@@ -1,0 +1,546 @@
+{
+  "Navbar": {
+    "home": "Ana səhifə",
+    "services": "Xidmətlər",
+    "blogs": "Bloqlar",
+    "about": "Haqqımızda",
+    "contact": "Əlaqə",
+    "portfolio": "Portfel",
+    "getConsultation": "Konsultasiya al"
+  },
+  "Hero": {
+    "slides": {
+      "slide1": {
+        "overline": "Marketinq və Brendinq Agentliyi",
+        "headline": "Brendinizi Növbəti\nSəviyyəyə Qaldırırıq.",
+        "supporting": "Qorxmaz şirkətlər üçün strateji dizayn və mühəndislik."
+      },
+      "slide2": {
+        "overline": "Rəqəmsal Təcrübələr",
+        "headline": "Vebin Gələcəyini Mühəndisləşdiririk.",
+        "supporting": "Diqqət tələb edən mükafatlı interfeyslər."
+      },
+      "slide3": {
+        "overline": "Kreativ İstiqamət",
+        "headline": "Minimal. Strateji. Gözardıedilməz.",
+        "supporting": "Xalis brend mahiyyətini ortaya çıxarmaq üçün səs-küyü kənarlaşdırırıq."
+      }
+    },
+    "seePortfolio": "Portfelimizə Baxın",
+    "scroll": "Sürüşdür",
+    "founderTitle": "Təsisçi və Kreativ Direktor",
+    "letsTalk": "Danışaq"
+  },
+  "Uniqueness": {
+    "sectionTitle": "Niyə The9thway?",
+    "cards": {
+      "card1": {
+        "title": "Performans Marketinqi",
+        "desc": "Lidlər, satışlar və ölçülə bilən böyümə yaradan hədəflənmiş reklam kampaniyaları aparırıq."
+      },
+      "card2": {
+        "title": "Məlumata Əsaslanan Strategiya",
+        "desc": "Effektiv marketinq strategiyaları qurmaq üçün məlumatlardan istifadə edirik."
+      },
+      "card3": {
+        "title": "Ekspert Marketinq Komandası",
+        "desc": "Mütəxəssis komandamız davamlı olaraq strateji marketinq nəticələri verir."
+      },
+      "card4": {
+        "title": "SEO və Orqanik Böyümə",
+        "desc": "Reytinqləri yaxşılaşdırır və vebsaytınız üçün davamlı orqanik trafik cəlb edirik."
+      }
+    }
+  },
+  "AboutStats": {
+    "title": "Güclü rəqəmsal strategiya ilə markaların böyüməsinə kömək edirik.",
+    "desc": "Biz sadəcə brendlər qurmur, onları müasir veb üçün mükəmməl estetika və dönüşümə yönəlmiş strategiyalarla birləşdirərək mühəndisləşdiririk.",
+    "stats": {
+      "stat1": "İllik Təcrübə",
+      "stat2": "Təhvil Verilmiş Layihə",
+      "stat3": "Xoşbəxt Müştəri",
+      "stat4": "Müştəri Məmnuniyyəti"
+    }
+  },
+  "Portfolio": {
+    "projects": {
+      "proj1": {
+        "tags": "Marketinq / Məhsul / Agentlik",
+        "title": "E-Ticarət Böyümə Kampaniyası",
+        "description": "Onlayn mağazanın performans marketinqi, SEO və konversiya optimallaşdırılması vasitəsilə gəlirini 320% artırmasına kömək etdik."
+      },
+      "proj2": {
+        "tags": "Korporativ / Biznes / Startap",
+        "title": "Brend Kimliyi Transformasiyası",
+        "description": "Brend mövqeyini və vizual kimliyini yenidən dizayn edərək daha güclü tanınma və cəlb olunma əldə etdik."
+      },
+      "proj3": {
+        "tags": "Korporativ / Biznes / Startap",
+        "title": "Strateji Planlaşdırma",
+        "description": "Xüsusi strategiyalar və ardıcıl sosial media kampaniyaları vasitəsilə cəlb olunmanı və izləyiciləri artırdıq."
+      },
+      "proj4": {
+        "tags": "Veb / UI / UX",
+        "title": "Rəqəmsal Platformanın Yenilənməsi",
+        "description": "İstifadəçilərin saxlanmasını iki dəfə artıran və itkiləri minimuma endirən güclü miqyaslana bilən platforma qurduq."
+      }
+    },
+    "caseStudies": "Keys Tədqiqatları",
+    "title": "Həqiqi Marketinq Uğurunu Nümayiş Etdirən Layihələrimiz.",
+    "viewAll": "Bütün Layihələrə Bax"
+  },
+  "Testimonials": {
+    "title": "Müştərilərimiz Nə Deyir",
+    "reviews": {
+      "rev1": {
+        "quote": "The9thway Agentliyi rəqəmsal varlığımızı tamamilə dəyişdirdi. Onların brendinqə yanaşması strateji, qorxmaz və inanılmaz dərəcədə effektivdir.",
+        "role": "CMO, TechNova"
+      },
+      "rev2": {
+        "quote": "Yenidən dizayndan bəri gələn lidlərdə 300% artım gördük. Onlar sadəcə veb-saytlar dizayn etmir, böyümə mühərrikləri hazırlayırlar.",
+        "role": "Təsisçi, Zenith Capital"
+      },
+      "rev3": {
+        "quote": "Təfərrüatlara diqqət və müasir estetika haqqında dərin anlayış. İndiyə qədər işlədiyimiz ən yaxşı kreativ tərəfdaşlar.",
+        "role": "Marketinq üzrə vitse-prezident, Lumina"
+      },
+      "rev4": {
+        "quote": "İlkin kəşf mərhələsindən tutmuş yekun buraxılışa qədər komanda qüsursuz işlədi. Yeni brend kimliyi bir şah əsərdir.",
+        "role": "CEO, Horizon Labs"
+      }
+    },
+    "servicesTitle": "Xidmətlərimiz Haqqında Müştərilər Nə Deyir"
+  },
+  "Team": {
+    "title": "Təcrübəli Rəqəmsal Marketinq Peşəkarlarımızla Tanış Olun.",
+    "desc": "Brendinizi yüksəltməyə həsr olunmuş strateqlər, dizaynerlər və mühəndislər kollektivi.",
+    "roles": {
+      "role1": "Təsisçi və Kreativ Direktor",
+      "role2": "Rəqəmsal Strategiya Rəhbəri",
+      "role3": "Aparıcı Mühəndis",
+      "role4": "Performans Marketinqi",
+      "role5": "Böyük UI/UX Dizayner",
+      "role6": "Məzmun Strateqi",
+      "role7": "Full-Stack Tərtibatçı",
+      "role8": "Müştəri Meneceri"
+    },
+    "viewAll": "Bütün Komandaya Bax"
+  },
+  "TeamPage": {
+    "Intro": {
+      "pill": "Komandamız",
+      "heading": "The9thway-nı İrəli Aparan İnsanlarla Tanış Olun.",
+      "paragraph": "Agentliyimizin vizyonunu reallığa çevirən ehtiraslı mütəxəssislər, strateqlər və dizaynerlər. Biz strateji təfəkkürü kreativ icra ilə birləşdirərək hər zaman daha yaxşısını hədəfləyirik."
+    }
+  },
+  "Contact": {
+    "heading": "Korporativ Ekspertlərimizlə Bu Gün Əlaqə Saxlayın!",
+    "desc": "Hədəflərinizi, çətinliklərinizi və böyümə üçün xüsusi biznes həllərini müzakirə etmək üçün ekspertlərimizlə əlaqə saxlayın.",
+    "address": "Ünvan",
+    "addressLine1": "Nizami küçəsi 124, Otaq 400",
+    "addressLine2": "Bakı, Azərbaycan, AZ1000",
+    "contact": "Əlaqə",
+    "formHeading": "Bizə mesaj göndərin",
+    "fullName": "Ad və Soyad",
+    "phone": "Telefon Nömrəsi",
+    "email": "Email Ünvanı",
+    "message": "Mesaj",
+    "submit": "Mesajı Göndər"
+  },
+  "Footer": {
+    "stayConnected": "Əlaqədə qalın",
+    "desc": "Yaradıcılıq və ehtirasla hazırlanmışdır. Əlaqədə qalaq — istənilən vaxt müraciət edin!",
+    "contactNow": "İndi Əlaqə Saxlayın",
+    "certified": "The9thway Təsdiqlənmiş",
+    "copyright": "Müəllif hüquqları © The9thway Agency 2026",
+    "backToTop": "Yuxarı qayıt"
+  },
+  "StickyCTA": {
+    "text": "Gəlin Danışaq"
+  },
+  "ClientLogos": {
+    "trustedBy": "Aparıcı markalar tərəfindən etibar edilir"
+  },
+  "Metadata": {
+    "homeTitle": "THE9THWAY AGENCY | Premium Brendinq və Marketinq",
+    "homeDesc": "Mükafatlı kreativ strategiya və rəqəmsal dizayn. Biz cəsarətli brendlər yaradırıq."
+  },
+  "ServicesPage": {
+    "pill": "Xidmətlərimiz",
+    "heading": "Böyüməni Təmin Edən Marketinq Xidmətlərimiz.",
+    "viewAll": "Bütün Xidmətlərə Bax",
+    "readMore": "Daha Ətraflı",
+    "services": [
+      {
+        "title": "Axtarış Motoru Optimizasiyası (SEO)",
+        "desc": "Veb saytınız üçün axtarış reytinqini yaxşılaşdırır və davamlı orqanik trafik cəlb edirik.",
+        "features": [
+          "Daxili (On-page) optimizasiya",
+          "Texniki SEO",
+          "Link quruculuğu",
+          "Açar söz strategiyası"
+        ]
+      },
+      {
+        "title": "Sosial Media Marketinqi (SMM)",
+        "desc": "Bizneslərə dəqiq məqsədlər təyin etməyə, fəaliyyət planları qurmağa və resursları bazar imkanları ilə uyğunlaşdırmağa kömək edirik.",
+        "features": [
+          "Böyümə strategiyası",
+          "Strateji inkişaf planı",
+          "Performansın izlənməsi",
+          "Biznes modelinin qiymətləndirilməsi"
+        ]
+      },
+      {
+        "title": "Bazar Araşdırması və Analiz",
+        "desc": "Rəqabət üstünlüklərini müəyyən etmək və riskləri azaltmaq üçün dərin bazar araşdırmaları.",
+        "features": [
+          "Rəqib analizi",
+          "İstehlakçı davranışları",
+          "Trend proqnozlaşdırması",
+          "Məlumata əsaslanan qərarlar"
+        ]
+      },
+      {
+        "title": "Bredinq və Strategiya",
+        "desc": "Hədəf kütlənizlə rezonans yaradan, güclü və tanınan brendlər yaradırıq.",
+        "features": [
+          "Brendin vizual kimliyi",
+          "Brend mövqeləndirməsi",
+          "Səs və mesajlaşma",
+          "Brend təlimatları"
+        ]
+      },
+      {
+        "title": "Məzmun Marketinqi",
+        "desc": "İzləyicilərinizi cəlb edən, məlumatlandıran və müştəriyə çevirən təsirli məzmunların yaradılması.",
+        "features": [
+          "Məzmun strategiyası",
+          "Kopiraytinq və bloq yazıları",
+          "Video istehsalı",
+          "E-poçt xəbər bülletenləri"
+        ]
+      }
+    ]
+  },
+  "WhyChooseUs": {
+    "pill": "Niyə Biz?",
+    "heading": "Biznesinizin Ehtiyaclarına Uyğunlaşdırılmış Həllər.",
+    "supporting": "Məlumatlara əsaslanan strategiyaları və qorxmaz yaradıcılığı birləşdirərək əhəmiyyətli nəticələr əldə edirik. Ambisiyalarınızla böyüyən bir tərəfdaş seçin.",
+    "card1": {
+      "industries": [
+        "Elektron ticarət",
+        "SaaS & Texnologiya",
+        "Daşınmaz Əmlak",
+        "Səhiyyə",
+        "Qonaqpərvərlik",
+        "Pərakəndə",
+        "Maliyyə"
+      ]
+    },
+    "card2": {
+      "stat": "500+",
+      "label": "Uğurlu Kampaniya",
+      "ctaText": "Birlikdə möhtəşəm işlər görək.",
+      "linkText": "Bizimlə əlaqə saxlayın"
+    },
+    "card3": {
+      "title": "Niyə Bizi Seçməlisiniz?",
+      "desc": "Sübut edilmiş metodologiyamız davamlı inkişafı təmin edir.",
+      "list": [
+        "Məlumatlara əsaslanan qərarlar",
+        "ROI mərkəzli strategiyalar",
+        "Təcrübəli marketinq komandası",
+        "Şəffaf hesabatlar",
+        "Ölçeklənə bilən inkişaf sistemləri"
+      ],
+      "button": "Pulsuz Konsultasiya"
+    },
+    "card4": {
+      "stat": "98%",
+      "label": "Müştərilərimiz keyfiyyət və nəticələrə görə bizimlə qalır."
+    },
+    "card5": {
+      "title": "24/7",
+      "desc": "Kampaniyalarınız üçün fasiləsiz dəstək və davamlı monitorinq."
+    }
+  },
+  "BlogsPage": {
+    "pill": "Blog",
+    "heading": "Fikirlərimiz, Təcrübəmiz və Sənaye Analizimiz.",
+    "exploreMore": "DAHA ƏTRAFLI",
+    "loadMore": "DAHA ÇOX YÜKLƏ",
+    "noComments": "Rəy yoxdur",
+    "comments": "Rəy",
+    "posts": [
+      {
+        "slug": "reqemsal-marketinq-strategiyalari",
+        "title": "Rəqəmsal Marketinq Strategiyaları ilə Biznesinizi Böyüdün",
+        "excerpt": "Müasir dövrdə rəqəmsal marketinqin gücündən istifadə edərək biznesinizi necə inkişaf etdirə biləcəyinizi kəşf edin. Ən son trendlər və strategiyalar.",
+        "author": "Aytən Məmmədova",
+        "role": "Marketinq Analitiki",
+        "date": "12 May, 2026",
+        "category": "Marketinq",
+        "comments": "0",
+        "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        "slug": "seo-sayt-trafiki",
+        "title": "SEO Sayt Trafikini Necə Sürətli Artırır",
+        "excerpt": "Axtarış motoru optimizasiyasının əsasları və vebsaytınızın orqanik axtarışlarda daha yuxarı pillələrə qalxması üçün praktik addımlar.",
+        "author": "Elçin Quliyev",
+        "role": "SEO Mütəxəssisi",
+        "date": "28 Aprel, 2026",
+        "category": "SEO",
+        "comments": "3",
+        "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        "slug": "2026-brendinq-trendleri",
+        "title": "2026-cı İldə Brendinq Trendləri: Sizi Nə Gözləyir?",
+        "excerpt": "Bu il brendinq dünyasında hansı tendensiyalar üstünlük təşkil edəcək? Yeni dizayn dilləri və istifadəçi təcrübəsinin önəmi.",
+        "author": "Leyla Əliyeva",
+        "role": "Kreativ Direktor",
+        "date": "15 Aprel, 2026",
+        "category": "Brendinq",
+        "comments": "12",
+        "image": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        "slug": "smm-ve-brend-sadiqliyi",
+        "title": "Sosial Media Vasitəsilə Brend Sadiqliyi Yaratmaq",
+        "excerpt": "Düzgün sosial media strategiyası ilə müştərilərinizlə uzunmüddətli və etibarlı əlaqələri necə qura bilərsiniz?",
+        "author": "Rəşad Həsənov",
+        "role": "SMM Meneceri",
+        "date": "02 Aprel, 2026",
+        "category": "SMM",
+        "comments": "5",
+        "image": "https://images.unsplash.com/photo-1611162616475-46b635cb6868?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        "slug": "mezmun-marketinqi-gucu",
+        "title": "Məzmun Marketinqi: Hekayənizi Doğru Anladın",
+        "excerpt": "Müştərilərinizi cəlb etmək və markanıza bağlamaq üçün güclü məzmun strategiyasının hazırlanması və tətbiqi yolları.",
+        "author": "Aysel Kərimli",
+        "role": "Məzmun Yaratıcısı",
+        "date": "20 Mart, 2026",
+        "category": "Məzmun",
+        "comments": "1",
+        "image": "https://images.unsplash.com/photo-1542435503-91dce531b409?q=80&w=800&auto=format&fit=crop"
+      }
+    ],
+    "searchLabel": "Axtarış",
+    "searchPlaceholder": "Axtarış edin...",
+    "topCategoriesLabel": "Top Kateqoriyalar",
+    "recentPostsLabel": "Son Məqalələr",
+    "allCategories": "Bütün Kateqoriyalar"
+  },
+  "AboutPage": {
+    "overline": "STUDİYA",
+    "heading": "Brendinizin Hekayəsini Danışan Sayt Təcrübələri və Kimliklər Quran Mükafatlı Yaradıcı Agentlik.",
+    "paragraph": "The9thway olaraq biz adi dizaynın hüdudlarından kənara çıxırıq. Hədəfimiz sadəcə estetik baxımdan gözəl yox, həm də strateji cəhətdən güclü rəqəmsal təcrübələr yaratmaqdır. Komandamız hər bir layihəyə brendin əsl mahiyyətini üzə çıxaran, istifadəçi təcrübəsini ən üst səviyyəyə qaldıran və biznesin böyüməsini sürətləndirən bir həll kimi yanaşır. Yaradıcı vizyonumuz və texniki mükəmməlliyimizlə, rəqabətədavamlı rəqəmsal mühitdə sizin fərqlənməyinizi təmin edirik.",
+    "WhatWeBuild": {
+      "heading": "Biz Real Biznes Nəticələri Yaradan Rəqəmsal Strategiyalar Qururuq.",
+      "paragraph": "Hər bir layihəmiz yalnız gözəl görünmək üçün deyil, ölçülə bilən və real biznes gəlirləri gətirmək üçün dizayn edilir. Bizim həllərimiz rəqəmsal mühitdə sizin davamlı böyümənizi təmin edir.",
+      "statValue": "100%",
+      "statLabel": "Məmnun Müştəri",
+      "statCaption": "Davamlı əməkdaşlıqlar",
+      "features": {
+        "0": {
+          "title": "Data-Driven Strategiyalar",
+          "description": "Qərarlarımızı təxminlər yox, yalnız dəqiq analitika və bazar məlumatları üzərində qururuq."
+        },
+        "1": {
+          "title": "ROI-Yönümlü Kampaniyalar",
+          "description": "Hər xərclənən büdcənin ən yüksək gəlir gətirməsi üçün optimallaşdırılmış hədəfləmə üsulları tətbiq edirik."
+        },
+        "2": {
+          "title": "Ekspert Komanda",
+          "description": "Yaradıcı vizyonla texniki mükəmməlliyi birləşdirən peşəkar və təcrübəli mütəxəssislərlə işləyirik."
+        }
+      },
+      "buttonLabel": "Haqqımızda Daha Çox Öyrən"
+    },
+    "MissionVision": {
+      "statValue": "100%",
+      "statLabel": "Məmnun Müştəri",
+      "statCaption": "Davamlı əməkdaşlıqlar",
+      "missionTitle": "BİZİM MİSSİYAMIZ",
+      "missionDesc": "Missiyamız mütəxəssis rəhbərliyi, data əsaslı qərarlar və strateji hədəfləmə vasitəsilə bizneslərə davamlı rəqəmsal böyümə bəxş etmək, riski minimuma endirmək və uzunmüddətli uğur yaratmaqdır.",
+      "visionTitle": "BİZİM VİZYONUMUZ",
+      "visionDesc": "Vizyonumuz innovasiyalar, dərin təcrübə və etibarlı partnyorluq vasitəsilə iddialı şirkətlərin davamlı rəqəmsal uğur və aydın inkişaf əldə etməsinə kömək edən aparıcı agentlik olmaqdır.",
+      "stats": {
+        "recommend": "99% Tövsiyə Edir",
+        "reviews": "100% Real Rəylər"
+      },
+      "quotes": {
+        "q1": "\"Bilgili bir komandadan mükəmməl rəhbərlik.\"",
+        "q2": "\"Dərin analitika, güclü nəticələr, əla dəstək.\"",
+        "q3": "\"Hər biznes çağırışında etibarlı partnyorumuz.\""
+      }
+    },
+    "AboutContactCTA": {
+      "heading": "Brendinizi Bizimlə Böyütməyə Hazırsınız?",
+      "paragraph": "Məqsədlərinizi reallığa çevirəcək xüsusi hazırlanmış rəqəmsal həlləri müzakirə etmək üçün bu gün bizimlə əlaqə saxlayın.",
+      "buttonLabel": "Bizimlə Əlaqə Saxlayın"
+    },
+    "Team": {
+      "title": "Yaradıcı Komandamızla Tanış Olun."
+    }
+  },
+  "PortfolioPage": {
+    "Hero": {
+      "pill": "İş Nümunələri",
+      "heading": "Son İşlərimiz",
+      "paragraph": "Strateji dizayn və rəqəmsal mühəndisliyin kəsişdiyi ən son layihələrimizi kəşf edin.",
+      "primaryBtn": "Konsultasiya Al",
+      "secondaryBtn": "Haqqımızda"
+    },
+    "CaseStudies": {
+      "viewProject": "Layihəyə Bax",
+      "cases": [
+        {
+          "tags": ["Brend Kimliyi", "Rəqəmsal Kampaniya"],
+          "title": "Aurora — Tam Brend Yenidənqurulması",
+          "stats": [
+            {"value": "+150%", "label": "Marka Bilinirliyi"},
+            {"value": "+64%", "label": "Sosial Media Engagement"},
+            {"value": "24/7", "label": "Kampaniya İzlənməsi"}
+          ]
+        },
+        {
+          "tags": ["Veb Dizayn", "UX/UI"],
+          "title": "Nexus — Rəqəmsal Platformanın İnkişafı",
+          "stats": [
+            {"value": "3x", "label": "İstifadəçi Qalması"},
+            {"value": "-40%", "label": "Bounce Rate"},
+            {"value": "99.9%", "label": "Uptime"}
+          ]
+        },
+        {
+          "tags": ["SEO", "Məzmun Marketinqi"],
+          "title": "Zenith — Hərtərəfli SEO və Məzmun",
+          "stats": [
+            {"value": "+200%", "label": "Orqanik Trafik"},
+            {"value": "Top 3", "label": "Axtarış Reytinqi"},
+            {"value": "+85%", "label": "Konversiya"}
+          ]
+        },
+        {
+          "tags": ["SMM", "Qlobal Kampaniya"],
+          "title": "Lumina — Qlobal SMM Kampaniyası",
+          "stats": [
+            {"value": "1M+", "label": "Aylıq Baxış"},
+            {"value": "+120%", "label": "İzləyici Artımı"},
+            {"value": "5x", "label": "ROI"}
+          ]
+        }
+      ]
+    },
+    "Testimonials": {
+      "heading": "Müştərilərimiz İşimiz Haqqında Nə Deyir",
+      "reviews": [
+        {
+          "quote": "The9thway Agentliyi rəqəmsal varlığımızı tamamilə dəyişdirdi. Onların brendinqə yanaşması strateji, qorxmaz və inanılmaz dərəcədə effektivdir.",
+          "name": "Elnur Məmmədov",
+          "role": "CMO, TechNova"
+        },
+        {
+          "quote": "Yenidən dizayndan bəri gələn lidlərdə 300% artım gördük. Onlar sadəcə veb-saytlar dizayn etmir, böyümə mühərrikləri hazırlayırlar.",
+          "name": "Aytən Əliyeva",
+          "role": "Təsisçi, Zenith Capital"
+        },
+        {
+          "quote": "Təfərrüatlara diqqət və müasir estetika haqqında dərin anlayış. İndiyə qədər işlədiyimiz ən yaxşı kreativ tərəfdaşlar.",
+          "name": "Rəşad Quliyev",
+          "role": "Marketinq üzrə vitse-prezident, Lumina"
+        }
+      ]
+    },
+    "FAQ": {
+      "pill": "FAQ",
+      "heading": "Tez-tez Verilən Suallar",
+      "calloutHeading": "Sualınız Var?",
+      "calloutDesc": "Layihənizi müzakirə etmək üçün bizə yazın.",
+      "calloutBtn": "Bizimlə Əlaqə",
+      "items": [
+        {
+          "q": "Bir layihə adətən nə qədər davam edir?",
+          "a": "Layihənin mürəkkəbliyindən asılı olaraq adətən 4-8 həftə çəkir."
+        },
+        {
+          "q": "Komandanızla necə işləyə bilərəm?",
+          "a": "Bizimlə əlaqə saxlayın, ehtiyaclarınızı müzakirə edək və sizə xüsusi təklif hazırlayaq."
+        },
+        {
+          "q": "Öz brend materiallarımızı təqdim edə bilərikmi?",
+          "a": "Bəli, mövcud materiallarınızı prosesə asanlıqla inteqrasiya edə bilərik."
+        },
+        {
+          "q": "Ödəniş necə strukturlaşdırılıb?",
+          "a": "Layihənin mərhələlərinə uyğun olaraq ödənişlər bölünür. Ətraflı məlumat üçün bizimlə əlaqə saxlayın."
+        },
+        {
+          "q": "Məlumatlarımızın məxfiliyini necə təmin edirsiniz?",
+          "a": "Məxfilik müqaviləsi (NDA) imzalayırıq və məlumatlarınızı ciddi şəkildə qoruyuruq."
+        },
+        {
+          "q": "Layihə bitdikdən sonra nə baş verir?",
+          "a": "Layihə təhvil verildikdən sonra texniki dəstək və inkişaf xidmətləri təklif edirik."
+        }
+      ]
+    }
+  },
+  "ContactPage": {
+    "WhyChooseUs": {
+      "overline": "NİYƏ THE9THWAY?",
+      "heading": "Niyə Bizim Marketinq Xidmətlərimizi Seçməlisiniz?",
+      "paragraph": "Biz yalnız yaradıcı dizayn deyil, həm də dataya əsaslanan strateji yanaşmalar tətbiq edərək, brendlərin qlobal miqyasda güclənməsini və yüksək gəlir (ROI) əldə etməsini təmin edirik.",
+      "chartLabels": {
+        "l1": "Reach",
+        "l2": "Engage",
+        "l3": "Convert",
+        "l4": "Growth"
+      },
+      "chartHeading": "Etibarlı və Təcrübəli Komanda.",
+      "chartDesc": "Rəqəmsal kampaniyalarınızın hər bir detalını ən incə təfərrüatına qədər izləyir və daimi inkişafı hədəfləyirik.",
+      "cards": [
+        {
+          "title": "Ekspert Məsləhətçi Komanda",
+          "desc": "Təcrübəli mütəxəssislərimiz biznesinizə dəyər qatacaq ən doğru qərarları verir."
+        },
+        {
+          "title": "Fərdi Strategiyalar",
+          "desc": "Hər bir brendin özünəməxsus ehtiyaclarına uyğun kreativ və analitik strategiyalar."
+        },
+        {
+          "title": "Sübutlanmış Nəticələr",
+          "desc": "Daha əvvəlki işlərimizlə təsdiqlənmiş, ölçüləbilən və real biznes nəticələri."
+        },
+        {
+          "title": "7/24 Dəstək",
+          "desc": "Layihənizin hər mərhələsində fasiləsiz əlaqə və operativ texniki dəstək xidməti."
+        }
+      ],
+      "bottomText": "Harada Olursunuz Olun, Bizimlə İşləyin."
+    },
+    "InfoMap": {
+      "Address": {
+        "label": "Ünvan",
+        "value": "Bakı şəhəri, Nizami küç. 10"
+      },
+      "Phone": {
+        "label": "Telefon",
+        "value": "+994 12 345 67 89"
+      },
+      "Email": {
+        "label": "E-poçt",
+        "value": "hello@the9thway.com"
+      },
+      "WorkingHours": {
+        "label": "İş Saatları",
+        "value": "Bazar ertəsi – Cümə, 09:00 – 18:00"
+      }
+    }
+  }
+}

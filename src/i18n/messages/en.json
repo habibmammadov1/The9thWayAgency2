@@ -1,0 +1,546 @@
+{
+  "Navbar": {
+    "home": "Home",
+    "services": "Services",
+    "blogs": "Blogs",
+    "about": "About",
+    "contact": "Contact",
+    "portfolio": "Portfolio",
+    "getConsultation": "Get a Consultation"
+  },
+  "Hero": {
+    "slides": {
+      "slide1": {
+        "overline": "Marketing & Branding Agency",
+        "headline": "We Take Your Brand to the Next Level.",
+        "supporting": "Strategic design and engineering for fearless companies."
+      },
+      "slide2": {
+        "overline": "Digital Experiences",
+        "headline": "Engineering the Future of the Web.",
+        "supporting": "Award-winning interfaces that demand attention."
+      },
+      "slide3": {
+        "overline": "Creative Direction",
+        "headline": "Minimal. Strategic. Unignorable.",
+        "supporting": "Stripping away the noise to reveal pure brand essence."
+      }
+    },
+    "seePortfolio": "See Our Portfolio",
+    "scroll": "Scroll",
+    "founderTitle": "Founder & Creative Director",
+    "letsTalk": "Let's Talk"
+  },
+  "Uniqueness": {
+    "sectionTitle": "Why Choose The9thway?",
+    "cards": {
+      "card1": {
+        "title": "Performance Marketing",
+        "desc": "Run targeted ad campaigns that generate leads, sales, measurable growth."
+      },
+      "card2": {
+        "title": "Data-Driven Strategy",
+        "desc": "We use data insights to build effective marketing strategies."
+      },
+      "card3": {
+        "title": "Expert Marketing Team",
+        "desc": "Our expert team delivers strategic marketing results consistently."
+      },
+      "card4": {
+        "title": "SEO & Organic Growth",
+        "desc": "We improve rankings and drive consistent organic traffic for your website."
+      }
+    }
+  },
+  "AboutStats": {
+    "title": "We help brands grow through powerful digital strategy.",
+    "desc": "We don't just build brands. We engineer them for the modern web, combining striking aesthetics with conversion-focused strategies.",
+    "stats": {
+      "stat1": "Years of Experience",
+      "stat2": "Projects Delivered",
+      "stat3": "Happy Clients",
+      "stat4": "Client Retention"
+    }
+  },
+  "Portfolio": {
+    "projects": {
+      "proj1": {
+        "tags": "Marketing / Product / Agency",
+        "title": "E-Commerce Growth Campaign",
+        "description": "Helped an online store increase revenue by 320% through performance marketing, SEO, and conversion optimization."
+      },
+      "proj2": {
+        "tags": "Corporate / Business / Startup",
+        "title": "Brand Identity Transformation",
+        "description": "Redesigned brand positioning and visual identity, resulting in stronger recognition and engagement."
+      },
+      "proj3": {
+        "tags": "Corporate / Business / Startup",
+        "title": "Strategic Planning",
+        "description": "We increased engagement and followers through tailored strategies, and consistent social media campaigns."
+      },
+      "proj4": {
+        "tags": "Web / UI / UX",
+        "title": "Digital Platform Overhaul",
+        "description": "Built a robust scalable platform that doubled user retention and minimized drop-offs."
+      }
+    },
+    "caseStudies": "Case Studies",
+    "title": "Our Projects That Showcase Real Marketing Success.",
+    "viewAll": "View All Projects"
+  },
+  "Testimonials": {
+    "title": "What Our Clients Say",
+    "reviews": {
+      "rev1": {
+        "quote": "The9thway Agency completely transformed our digital presence. Their approach to branding is strategic, fearless, and incredibly effective.",
+        "role": "CMO, TechNova"
+      },
+      "rev2": {
+        "quote": "We've seen a 300% increase in inbound leads since the redesign. They don't just design websites; they engineer growth engines.",
+        "role": "Founder, Zenith Capital"
+      },
+      "rev3": {
+        "quote": "Meticulous attention to detail and a profound understanding of modern aesthetics. The best creative partners we've ever worked with.",
+        "role": "VP Marketing, Lumina"
+      },
+      "rev4": {
+        "quote": "From the initial discovery phase to the final launch, their team executed flawlessly. The new brand identity is a masterpiece.",
+        "role": "CEO, Horizon Labs"
+      }
+    },
+    "servicesTitle": "What Clients Say About Our Services"
+  },
+  "Team": {
+    "title": "Meet Our Experienced Digital Marketing Professionals.",
+    "desc": "A collective of strategists, designers, and engineers dedicated to elevating your brand.",
+    "roles": {
+      "role1": "Founder & Creative Director",
+      "role2": "Head of Digital Strategy",
+      "role3": "Lead Engineer",
+      "role4": "Performance Marketing",
+      "role5": "Senior UI/UX Designer",
+      "role6": "Content Strategist",
+      "role7": "Full-Stack Developer",
+      "role8": "Account Manager"
+    },
+    "viewAll": "View All Team"
+  },
+  "TeamPage": {
+    "Intro": {
+      "pill": "Our Team",
+      "heading": "Meet the People Driving The9thway Forward.",
+      "paragraph": "Passionate professionals, strategists, and designers turning our agency's vision into reality. We combine strategic thinking with creative execution to always aim for better."
+    }
+  },
+  "Contact": {
+    "heading": "Get in Touch With Our Corporate Experts Today!",
+    "desc": "Reach out to our experts to discuss your goals, challenges, and tailored business solutions for growth.",
+    "address": "Address",
+    "addressLine1": "124 Nizami Street, Suite 400",
+    "addressLine2": "Baku, Azerbaijan, AZ1000",
+    "contact": "Contact",
+    "formHeading": "Send us a message",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "message": "Message",
+    "submit": "Submit Message"
+  },
+  "Footer": {
+    "stayConnected": "Stay Connected",
+    "desc": "Crafted with creativity and passion. Let's stay connected — reach out anytime!",
+    "contactNow": "Contact Now",
+    "certified": "The9thway Certified",
+    "copyright": "Copyright © The9thway Agency 2026",
+    "backToTop": "Back to top"
+  },
+  "StickyCTA": {
+    "text": "Let's Talk"
+  },
+  "ClientLogos": {
+    "trustedBy": "Trusted by leading brands"
+  },
+  "Metadata": {
+    "homeTitle": "THE9THWAY AGENCY | Premium Branding & Marketing",
+    "homeDesc": "Award-winning creative strategy & digital design. We build fearless brands."
+  },
+  "ServicesPage": {
+    "pill": "Our Services",
+    "heading": "Our Marketing Services That Drive Growth.",
+    "viewAll": "View All Services",
+    "readMore": "Read More",
+    "services": [
+      {
+        "title": "Search Engine Optimization",
+        "desc": "We improve rankings and drive consistent organic traffic for your website.",
+        "features": [
+          "On-page optimization",
+          "Technical SEO",
+          "Link building",
+          "Keyword strategy"
+        ]
+      },
+      {
+        "title": "Social Media Marketing",
+        "desc": "We help businesses define clear goals, develop actionable strategies, and create structured plans that align vision, resources, and market opportunities.",
+        "features": [
+          "Growth strategy & planning",
+          "Strategic roadmap & development",
+          "Performance tracking",
+          "Business model evaluation"
+        ]
+      },
+      {
+        "title": "Market Research & Analysis",
+        "desc": "In-depth market research to uncover insights, identify opportunities, and mitigate risks.",
+        "features": [
+          "Competitor analysis",
+          "Consumer insights",
+          "Trend forecasting",
+          "Data-driven decisions"
+        ]
+      },
+      {
+        "title": "Branding & Strategy",
+        "desc": "Building powerful, recognizable brands that resonate with your target audience.",
+        "features": [
+          "Brand identity design",
+          "Brand positioning",
+          "Voice & messaging",
+          "Brand guidelines"
+        ]
+      },
+      {
+        "title": "Content Marketing",
+        "desc": "Creating compelling content that engages, informs, and converts your audience.",
+        "features": [
+          "Content strategy",
+          "Copywriting & blogging",
+          "Video production",
+          "Email newsletters"
+        ]
+      }
+    ]
+  },
+  "WhyChooseUs": {
+    "pill": "Why Choose Us",
+    "heading": "Flexible Solutions Tailored to Your Business Needs.",
+    "supporting": "We combine data-driven strategies with fearless creativity to deliver results that matter. Choose a partner that scales with your ambition.",
+    "card1": {
+      "industries": [
+        "E-commerce",
+        "SaaS & Tech",
+        "Real Estate",
+        "Healthcare",
+        "Hospitality",
+        "Retail",
+        "Finance"
+      ]
+    },
+    "card2": {
+      "stat": "500+",
+      "label": "Campaigns Launched",
+      "ctaText": "Let's make great work together.",
+      "linkText": "Get in touch with us"
+    },
+    "card3": {
+      "title": "Why Choose Us?",
+      "desc": "Our proven methodology ensures consistent growth.",
+      "list": [
+        "Data-driven decision making",
+        "ROI-focused strategies",
+        "Experienced marketing team",
+        "Transparent reporting",
+        "Scalable growth systems"
+      ],
+      "button": "Free Consultation"
+    },
+    "card4": {
+      "stat": "98%",
+      "label": "Clients stay for our quality and results."
+    },
+    "card5": {
+      "title": "24/7",
+      "desc": "Always-on support and continuous monitoring for your campaigns."
+    }
+  },
+  "BlogsPage": {
+    "pill": "Blog",
+    "heading": "Our Insights, Experience and Industry Analysis.",
+    "exploreMore": "EXPLORE MORE",
+    "loadMore": "LOAD MORE",
+    "noComments": "No Comments",
+    "comments": "Comments",
+    "posts": [
+      {
+        "slug": "digital-marketing-strategies",
+        "title": "Grow Your Business with Digital Marketing Strategies",
+        "excerpt": "Discover how you can grow your business by leveraging the power of digital marketing in the modern era. Latest trends and strategies.",
+        "author": "Ayten Mammadova",
+        "role": "Marketing Analyst",
+        "date": "May 12, 2026",
+        "category": "Marketing",
+        "comments": "0",
+        "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        "slug": "how-seo-increases-traffic",
+        "title": "How SEO Rapidly Increases Website Traffic",
+        "excerpt": "The basics of search engine optimization and practical steps for your website to climb higher in organic searches.",
+        "author": "Elchin Guliyev",
+        "role": "SEO Specialist",
+        "date": "April 28, 2026",
+        "category": "SEO",
+        "comments": "3",
+        "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        "slug": "2026-branding-trends",
+        "title": "Branding Trends in 2026: What Awaits You?",
+        "excerpt": "What trends will dominate the branding world this year? New design languages and the importance of user experience.",
+        "author": "Leyla Aliyeva",
+        "role": "Creative Director",
+        "date": "April 15, 2026",
+        "category": "Branding",
+        "comments": "12",
+        "image": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        "slug": "smm-and-brand-loyalty",
+        "title": "Building Brand Loyalty Through Social Media",
+        "excerpt": "How can you build long-term and reliable relationships with your customers with the right social media strategy?",
+        "author": "Rashad Hasanov",
+        "role": "SMM Manager",
+        "date": "April 02, 2026",
+        "category": "SMM",
+        "comments": "5",
+        "image": "https://images.unsplash.com/photo-1611162616475-46b635cb6868?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        "slug": "power-of-content-marketing",
+        "title": "Content Marketing: Tell Your Story Right",
+        "excerpt": "Ways to prepare and implement a strong content strategy to attract your customers and bind them to your brand.",
+        "author": "Aysel Karimli",
+        "role": "Content Creator",
+        "date": "March 20, 2026",
+        "category": "Content",
+        "comments": "1",
+        "image": "https://images.unsplash.com/photo-1542435503-91dce531b409?q=80&w=800&auto=format&fit=crop"
+      }
+    ],
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search here...",
+    "topCategoriesLabel": "Top Categories",
+    "recentPostsLabel": "Recent Posts",
+    "allCategories": "All Categories"
+  },
+  "AboutPage": {
+    "overline": "STUDIO",
+    "heading": "An Award-Winning Creative Agency Building Brand Identities and Story-Driven Web Experiences.",
+    "paragraph": "At The9thway, we push the boundaries of conventional design. Our goal is to create digital experiences that are not only aesthetically beautiful but strategically powerful. Our team approaches every project as a solution that uncovers the true essence of the brand, elevates user experience to the highest level, and accelerates business growth. With our creative vision and technical excellence, we ensure you stand out in a competitive digital landscape.",
+    "WhatWeBuild": {
+      "heading": "We Build Digital Strategies That Drive Real Business Results.",
+      "paragraph": "Every project we undertake is designed not just to look beautiful, but to bring measurable and tangible business returns. Our solutions ensure your continuous growth in the digital landscape.",
+      "statValue": "100%",
+      "statLabel": "Satisfied Clients",
+      "statCaption": "Long-term partnerships",
+      "features": {
+        "0": {
+          "title": "Data-Driven Strategies",
+          "description": "We base our decisions not on guesses, but purely on accurate analytics and market data."
+        },
+        "1": {
+          "title": "ROI-Focused Campaigns",
+          "description": "We apply optimized targeting methods to ensure every spent budget yields the highest possible return."
+        },
+        "2": {
+          "title": "Expert Team",
+          "description": "We work with professional and experienced specialists who combine creative vision with technical excellence."
+        }
+      },
+      "buttonLabel": "Learn More About Us"
+    },
+    "MissionVision": {
+      "statValue": "100%",
+      "statLabel": "Satisfied Client",
+      "statCaption": "Delivering trusted solutions",
+      "missionTitle": "OUR MISSION",
+      "missionDesc": "Our mission is to empower businesses with clear strategies, expert guidance, and data-driven insights that drive sustainable growth, minimize risk, and create long-term digital success.",
+      "visionTitle": "OUR VISION",
+      "visionDesc": "Our vision is to become the leading agency partner, helping ambitious businesses achieve clarity, strategic growth, and lasting success through innovation, expertise, and trusted advisory services.",
+      "stats": {
+        "recommend": "99% Recommend",
+        "reviews": "100% Real Reviews"
+      },
+      "quotes": {
+        "q1": "\"Outstanding guidance from a knowledgeable team.\"",
+        "q2": "\"Clear insights, strong outcomes, great support.\"",
+        "q3": "\"Trusted partner through every business challenge.\""
+      }
+    },
+    "AboutContactCTA": {
+      "heading": "Ready to Grow Your Brand With Us?",
+      "paragraph": "Contact us today to discuss tailor-made digital solutions that turn your goals into reality.",
+      "buttonLabel": "Get In Touch"
+    },
+    "Team": {
+      "title": "Meet Our Creative Team."
+    }
+  },
+  "PortfolioPage": {
+    "Hero": {
+      "pill": "Case Studies",
+      "heading": "Recent Work",
+      "paragraph": "Explore our latest projects where strategic design meets digital engineering.",
+      "primaryBtn": "Get a Consultation",
+      "secondaryBtn": "About Us"
+    },
+    "CaseStudies": {
+      "viewProject": "View Project",
+      "cases": [
+        {
+          "tags": ["Brand Identity", "Digital Campaign"],
+          "title": "Aurora — Complete Brand Redesign",
+          "stats": [
+            {"value": "+150%", "label": "Brand Awareness"},
+            {"value": "+64%", "label": "Social Media Engagement"},
+            {"value": "24/7", "label": "Campaign Tracking"}
+          ]
+        },
+        {
+          "tags": ["Web Design", "UX/UI"],
+          "title": "Nexus — Digital Platform Development",
+          "stats": [
+            {"value": "3x", "label": "User Retention"},
+            {"value": "-40%", "label": "Bounce Rate"},
+            {"value": "99.9%", "label": "Uptime"}
+          ]
+        },
+        {
+          "tags": ["SEO", "Content Marketing"],
+          "title": "Zenith — Comprehensive SEO & Content",
+          "stats": [
+            {"value": "+200%", "label": "Organic Traffic"},
+            {"value": "Top 3", "label": "Search Ranking"},
+            {"value": "+85%", "label": "Conversion"}
+          ]
+        },
+        {
+          "tags": ["SMM", "Global Campaign"],
+          "title": "Lumina — Global SMM Campaign",
+          "stats": [
+            {"value": "1M+", "label": "Monthly Views"},
+            {"value": "+120%", "label": "Follower Growth"},
+            {"value": "5x", "label": "ROI"}
+          ]
+        }
+      ]
+    },
+    "Testimonials": {
+      "heading": "What Our Partners Say",
+      "reviews": [
+        {
+          "quote": "The9thway Agency completely transformed our digital presence. Their approach to branding is strategic, fearless, and incredibly effective.",
+          "name": "Elnur Mammadov",
+          "role": "CMO, TechNova"
+        },
+        {
+          "quote": "We've seen a 300% increase in inbound leads since the redesign. They don't just design websites; they engineer growth engines.",
+          "name": "Ayten Aliyeva",
+          "role": "Founder, Zenith Capital"
+        },
+        {
+          "quote": "Meticulous attention to detail and a profound understanding of modern aesthetics. The best creative partners we've ever worked with.",
+          "name": "Rashad Guliyev",
+          "role": "VP Marketing, Lumina"
+        }
+      ]
+    },
+    "FAQ": {
+      "pill": "FAQ",
+      "heading": "Frequently Asked Questions",
+      "calloutHeading": "Have a Question?",
+      "calloutDesc": "Write to us to discuss your project.",
+      "calloutBtn": "Contact Us",
+      "items": [
+        {
+          "q": "How long does a project typically take?",
+          "a": "Depending on complexity, it usually takes 4-8 weeks."
+        },
+        {
+          "q": "How can I work with your team?",
+          "a": "Contact us, we will discuss your needs and prepare a custom proposal."
+        },
+        {
+          "q": "Can we provide our own brand materials?",
+          "a": "Yes, we can seamlessly integrate your existing materials into the process."
+        },
+        {
+          "q": "How is the payment structured?",
+          "a": "Payments are divided according to project milestones. Contact us for details."
+        },
+        {
+          "q": "How do you ensure the confidentiality of our data?",
+          "a": "We sign a Non-Disclosure Agreement (NDA) and strictly protect your data."
+        },
+        {
+          "q": "What happens after the project is completed?",
+          "a": "We offer technical support and development services after project delivery."
+        }
+      ]
+    }
+  },
+  "ContactPage": {
+    "WhyChooseUs": {
+      "overline": "WHY THE9THWAY?",
+      "heading": "Why Choose Our Marketing Services?",
+      "paragraph": "We apply not just creative design, but data-driven strategic approaches to ensure brands strengthen globally and achieve high ROI.",
+      "chartLabels": {
+        "l1": "Reach",
+        "l2": "Engage",
+        "l3": "Convert",
+        "l4": "Growth"
+      },
+      "chartHeading": "Reliable and Experienced Team.",
+      "chartDesc": "We track every detail of your digital campaigns meticulously and aim for continuous development.",
+      "cards": [
+        {
+          "title": "Expert Consulting Team",
+          "desc": "Our experienced professionals make the right decisions that add value to your business."
+        },
+        {
+          "title": "Tailored Strategies",
+          "desc": "Creative and analytical strategies tailored to the unique needs of each brand."
+        },
+        {
+          "title": "Proven Results",
+          "desc": "Measurable and real business results validated by our extensive portfolio."
+        },
+        {
+          "title": "24/7 Support",
+          "desc": "Uninterrupted communication and prompt technical support at every stage of your project."
+        }
+      ],
+      "bottomText": "Work With Us, Wherever You Are."
+    },
+    "InfoMap": {
+      "Address": {
+        "label": "Address",
+        "value": "10 Nizami St., Baku"
+      },
+      "Phone": {
+        "label": "Phone",
+        "value": "+994 12 345 67 89"
+      },
+      "Email": {
+        "label": "Email",
+        "value": "hello@the9thway.com"
+      },
+      "WorkingHours": {
+        "label": "Working Hours",
+        "value": "Monday – Friday, 09:00 – 18:00"
+      }
+    }
+  }
+}
