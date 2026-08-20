@@ -6,12 +6,47 @@ import { Plus, Minus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 
-export default function PortfolioFAQ() {
+interface FAQIntro {
+  pillLabel: string;
+  heading: string;
+  calloutHeading: string;
+  calloutText: string;
+  calloutCtaLabel: string;
+}
+
+interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+interface PortfolioFAQProps {
+  initialData?: {
+    intro?: FAQIntro | null;
+    items?: FAQItem[] | null;
+  } | null;
+}
+
+export default function PortfolioFAQ({ initialData }: PortfolioFAQProps) {
   const t = useTranslations("PortfolioPage.FAQ");
   const [openIndex, setOpenIndex] = useState<number>(0);
 
-  // We have 6 FAQ items
-  const faqItems = [0, 1, 2, 3, 4, 5];
+  const intro = initialData?.intro;
+  const items = initialData?.items && initialData.items.length > 0 ? initialData.items : null;
+
+  const pillLabel = intro?.pillLabel || t("pill");
+  const heading = intro?.heading || t("heading");
+  const calloutHeading = intro?.calloutHeading || t("calloutHeading");
+  const calloutDesc = intro?.calloutText || t("calloutDesc");
+  const calloutBtn = intro?.calloutCtaLabel || t("calloutBtn");
+
+  const fallbackItems = [0, 1, 2, 3, 4, 5].map((idx) => ({
+    id: String(idx),
+    question: t(`items.${idx}.q`),
+    answer: t(`items.${idx}.a`)
+  }));
+
+  const faqItemsList = items || fallbackItems;
 
   return (
     <section className="w-full py-24 bg-paper">
@@ -28,36 +63,36 @@ export default function PortfolioFAQ() {
           >
             <div>
               <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-accent text-accent text-sm font-medium tracking-wide uppercase mb-6">
-                {t("pill")}
+                {pillLabel}
               </div>
               <h2 className="text-4xl md:text-5xl font-display font-bold text-ink leading-[1.1] mb-8">
-                {t("heading")}
+                {heading}
               </h2>
             </div>
 
             {/* Dark Callout Card */}
             <div className="bg-ink rounded-3xl p-8 text-white mt-12 lg:mt-0">
-              <h3 className="text-2xl font-bold mb-2">{t("calloutHeading")}</h3>
-              <p className="text-gray-400 mb-8">{t("calloutDesc")}</p>
+              <h3 className="text-2xl font-bold mb-2">{calloutHeading}</h3>
+              <p className="text-gray-400 mb-8">{calloutDesc}</p>
               <Link 
                 href="/contact"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white font-semibold hover:bg-white hover:text-ink transition-colors duration-300 w-full"
               >
-                {t("calloutBtn")}
+                {calloutBtn}
               </Link>
             </div>
           </motion.div>
 
           {/* Right Column (Accordion) */}
           <div className="w-full lg:w-2/3 flex flex-col gap-4">
-            {faqItems.map((idx) => {
-              const question: string = t(`items.${idx}.q`);
-              const answer: string = t(`items.${idx}.a`);
+            {faqItemsList.map((item, idx) => {
+              const question = item.question;
+              const answer = item.answer;
               const isOpen = openIndex === idx;
 
               return (
                 <motion.div 
-                  key={idx}
+                  key={item.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}

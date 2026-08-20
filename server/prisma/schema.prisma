@@ -1,0 +1,453 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model HeroSlide {
+  id          String   @id @default(uuid())
+  locale      String   // "az" | "ru" | "en"
+  order       Int
+  overline    String
+  headline    String
+  description String
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model HeroTeamLead {
+  id         String   @id @default(uuid())
+  locale     String   @unique
+  name       String
+  role       String
+  linkLabel  String
+  photoUrl   String?
+  updatedAt  DateTime @updatedAt
+}
+
+model UniquenessCard {
+  id          String   @id @default(uuid())
+  locale      String
+  order       Int
+  icon        String
+  title       String
+  description String
+  imageUrl    String?
+  updatedAt   DateTime @updatedAt
+}
+
+model AboutStat {
+  id        String   @id @default(uuid())
+  locale    String
+  order     Int
+  value     String   // e.g. "8+", "98%"
+  label     String
+  updatedAt DateTime @updatedAt
+}
+
+model AboutStatsContent {
+  id          String   @id @default(uuid())
+  locale      String   @unique
+  heading     String
+  paragraph   String
+  imageUrl    String?
+  caption     String
+  updatedAt   DateTime @updatedAt
+}
+
+model FooterContent {
+  id             String   @id @default(uuid())
+  locale         String   @unique
+  connectHeading String
+  email          String
+  supportingText String
+  ctaLabel       String
+  copyrightText  String?
+  updatedAt      DateTime @updatedAt
+}
+
+model FooterSocialLink {
+  id       String  @id @default(uuid())
+  platform String  // "instagram" | "linkedin" | "behance" | "x"
+  url      String
+  order    Int
+}
+
+model ClientLogo {
+  id        String   @id @default(uuid())
+  name      String   // company/brand name, used as alt text
+  imageUrl  String   // logo image URL
+  order     Int
+  isActive  Boolean  @default(true)  // toggle visibility without deleting
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model ServicesIntro {
+  id        String   @id @default(uuid())
+  locale    String   @unique
+  pillLabel String   // "Our Services"
+  heading   String   // "Our Marketing Services That Drive Growth."
+  ctaLabel  String   // "View All Services" button text
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  locale      String
+  order       Int
+  icon        String
+  title       String
+  description String
+  bullets     Json     // string[]
+  imageUrl    String?
+  updatedAt   DateTime @updatedAt
+}
+
+model WhyChooseUsIntro {
+  id         String   @id @default(uuid())
+  locale     String   @unique
+  pillLabel  String   // "Why Choose Us"
+  heading    String
+  paragraph  String
+  updatedAt  DateTime @updatedAt
+}
+
+model Industry {
+  id        String   @id @default(uuid())
+  locale    String
+  order     Int
+  name      String
+  updatedAt DateTime @updatedAt
+}
+
+model StatHighlightCard {
+  id             String   @id @default(uuid())
+  locale         String   @unique
+  value          String   // e.g. "94K" or agency-specific stat
+  label          String
+  imageUrl       String?
+  ctaText        String   // "Let's make great work together."
+  ctaLinkLabel   String   // "Get in touch with us"
+  updatedAt      DateTime @updatedAt
+}
+
+model WhyChooseUsCard {
+  id               String   @id @default(uuid())
+  locale           String   @unique
+  heading          String   // "Why Choose Us?"
+  paragraph        String
+  checklistItems   Json     // string[]
+  ctaLabel         String   // "Free Consultation"
+  updatedAt        DateTime @updatedAt
+}
+
+model HappyClientsCard {
+  id           String   @id @default(uuid())
+  locale       String   @unique
+  percentage   String   // "98%"
+  label        String   // "Clients stay for our quality and results."
+  avatarUrls   Json     // string[]
+  clientCount  String   // "62+"
+  updatedAt    DateTime @updatedAt
+}
+
+model SupportCard {
+  id          String   @id @default(uuid())
+  locale      String   @unique
+  badge       String   // "24/7"
+  heading     String   // "Always On Support"
+  description String
+  updatedAt   DateTime @updatedAt
+}
+
+model TestimonialsSectionIntro {
+  id        String   @id @default(uuid())
+  locale    String
+  page      String   // "home" | "services"
+  heading   String
+  updatedAt DateTime @updatedAt
+
+  @@unique([locale, page])
+}
+
+model TestimonialHighlight {
+  id             String   @id @default(uuid())
+  locale         String   @unique
+  rating         String   // "4.9"
+  reviewCount    String   // "(40+ reviews)"
+  blurb          String   // short line under the rating
+  updatedAt      DateTime @updatedAt
+}
+
+model Testimonial {
+  id           String   @id @default(uuid())
+  locale       String
+  order        Int
+  quote        String
+  clientName   String
+  clientRole   String   // e.g. "CEO, Alaxa"
+  avatarUrl    String?
+  trustBadge   String?  // e.g. "Google Reviews" label, optional
+  updatedAt    DateTime @updatedAt
+}
+
+model PortfolioHero {
+  id                String   @id @default(uuid())
+  locale            String   @unique
+  pillLabel         String   // "Case Studies"
+  heading           String
+  paragraph         String
+  primaryCtaLabel   String   // "Konsultasiya Al"
+  secondaryCtaLabel String   // "Haqqımızda"
+  backgroundImageUrl String?
+  updatedAt         DateTime @updatedAt
+}
+
+model CaseStudy {
+  id               String   @id @default(uuid())
+  locale           String
+  slug             String
+  order            Int
+  tags             Json     // string[]
+  title            String
+  colorTheme       String   // "ink" | "lime-dark" | "ink-light"
+  stat1Value       String
+  stat1Label       String
+  stat2Value       String
+  stat2Label       String
+  stat3Value       String
+  stat3Label       String
+  viewProjectLabel String
+  projectLink      String?
+  challenge        String   @default("")
+  approach         String   @default("")
+  result           String   @default("")
+  galleryImageUrls Json     // string[]
+  updatedAt        DateTime @updatedAt
+
+  @@unique([locale, slug])
+}
+
+model PortfolioFAQIntro {
+  id              String   @id @default(uuid())
+  locale          String   @unique
+  pillLabel       String   // "FAQ"
+  heading         String
+  calloutHeading  String   // "Sualınız Var?"
+  calloutText     String
+  calloutCtaLabel String   // "Bizimlə Əlaqə"
+  updatedAt       DateTime @updatedAt
+}
+
+model FAQItem {
+  id        String   @id @default(uuid())
+  locale    String
+  order     Int
+  question  String
+  answer    String
+  updatedAt DateTime @updatedAt
+}
+
+model BlogCategory {
+  id        String   @id @default(uuid())
+  locale    String
+  name      String
+  slug      String
+  order     Int
+  updatedAt DateTime @updatedAt
+  posts     BlogPost[]
+
+  @@unique([locale, slug])
+}
+
+model BlogPost {
+  id               String        @id @default(uuid())
+  locale           String
+  slug             String
+  title            String
+  excerpt          String
+  content          Json          // array of content blocks: [{ type, value }]
+  featuredImageUrl String?
+  categoryId       String?
+  category         BlogCategory? @relation(fields: [categoryId], references: [id])
+  authorName       String
+  authorAvatarUrl  String?
+  authorBio        String?
+  publishedAt      DateTime      @default(now())
+  isPublished      Boolean       @default(true)
+  updatedAt        DateTime      @updatedAt
+
+  @@unique([locale, slug])
+}
+
+model StudioIntroContent {
+  id           String   @id @default(uuid())
+  locale       String   @unique
+  overline     String   // "STUDİYA"
+  heading      String
+  paragraph    String
+  image1Url    String?
+  image2Url    String?
+  updatedAt    DateTime @updatedAt
+}
+
+model WhatWeBuildContent {
+  id              String   @id @default(uuid())
+  locale          String   @unique
+  mainImageUrl    String?
+  statValue       String   // "100%"
+  statLabel       String   // "Məmnun Müştəri"
+  statAvatarUrls  Json     // string[]
+  statCaption     String
+  heading         String
+  paragraph       String
+  ctaLabel        String   // "Haqqımızda Daha Çox Öyrən"
+  updatedAt       DateTime @updatedAt
+}
+
+model WhatWeBuildFeature {
+  id          String   @id @default(uuid())
+  locale      String
+  order       Int
+  icon        String
+  title       String
+  description String
+  updatedAt   DateTime @updatedAt
+}
+
+model MissionVisionContent {
+  id              String   @id @default(uuid())
+  locale          String   @unique
+  statValue       String   // reused "100%" stat card style
+  statLabel       String
+  statAvatarUrls  Json
+  statCaption     String
+  missionLabel    String   // "OUR MİSSİYAMIZ"
+  missionText     String
+  visionLabel     String   // "OUR VİZYONUMUZ"
+  visionText      String
+  updatedAt       DateTime @updatedAt
+}
+
+model RecommendationSnippet {
+  id        String   @id @default(uuid())
+  locale    String
+  order     Int
+  type      String   // "quote" | "stat"
+  text      String   // quote text OR stat label
+  value     String?  // stat value, only used when type = "stat"
+  avatarUrl String?  // only used when type = "quote"
+  updatedAt DateTime @updatedAt
+}
+
+model TeamMember {
+  id           String   @id @default(uuid())
+  locale       String
+  order        Int
+  name         String
+  role         String   // e.g. "Cash Flow Optimization"
+  department   String?  // e.g. "Marketinq", "Dizayn"
+  photoUrl     String?
+  linkedinUrl  String?
+  instagramUrl String?
+  isActive     Boolean  @default(true)
+  updatedAt    DateTime @updatedAt
+}
+
+model TeamIntroContent {
+  id             String   @id @default(uuid())
+  locale         String   @unique
+  pillLabel      String   // "Komandamız"
+  heading        String
+  paragraph      String
+  updatedAt      DateTime @updatedAt
+}
+
+model TeamTeaserSettings {
+  id                String   @id @default(uuid())
+  locale            String
+  page              String   // "home" | "about"
+  heading           String   // e.g. "Meet Our Experienced..."
+  viewAllLabel      String   // "View All Team"
+  displayCount      Int      @default(4)
+  updatedAt         DateTime @updatedAt
+
+  @@unique([locale, page])
+}
+
+model ContactWhyChooseUsContent {
+  id                String   @id @default(uuid())
+  locale            String   @unique
+  overline          String   // "NİYƏ THE9THWAY?"
+  chartLabel        String   // "Data Monitoring"
+  chartHeading      String
+  chartParagraph    String
+  chartBarValues    Json     // number[] e.g. [40, 65, 30, 80, 55]
+  rightHeading      String
+  rightParagraph    String
+  bandText          String   // "Harada Olursunuz Olun, Bizimlə İşləyin."
+  updatedAt         DateTime @updatedAt
+}
+
+model ContactFeatureCard {
+  id          String   @id @default(uuid())
+  locale      String
+  order       Int
+  icon        String
+  title       String
+  description String
+  updatedAt   DateTime @updatedAt
+}
+
+model ContactInfo {
+  id            String   @id @default(uuid())
+  locale        String   @unique
+  address       String
+  phone         String
+  email         String
+  workingHours  String
+  mapLatitude   Float?
+  mapLongitude  Float?
+  updatedAt     DateTime @updatedAt
+}
+
+model ContactSubmission {
+  id         String   @id @default(uuid())
+  fullName   String
+  phone      String?
+  email      String
+  message    String
+  sourcePage String   // "home" | "contact"
+  locale     String
+  status     String   @default("new") // "new" | "read" | "archived"
+  createdAt  DateTime @default(now())
+}
+
+model TranslationEntry {
+  id        String   @id @default(uuid())
+  namespace String   
+  key       String   
+  locale    String
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@unique([namespace, key, locale])
+}
+
+model AdminUser {
+  id                 String    @id @default(uuid())
+  email              String    @unique
+  passwordHash       String
+  name               String
+  role               String    @default("admin")
+  isActive           Boolean   @default(true)
+  mustChangePassword Boolean   @default(true)
+  lastLoginAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+

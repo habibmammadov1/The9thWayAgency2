@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@layer base {
+  .admin-theme {
+    /* Shadcn core mappings referencing our global colors */
+    --background: #F3F4F6; /* Cool light gray */
+    --foreground: var(--color-ink); /* True black */
+
+    --card: #FFFFFF;
+    --card-foreground: var(--color-ink);
+
+    --popover: var(--color-white);
+    --popover-foreground: var(--color-ink);
+
+    --primary: var(--color-admin-accent); /* Warm sand/beige */
+    --primary-foreground: var(--color-ink);
+
+    --secondary: var(--color-gray-200);
+    --secondary-foreground: var(--color-ink);
+
+    --muted: var(--color-gray-200);
+    --muted-foreground: var(--color-gray-500);
+
+    --accent: var(--color-gray-200);
+    --accent-foreground: var(--color-ink);
+
+    --destructive: #ef4444;
+    --destructive-foreground: var(--color-white);
+
+    --border: #E5E7EB; /* Cool gray border */
+    --input: var(--color-gray-200);
+    --ring: var(--color-accent);
+
+    --radius: 0.75rem; /* 12px for standard corners */
+  }
+}
+
+/* Force standard scrolling and basic resets inside admin */
+.admin-theme {
+  font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--foreground);
+}

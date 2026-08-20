@@ -227,6 +227,8 @@ export interface BlogPost {
   category: string;
   comments: number;
   image: string;
+  content: string;
+  authorAvatarUrl?: string;
 }
 
 export const getBlogPosts = (t: any): BlogPost[] => {
@@ -240,5 +242,7 @@ export const getBlogPosts = (t: any): BlogPost[] => {
     category: t(`posts.${idx}.category`),
     comments: parseInt(t(`posts.${idx}.comments`)) || 0,
     image: t(`posts.${idx}.image`),
+    content: t.raw(`posts.${idx}.content`),
+    authorAvatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100&auto=format&fit=crop",
   }));
 };

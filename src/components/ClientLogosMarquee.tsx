@@ -4,10 +4,14 @@ import React from "react";
 import { LOGOS } from "@/lib/data";
 import { useTranslations } from "next-intl";
 
-export default function ClientLogosMarquee() {
+export default function ClientLogosMarquee({ logos }: { logos?: any[] }) {
   const t = useTranslations("ClientLogos");
+  
+  // Use dynamic logos if available and not empty, otherwise fallback to static LOGOS
+  const activeLogos = logos && logos.length > 0 ? logos : LOGOS;
+  
   // Duplicate array to ensure seamless infinite scroll
-  const duplicatedLogos = [...LOGOS, ...LOGOS, ...LOGOS];
+  const duplicatedLogos = [...activeLogos, ...activeLogos, ...activeLogos];
 
   return (
     <section className="w-full bg-[#0B0B0C] py-8 border-b border-white/5 relative overflow-hidden flex items-center">
@@ -27,10 +31,9 @@ export default function ClientLogosMarquee() {
             className="flex-shrink-0 flex items-center justify-center w-40 md:w-56 mx-4"
           >
             <img 
-              src={logo.src} 
+              src={logo.imageUrl || logo.src} 
               alt={logo.name} 
-              className="h-6 md:h-8 object-contain filter grayscale opacity-60 transition-all duration-300 group-hover:hover:grayscale-0 group-hover:hover:opacity-100"
-              style={{ filter: "brightness(0) invert(1)" }} // Forces logos to white initially for dark bg
+              className="h-8 md:h-12 lg:h-14 object-contain grayscale opacity-60 transition-all duration-300 group-hover:hover:grayscale-0 group-hover:hover:opacity-100"
             />
           </div>
         ))}

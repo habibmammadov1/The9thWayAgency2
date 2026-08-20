@@ -26,11 +26,12 @@ export default function AnimatedCounter({ value, suffix = "", duration = 2 }: An
   }, [isInView, value, motionValue]);
 
   useEffect(() => {
-    springValue.on("change", (latest) => {
+    const unsubscribe = springValue.on("change", (latest) => {
       if (ref.current) {
         ref.current.textContent = Math.round(latest).toString();
       }
     });
+    return () => unsubscribe();
   }, [springValue]);
 
   return (

@@ -10,6 +10,7 @@ import {NextIntlClientProvider} from 'next-intl';
 import {getMessages, setRequestLocale} from 'next-intl/server';
 import {routing} from '@/i18n/routing';
 import {notFound} from 'next/navigation';
+import { fetchFooter } from "@/lib/api";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://the9thway.com"),
@@ -58,16 +59,18 @@ export default async function RootLayout({
 
   setRequestLocale(locale);
   const messages = await getMessages();
+  
+  const footerData = await fetchFooter(locale);
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className={`${gilroy.variable} ${belwe.variable} antialiased`} suppressHydrationWarning>
+    <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
+      <body className={`${gilroy.variable} ${belwe.variable} font-sans bg-[#0B0B0C] text-[#E4E2DF] antialiased`} suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
+          <ScrollProgressBar />
+          <Navbar />
           <SmoothScrollProvider>
-            <ScrollProgressBar />
-            <Navbar />
             {children}
-            <Footer />
+            <Footer data={footerData} locale={locale} />
           </SmoothScrollProvider>
         </NextIntlClientProvider>
       </body>

@@ -13,6 +13,8 @@ interface BlogSidebarProps {
   recentPosts: BlogPost[];
   selectedCategory: string | null;
   onSelectCategory: (category: string | null) => void;
+  searchQuery: string;
+  onSearchQueryChange: (query: string) => void;
 }
 
 const widgetVariants: Variants = {
@@ -28,14 +30,18 @@ const widgetVariants: Variants = {
   }),
 };
 
-export default function BlogSidebar({ categories, recentPosts, selectedCategory, onSelectCategory }: BlogSidebarProps) {
+export default function BlogSidebar({ 
+  categories, 
+  recentPosts, 
+  selectedCategory, 
+  onSelectCategory,
+  searchQuery,
+  onSearchQueryChange
+}: BlogSidebarProps) {
   const t = useTranslations("BlogsPage");
-  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would filter by search query
-    console.log("Searching for:", searchQuery);
   };
 
   return (
@@ -55,16 +61,16 @@ export default function BlogSidebar({ categories, recentPosts, selectedCategory,
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => onSearchQueryChange(e.target.value)}
             placeholder={t("searchPlaceholder")}
             className="w-full h-12 bg-paper rounded-xl pl-4 pr-14 text-sm font-medium text-black placeholder:text-gray-500 border border-transparent focus:outline-none transition-all duration-300"
           />
           {/* Animated bottom border on focus/hover for input */}
-          <div className="absolute left-0 bottom-0 w-full h-[2px] bg-accent scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500 origin-left rounded-b-xl" />
+          <div className="absolute left-0 bottom-0 w-full h-[2px] bg-[#D9C2A0] scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500 origin-left rounded-b-xl" />
           
           <button 
             type="submit" 
-            className="absolute right-1 top-1 bottom-1 w-10 bg-accent rounded-lg flex items-center justify-center hover:scale-[1.05] transition-transform shadow-sm"
+            className="absolute right-1 top-1 bottom-1 w-10 bg-[#D9C2A0] rounded-lg flex items-center justify-center hover:scale-[1.05] transition-transform shadow-sm"
           >
             <Search size={18} className="text-black" />
           </button>
@@ -87,14 +93,14 @@ export default function BlogSidebar({ categories, recentPosts, selectedCategory,
             onClick={() => onSelectCategory(null)}
             className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all duration-300 group ${
               selectedCategory === null 
-                ? "border-accent bg-accent/10" 
-                : "border-gray-200 bg-white hover:border-accent hover:bg-accent/5"
+                ? "border-[#D9C2A0] bg-[#D9C2A0]/15" 
+                : "border-gray-200 bg-white hover:border-[#D9C2A0] hover:bg-[#D9C2A0]/5"
             }`}
           >
             <span className={`text-sm font-semibold transition-colors ${selectedCategory === null ? "text-black" : "text-gray-500 group-hover:text-black"}`}>
               {t("allCategories")}
             </span>
-            <ChevronRight size={16} className={`transition-all duration-300 ${selectedCategory === null ? "text-accent opacity-100 translate-x-0" : "text-accent opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"}`} />
+            <ChevronRight size={16} className={`transition-all duration-300 ${selectedCategory === null ? "text-[#A38B68] opacity-100 translate-x-0" : "text-[#A38B68] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"}`} />
           </button>
 
           {categories.map((cat, i) => (
@@ -103,14 +109,14 @@ export default function BlogSidebar({ categories, recentPosts, selectedCategory,
               onClick={() => onSelectCategory(cat)}
               className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all duration-300 group ${
                 selectedCategory === cat 
-                  ? "border-accent bg-accent/10" 
-                  : "border-gray-200 bg-white hover:border-accent hover:bg-accent/5"
+                  ? "border-[#D9C2A0] bg-[#D9C2A0]/15" 
+                  : "border-gray-200 bg-white hover:border-[#D9C2A0] hover:bg-[#D9C2A0]/5"
               }`}
             >
               <span className={`text-sm font-semibold transition-colors ${selectedCategory === cat ? "text-black" : "text-gray-500 group-hover:text-black"}`}>
                 {cat}
               </span>
-              <ChevronRight size={16} className={`transition-all duration-300 ${selectedCategory === cat ? "text-accent opacity-100 translate-x-0" : "text-accent opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"}`} />
+              <ChevronRight size={16} className={`transition-all duration-300 ${selectedCategory === cat ? "text-[#A38B68] opacity-100 translate-x-0" : "text-[#A38B68] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"}`} />
             </button>
           ))}
         </div>
@@ -140,10 +146,10 @@ export default function BlogSidebar({ categories, recentPosts, selectedCategory,
               </div>
               <div className="flex flex-col flex-1">
                 <div className="flex items-center gap-1.5 text-xs font-medium text-gray-500 mb-2">
-                  <Calendar size={12} className="text-accent" />
+                  <Calendar size={12} className="text-[#A38B68]" />
                   <span>{post.date}</span>
                 </div>
-                <h4 className="text-sm font-bold text-black leading-tight line-clamp-2 group-hover:text-accent transition-colors">
+                <h4 className="text-sm font-bold text-black leading-tight line-clamp-2 group-hover:text-[#A38B68] transition-colors">
                   {post.title}
                 </h4>
               </div>

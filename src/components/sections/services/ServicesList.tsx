@@ -70,9 +70,8 @@ const ConcentricIcon = () => (
   </div>
 );
 
-export default function ServicesList() {
-  const t = useTranslations("ServicesPage");
-  const [activeIndex, setActiveIndex] = useState(1);
+export default function ServicesList({ initialData }: { initialData?: any }) {
+  const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -82,20 +81,16 @@ export default function ServicesList() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const servicesList = [0, 1, 2, 3, 4].map(idx => ({
+  const data = initialData || { intro: {}, services: [] };
+  const servicesList = data.services.length > 0 ? data.services : [0, 1, 2, 3, 4].map(idx => ({
     id: idx,
-    title: t(`services.${idx}.title`),
-    desc: t(`services.${idx}.desc`),
-    features: [
-      t(`services.${idx}.features.0`),
-      t(`services.${idx}.features.1`),
-      t(`services.${idx}.features.2`),
-      t(`services.${idx}.features.3`),
-    ],
+    title: `Service ${idx}`,
+    desc: `Description for service ${idx}`,
+    bullets: ["Feature 1", "Feature 2", "Feature 3", "Feature 4"],
     image: SERVICES_PAGE_DATA[idx]?.image || SERVICES_PAGE_DATA[0].image
   }));
 
-  const activeData = servicesList[activeIndex];
+  const activeData = servicesList[activeIndex] || servicesList[0];
 
   return (
     <section className="relative w-full bg-paper pt-24 pb-32">
@@ -111,7 +106,7 @@ export default function ServicesList() {
         >
           {/* Pill removed per request */}
           <h2 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold text-black leading-[1.1] max-w-4xl tracking-tight mt-8 lg:mt-12">
-            {t("heading")}
+            {data.intro?.heading || "Böyüməni Təmin Edən Marketinq Xidmətlərimiz."}
           </h2>
         </motion.div>
 
@@ -127,7 +122,7 @@ export default function ServicesList() {
             {/* Column 1: List */}
             <div className="col-span-4 flex flex-col gap-4 relative">
               <div className="flex flex-col gap-3">
-                {servicesList.map((service, idx) => {
+                {servicesList.map((service: any, idx: number) => {
                   const isActive = activeIndex === idx;
                   return (
                     <button
@@ -158,7 +153,7 @@ export default function ServicesList() {
               <button className="mt-4 w-full relative overflow-hidden rounded-2xl p-[2px] group">
                 <span className="absolute inset-0 bg-gradient-to-r from-ink via-accent to-ink bg-[length:200%_auto] animate-[gradient_3s_linear_infinite]" />
                 <div className="relative bg-black px-6 py-6 rounded-2xl flex items-center justify-between group-hover:bg-transparent transition-colors duration-500">
-                  <span className="text-white font-bold group-hover:text-black transition-colors">{t("viewAll")}</span>
+                  <span className="text-white font-bold group-hover:text-black transition-colors">{data.intro?.ctaLabel || "Bütün Xidmətlərə Bax"}</span>
                   <ArrowRight className="text-accent group-hover:text-black transition-colors" />
                 </div>
               </button>
@@ -177,15 +172,15 @@ export default function ServicesList() {
                 >
                   <ConcentricIcon />
                   
-                  <p className="text-gray-200 text-lg leading-relaxed mb-10 min-h-[120px]">
-                    {activeData.desc}
+                  <p className="text-gray-600 text-lg leading-relaxed mb-10 min-h-[120px]">
+                    {activeData.description || activeData.desc}
                   </p>
 
-                  <ul className="flex flex-col gap-4 mb-12">
-                    {activeData.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm font-medium text-gray-500">
-                        <span className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_5px_rgba(217,194,160,0.5)] shrink-0" />
-                        {feature}
+                  <ul className="space-y-4 mb-10 w-full">
+                    {(activeData.bullets || activeData.features || []).map((feature: string, idx: number) => (
+                      <li key={idx} className="flex items-center gap-4 border-b border-black/5 pb-3 w-full group">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent group-hover:scale-150 transition-transform" />
+                        <span className="text-black font-medium">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -194,7 +189,7 @@ export default function ServicesList() {
 
               {/* Bottom Read More Action */}
               <div className="flex items-center gap-4 mt-auto">
-                <span className="text-gray-500 text-sm font-semibold tracking-wide">{t("readMore")}</span>
+                <span className="text-gray-500 text-sm font-semibold tracking-wide">Daha Ətraflı</span>
                 <div className="flex-1 h-[1px] bg-gray-500" />
                 <button className="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center hover:bg-accent hover:text-black text-white transition-colors duration-300">
                   <ArrowRight size={16} />
@@ -214,8 +209,8 @@ export default function ServicesList() {
                   className="absolute inset-0"
                 >
                   <Image 
-                    src={activeData.image}
-                    alt={activeData.title}
+                    src={activeData.imageUrl || activeData.image || SERVICES_PAGE_DATA[0].image}
+                    alt={activeData.title || "Service image"}
                     fill
                     className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                     sizes="(max-width: 1280px) 33vw, 400px"
@@ -232,7 +227,7 @@ export default function ServicesList() {
         {/* Mobile Accordion Layout */}
         {isMobile && (
           <div className="flex flex-col gap-4 bg-gradient-to-br from-[var(--color-ink)] to-[var(--color-ink-light)] rounded-3xl p-4 shadow-2xl">
-            {servicesList.map((service, idx) => {
+            {servicesList.map((service: any, idx: number) => {
               const isActive = activeIndex === idx;
               return (
                 <div key={idx} className="flex flex-col">
@@ -269,10 +264,10 @@ export default function ServicesList() {
                         <div className="p-5 flex flex-col gap-6">
                           <ConcentricIcon />
                           <p className="text-gray-200 text-sm leading-relaxed">
-                            {service.desc}
+                            {service.description || service.desc}
                           </p>
                           <ul className="flex flex-col gap-3">
-                            {service.features.map((feature, i) => (
+                            {(service.bullets || service.features || []).map((feature: string, i: number) => (
                               <li key={i} className="flex items-center gap-3 text-xs font-medium text-gray-500">
                                 <span className="w-1 h-1 rounded-full bg-accent shadow-[0_0_5px_rgba(217,194,160,0.5)] shrink-0" />
                                 {feature}
@@ -282,8 +277,8 @@ export default function ServicesList() {
                           
                           <div className="relative w-full h-[250px] rounded-xl overflow-hidden mt-4">
                             <Image 
-                              src={service.image}
-                              alt={service.title}
+                              src={service.imageUrl || service.image || SERVICES_PAGE_DATA[idx]?.image || SERVICES_PAGE_DATA[0].image}
+                              alt={service.title || "Service image"}
                               fill
                               className="object-cover grayscale"
                               sizes="100vw"
@@ -292,7 +287,7 @@ export default function ServicesList() {
                           </div>
 
                           <button className="flex items-center justify-center gap-3 w-full py-4 mt-2 bg-gray-500 rounded-xl hover:bg-accent hover:text-black text-white transition-colors font-semibold text-sm">
-                            {t("readMore")}
+                            Daha Ətraflı
                             <ArrowRight size={16} />
                           </button>
                         </div>
@@ -306,7 +301,7 @@ export default function ServicesList() {
             <button className="mt-2 w-full relative overflow-hidden rounded-2xl p-[1px] group">
               <span className="absolute inset-0 bg-gradient-to-r from-ink via-accent to-ink bg-[length:200%_auto] animate-[gradient_3s_linear_infinite]" />
               <div className="relative bg-black px-5 py-5 rounded-2xl flex items-center justify-between group-hover:bg-transparent transition-colors duration-500">
-                <span className="text-white font-bold text-sm group-hover:text-black transition-colors">{t("viewAll")}</span>
+                <span className="text-white font-bold text-sm group-hover:text-black transition-colors">{data.intro?.ctaLabel || "Bütün Xidmətlərə Bax"}</span>
                 <ArrowRight size={18} className="text-accent group-hover:text-black transition-colors" />
               </div>
             </button>

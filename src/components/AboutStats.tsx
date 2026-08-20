@@ -7,7 +7,12 @@ import Image from "next/image";
 import { STATS, AVATARS } from "@/lib/data";
 import { useTranslations } from "next-intl";
 
-export default function AboutStats() {
+interface AboutStatsProps {
+  data?: any;
+  locale?: string;
+}
+
+export default function AboutStats({ data, locale }: AboutStatsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -18,6 +23,7 @@ export default function AboutStats() {
   const imageY = useTransform(scrollYProgress, [0, 1], [-50, 50]);
 
   const t = useTranslations("AboutStats");
+  const stats = data?.stats && data.stats.length > 0 ? data.stats : STATS;
 
   return (
     <section className="w-full bg-white text-[#0B0B0C] pt-12 md:pt-16 pb-8 md:pb-12 border-t border-[#E4E2DF]">
@@ -60,26 +66,36 @@ export default function AboutStats() {
 
           {/* Right: Content & Stats */}
           <motion.div 
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
             viewport={{ once: true, margin: "-100px" }}
             className="flex flex-col"
           >
-            <h2 className="heading-section mb-6">{t("title")}</h2>
+            <h2 className="heading-section mb-6">{data?.title || t("title")}</h2>
             <p className="text-[#8A8A87] text-lg leading-relaxed mb-12">
-              {t("desc")}
+              {data?.desc || t("desc")}
             </p>
 
             <div className="grid grid-cols-2 gap-x-8 gap-y-12">
-              {STATS.map((stat) => (
-                <div key={stat.id}>
-                  <div className="text-4xl md:text-5xl lg:text-6xl text-[#0B0B0C] mb-2">
-                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+              {stats.map((stat: any, index: number) => {
+                // If it's real data, the value might be "250+", let's split it for the counter.
+                const rawVal = String(stat.value || "");
+                const numMatch = rawVal.match(/(\d+)/);
+                const valStr = numMatch ? numMatch[0] : "0";
+                const suffix = rawVal.replace(valStr, "");
+                
+                return (
+                  <div key={stat.id || index}>
+                    <div className="text-4xl md:text-5xl lg:text-6xl text-[#0B0B0C] mb-2 font-display">
+                      <AnimatedCounter value={parseInt(valStr, 10) || 0} suffix={suffix} />
+                    </div>
+                    <p className="text-sm font-medium tracking-wide uppercase text-[#8A8A87]">
+                      {stat.label || t(`stats.stat${index + 1}`)}
+                    </p>
                   </div>
-                  <p className="text-sm font-medium tracking-wide uppercase text-[#8A8A87]">{t(`stats.stat${stat.id}`)}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
 

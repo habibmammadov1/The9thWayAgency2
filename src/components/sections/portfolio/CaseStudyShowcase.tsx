@@ -16,28 +16,41 @@ const svgIcons = [
   <svg key="4" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-accent opacity-50"><path d="M12 2L2 12l10 10 10-10L12 2z"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
 ];
 
-const cardColors = [
-  "bg-ink",
-  "bg-ink-light",
-  "bg-[#1A1A1A]",
-  "bg-[#2A2A2A]"
-];
+interface CaseStudyItem {
+  id: string;
+  slug: string;
+  tags: any; // string[] or JSON
+  title: string;
+  colorTheme: string;
+  stat1Value: string;
+  stat1Label: string;
+  stat2Value: string;
+  stat2Label: string;
+  stat3Value: string;
+  stat3Label: string;
+  viewProjectLabel: string;
+  projectLink?: string | null;
+}
 
-export default function CaseStudyShowcase() {
+export default function CaseStudyShowcase({ initialData }: { initialData?: CaseStudyItem[] | null }) {
   const t = useTranslations("PortfolioPage.CaseStudies");
   
-  const cases = [0, 1, 2, 3];
+  const cases = initialData && initialData.length > 0 
+    ? initialData 
+    : [0, 1, 2, 3];
 
   return (
     <section className="w-full bg-paper py-24 overflow-hidden">
       <div className="container mx-auto">
         <div className="flex flex-col gap-32">
-          {cases.map((idx) => {
+          {cases.map((item, idx) => {
+            const isDynamic = typeof item !== "number";
             return (
               <CaseStudyRow 
-                key={idx}
+                key={isDynamic ? (item as CaseStudyItem).id : idx}
                 idx={idx}
                 isReversed={idx % 2 !== 0}
+                data={isDynamic ? (item as CaseStudyItem) : undefined}
                 t={t}
               />
             );
@@ -48,7 +61,31 @@ export default function CaseStudyShowcase() {
   );
 }
 
-function CaseStudyRow({ idx, isReversed, t }: { idx: number, isReversed: boolean, t: any }) {
+const cardColors = [
+  "bg-ink",
+  "bg-ink-light",
+  "bg-[#1A1A1A]",
+  "bg-[#2A2A2A]"
+];
+
+function getCardColor(colorTheme: string, idx: number) {
+  if (colorTheme === "ink") return "bg-ink";
+  if (colorTheme === "lime-dark") return "bg-[#8DE45F]";
+  if (colorTheme === "ink-light") return "bg-ink-light";
+  return cardColors[idx % cardColors.length];
+}
+
+function CaseStudyRow({ 
+  idx, 
+  isReversed, 
+  data, 
+  t 
+}: { 
+  idx: number; 
+  isReversed: boolean; 
+  data?: CaseStudyItem; 
+  t: any; 
+}) {
   const rowRef = useRef<HTMLDivElement>(null);
   
   const { scrollYProgress } = useScroll({
@@ -58,8 +95,34 @@ function CaseStudyRow({ idx, isReversed, t }: { idx: number, isReversed: boolean
   
   const imgParallax = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
-  const tags: string[] = t.raw(`cases.${idx}.tags`);
-  const stats: {value: string, label: string}[] = t.raw(`cases.${idx}.stats`);
+  // Resolve tags
+  let tags: string[] = [];
+  if (data) {
+    if (Array.isArray(data.tags)) {
+      tags = data.tags;
+    } else {
+      try {
+        tags = typeof data.tags === "string" ? JSON.parse(data.tags) : [];
+      } catch (e) {
+        tags = [];
+      }
+    }
+  } else {
+    tags = t.raw(`cases.${idx}.tags`);
+  }
+
+  // Resolve stats
+  const stats = data ? [
+    { value: data.stat1Value, label: data.stat1Label },
+    { value: data.stat2Value, label: data.stat2Label },
+    { value: data.stat3Value, label: data.stat3Label },
+  ] : t.raw(`cases.${idx}.stats`) as { value: string; label: string }[];
+
+  const title = data ? data.title : t(`cases.${idx}.title`);
+  const viewProject = data ? data.viewProjectLabel : t("viewProject");
+  const fallbackSlugs = ["aurora", "nexus", "zenith", "lumina"];
+  const link = data ? `/portfolio/${data.slug}` : `/portfolio/${fallbackSlugs[idx % fallbackSlugs.length]}`;
+  const themeColor = data ? getCardColor(data.colorTheme, idx) : cardColors[idx % cardColors.length];
 
   return (
     <motion.div 
@@ -72,7 +135,7 @@ function CaseStudyRow({ idx, isReversed, t }: { idx: number, isReversed: boolean
     >
       {/* Image Side */}
       <div className="w-full lg:w-1/2 relative overflow-hidden rounded-[2rem] aspect-[4/3] flex items-center justify-center">
-        <div className={`absolute inset-0 ${cardColors[idx % cardColors.length]}`} />
+        <div className={`absolute inset-0 ${themeColor}`} />
         <motion.div style={{ y: imgParallax }} className="relative z-10 scale-150">
           {svgIcons[idx % svgIcons.length]}
         </motion.div>
@@ -91,7 +154,7 @@ function CaseStudyRow({ idx, isReversed, t }: { idx: number, isReversed: boolean
 
         {/* Title */}
         <h3 className="text-3xl md:text-5xl font-display font-bold text-ink leading-[1.1] mb-8">
-          {t(`cases.${idx}.title`)}
+          {title}
         </h3>
 
         {/* Divider */}
@@ -110,10 +173,10 @@ function CaseStudyRow({ idx, isReversed, t }: { idx: number, isReversed: boolean
         {/* View Project Button */}
         <div>
           <Link 
-            href="#"
+            href={link}
             className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-ink text-white font-semibold hover:bg-accent hover:text-ink transition-colors duration-300"
           >
-            {t("viewProject")}
+            {viewProject}
           </Link>
         </div>
       </div>

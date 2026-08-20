@@ -30,7 +30,12 @@ const SOCIAL_LINKS = [
   { icon: Twitter, href: "#" },
 ];
 
-export default function Footer() {
+interface FooterProps {
+  data?: any;
+  locale?: string;
+}
+
+export default function Footer({ data, locale }: FooterProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -69,18 +74,18 @@ export default function Footer() {
             className="flex-1 flex flex-col items-start w-full"
           >
             <h4 className="text-[#8A8A87] font-medium tracking-wide flex items-center gap-1 mb-8 text-xl">
-              {tFooter("stayConnected")} <sup className="text-sm -mt-2">®</sup>
+              {data?.stayConnected || tFooter("stayConnected")} <sup className="text-sm -mt-2">®</sup>
             </h4>
             
             <a 
-              href="mailto:hello@the9thway.com" 
+              href={`mailto:${data?.email || "hello@the9thway.com"}`} 
               className="text-4xl md:text-5xl lg:text-[5rem] font-bold underline decoration-[3px] underline-offset-[12px] decoration-black/20 hover:decoration-black transition-colors duration-300 mb-8 w-full truncate"
             >
-              hello@the9thway.com
+              {data?.email || "hello@the9thway.com"}
             </a>
             
             <p className="text-lg md:text-xl text-[#8A8A87] font-medium max-w-md leading-relaxed mb-12">
-              {tFooter("desc")}
+              {data?.desc || tFooter("desc")}
             </p>
             <MagneticButtonWrapper pullStrength={0.15}>
               <Link href="/contact" className="group relative flex items-center gap-4 rounded-full bg-[#0B0B0C] pl-2 pr-6 py-2 text-white overflow-hidden transition-colors duration-300">
@@ -88,7 +93,7 @@ export default function Footer() {
                 <div className="relative z-10 w-10 h-10 bg-[#d9c2a0] rounded-full flex items-center justify-center text-black">
                   <ArrowRight size={18} className="group-hover:-rotate-45 transition-transform duration-300" />
                 </div>
-                <span className="relative z-10 font-semibold tracking-wide text-sm">{tFooter("contactNow")}</span>
+                <span className="relative z-10 font-semibold tracking-wide text-sm">{data?.contactNow || tFooter("contactNow")}</span>
               </Link>
             </MagneticButtonWrapper>
           </motion.div>
@@ -143,12 +148,24 @@ export default function Footer() {
 
           {/* Social Links Block */}
           <div className="bg-white rounded-3xl p-2.5 flex gap-2 shadow-sm shrink-0 mb-2 md:mb-6 z-10">
-            {SOCIAL_LINKS.map((social, idx) => {
-              const Icon = social.icon;
+            {(data?.socials?.length > 0 ? data.socials : SOCIAL_LINKS).map((social: any, idx: number) => {
+              const platformMap: Record<string, any> = {
+                instagram: Instagram,
+                linkedin: Linkedin,
+                dribbble: Dribbble,
+                twitter: Twitter,
+                x: Twitter
+              };
+              
+              const platform = typeof social.platform === 'string' ? social.platform.toLowerCase() : '';
+              const Icon = social.icon || platformMap[platform] || Twitter;
+
               return (
                 <a 
                   key={idx}
-                  href={social.href}
+                  href={social.url || social.href || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-12 h-12 md:w-14 md:h-14 rounded-full border border-[#E4E2DF] flex items-center justify-center text-[#0B0B0C] transition-all duration-300 hover:bg-[#d9c2a0] hover:scale-110 hover:border-transparent group"
                 >
                   <Icon size={20} className="group-hover:rotate-12 transition-transform duration-300" />
@@ -160,7 +177,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="flex flex-col sm:flex-row justify-between items-center py-8 border-t border-[#E4E2DF] text-sm text-[#8A8A87] font-medium">
-          <p>{tFooter("copyright")}</p>
+          <p>{data?.copyright || tFooter("copyright")}</p>
           <button 
             onClick={scrollToTop}
             className="flex items-center gap-2 text-[#0B0B0C] hover:text-[#8A8A87] transition-colors mt-6 sm:mt-0 group uppercase font-bold tracking-widest text-[11px]"

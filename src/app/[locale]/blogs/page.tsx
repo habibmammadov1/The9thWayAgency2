@@ -1,18 +1,44 @@
 import React from "react";
 import { setRequestLocale } from "next-intl/server";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 import BlogLayoutWrapper from "@/components/sections/blogs/BlogLayoutWrapper";
-import { getBlogPosts } from "@/lib/data";
+import { fetchBlogPosts } from "@/lib/api";
 
-export default function BlogsPage({ params: { locale } }: { params: { locale: string } }) {
+interface PageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function BlogsPage({ params }: PageProps) {
+  const { locale } = await params;
   // Enable static rendering
   setRequestLocale(locale);
 
-  const t = useTranslations("BlogsPage");
+  const t = await getTranslations("BlogsPage");
 
-  // Fetch posts dynamically using translated keys, centralized in lib/data
-  const posts = getBlogPosts(t);
+  // Fetch posts dynamically from database API (retrieve up to 100 for the list)
+  const dbData = await fetchBlogPosts(locale, 1, "", "", 100);
+  const dbPosts = dbData?.posts || [];
+
+  // Map database posts to public BlogPost format
+  const posts = dbPosts.map((post: any) => ({
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt,
+    author: post.authorName,
+    role: post.authorBio || "",
+    date: post.publishedAt 
+      ? new Date(post.publishedAt).toLocaleDateString(
+          locale === "en" ? "en-US" : locale === "ru" ? "ru-RU" : "az-AZ",
+          { year: "numeric", month: "long", day: "numeric" }
+        )
+      : "",
+    category: post.category ? post.category.name : "",
+    comments: 0,
+    image: post.featuredImageUrl || "",
+    content: "", // HTML content is only parsed on details page
+    authorAvatarUrl: post.authorAvatarUrl || "",
+  }));
 
   return (
     <main className="w-full bg-paper min-h-screen pt-24 pb-32">

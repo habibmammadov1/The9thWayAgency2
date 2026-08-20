@@ -9,6 +9,8 @@
   --color-gray-500: #8A8A8A;
   --color-gray-200: #E4E4E1;
   --color-accent: #D9C2A0;
+  --color-admin-accent: #D9C2A0;
+  --color-ink-lighter: #3D3D3D;
 
   --font-sans: var(--font-gilroy), system-ui, sans-serif;
   --font-display: var(--font-belwe), Georgia, serif;

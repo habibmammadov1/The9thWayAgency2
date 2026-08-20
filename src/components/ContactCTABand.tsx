@@ -14,8 +14,8 @@ export default function ContactCTABand() {
       
       {/* Background Subtle Gradient Blobs (reusing hero-style treatment) */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute -top-1/2 -left-1/4 w-[1000px] h-[1000px] bg-accent/20 rounded-full blur-[120px] mix-blend-screen" />
-        <div className="absolute -bottom-1/2 -right-1/4 w-[800px] h-[800px] bg-accent/10 rounded-full blur-[100px] mix-blend-screen" />
+        <div className="absolute -top-1/2 -left-1/4 w-[1000px] h-[1000px] bg-[#D9C2A0]/20 rounded-full blur-[120px] mix-blend-screen" />
+        <div className="absolute -bottom-1/2 -right-1/4 w-[800px] h-[800px] bg-[#D9C2A0]/10 rounded-full blur-[100px] mix-blend-screen" />
       </div>
 
       <div className="container relative z-10 mx-auto px-6 md:px-12 text-center flex flex-col items-center">
@@ -48,7 +48,7 @@ export default function ContactCTABand() {
         >
           <Link
             href="/contact"
-            className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-accent text-black rounded-full font-bold uppercase tracking-widest text-sm overflow-hidden transition-transform hover:scale-105 shadow-[0_0_40px_rgba(214,255,63,0.15)]"
+            className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D9C2A0] text-black rounded-full font-bold uppercase tracking-widest text-sm overflow-hidden transition-transform hover:scale-105 shadow-[0_0_40px_rgba(217,194,160,0.15)]"
           >
             {/* Magnetic Hover Background Effect */}
             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />

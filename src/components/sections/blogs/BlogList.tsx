@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { Calendar, MessageSquare, Tag, ArrowRight } from "lucide-react";
 import { BlogPost } from "@/lib/data";
 
@@ -24,21 +24,20 @@ const cardVariants: Variants = {
 interface BlogListProps {
   posts: BlogPost[];
   selectedCategory: string | null;
+  searchQuery?: string;
 }
 
-export default function BlogList({ posts, selectedCategory }: BlogListProps) {
+export default function BlogList({ posts, selectedCategory, searchQuery }: BlogListProps) {
   const t = useTranslations("BlogsPage");
   const [visiblePosts, setVisiblePosts] = useState(3);
   
-  // Filter posts based on category
-  const filteredPosts = selectedCategory 
-    ? posts.filter(p => p.category === selectedCategory)
-    : posts;
+  // Wrapper already filters posts based on category and search query
+  const filteredPosts = posts;
 
-  // Reset pagination when category changes
+  // Reset pagination when category or search query changes
   useEffect(() => {
     setVisiblePosts(3);
-  }, [selectedCategory]);
+  }, [selectedCategory, searchQuery]);
 
   const handleLoadMore = () => {
     setVisiblePosts((prev) => Math.min(prev + 2, filteredPosts.length));
@@ -70,7 +69,7 @@ export default function BlogList({ posts, selectedCategory }: BlogListProps) {
                 />
                 {/* Subtle duotone/tint overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
-                <div className="absolute inset-0 bg-accent mix-blend-overlay opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-[#D9C2A0] mix-blend-overlay opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
               </Link>
 
               {/* Content Container */}
@@ -81,7 +80,12 @@ export default function BlogList({ posts, selectedCategory }: BlogListProps) {
                   {/* Author */}
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 rounded-full bg-gray-200 overflow-hidden relative border border-gray-300">
-                      <Image src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100&auto=format&fit=crop" alt="Author" fill className="object-cover grayscale" />
+                      <Image 
+                        src={post.authorAvatarUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100&auto=format&fit=crop"} 
+                        alt="Author" 
+                        fill 
+                        className="object-cover grayscale" 
+                      />
                     </div>
                     <span className="text-black font-semibold">{post.author}</span>
                   </div>
@@ -97,7 +101,7 @@ export default function BlogList({ posts, selectedCategory }: BlogListProps) {
                   <div className="w-1 h-1 rounded-full bg-gray-300 hidden md:block" />
 
                   {/* Category */}
-                  <div className="flex items-center gap-1.5 cursor-pointer hover:text-accent transition-colors">
+                  <div className="flex items-center gap-1.5 cursor-pointer hover:text-[#A38B68] transition-colors">
                     <Tag size={14} className="text-current" />
                     <span>{post.category}</span>
                   </div>
@@ -113,7 +117,7 @@ export default function BlogList({ posts, selectedCategory }: BlogListProps) {
 
                 {/* Title & Excerpt */}
                 <Link href={`/blogs/${post.slug}`} className="group/title">
-                  <h3 className="text-2xl md:text-3xl font-display font-bold text-black leading-[1.2] mb-4 group-hover/title:text-accent transition-colors duration-300 line-clamp-2">
+                  <h3 className="text-2xl md:text-3xl font-display font-bold text-black leading-[1.2] mb-4 group-hover/title:text-[#A38B68] transition-colors duration-300 line-clamp-2">
                     {post.title}
                   </h3>
                 </Link>
@@ -125,7 +129,7 @@ export default function BlogList({ posts, selectedCategory }: BlogListProps) {
                 <div className="mt-auto">
                   <Link href={`/blogs/${post.slug}`} className="inline-flex items-center gap-4 group/btn">
                     <span className="text-black text-sm font-bold tracking-widest uppercase">{t("exploreMore")}</span>
-                    <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center shadow-sm group-hover/btn:translate-x-1.5 transition-transform duration-300">
+                    <div className="w-10 h-10 rounded-full bg-[#D9C2A0] flex items-center justify-center shadow-sm group-hover/btn:translate-x-1.5 transition-transform duration-300">
                       <ArrowRight size={18} className="text-black" />
                     </div>
                   </Link>

@@ -14,14 +14,38 @@ const TESTIMONIAL_IMAGES = [
   "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=600&auto=format&fit=crop"
 ];
 
-export default function PortfolioTestimonials() {
+interface TestimonialItem {
+  id: string;
+  quote: string;
+  clientName: string;
+  clientRole: string;
+  avatarUrl?: string | null;
+  trustBadge?: string | null;
+}
+
+interface PortfolioTestimonialsProps {
+  headingOverride?: string;
+  initialList?: TestimonialItem[] | null;
+}
+
+export default function PortfolioTestimonials({ headingOverride, initialList }: PortfolioTestimonialsProps) {
   const t = useTranslations("PortfolioPage.Testimonials");
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
-  const reviews = [0, 1, 2];
+  const headingText = headingOverride || t("heading");
+
+  const fallbackList = [0, 1, 2].map((idx) => ({
+    id: String(idx),
+    quote: t.raw(`reviews.${idx}.quote`),
+    clientName: t.raw(`reviews.${idx}.name`),
+    clientRole: t.raw(`reviews.${idx}.role`),
+    avatarUrl: TESTIMONIAL_IMAGES[idx % TESTIMONIAL_IMAGES.length]
+  }));
+
+  const testimonialsList = initialList && initialList.length > 0 ? initialList : fallbackList;
 
   return (
     <section className="w-full bg-paper py-24">
@@ -35,11 +59,11 @@ export default function PortfolioTestimonials() {
           className="mb-12"
         >
           <h2 className="text-3xl md:text-5xl font-display font-bold text-ink mb-6">
-            {t("heading")}
+            {headingText}
           </h2>
           <div className="w-full h-px bg-gray-300" />
         </motion.div>
-
+ 
         {/* Testimonials Carousel */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
@@ -50,24 +74,26 @@ export default function PortfolioTestimonials() {
           ref={emblaRef}
         >
           <div className="flex">
-            {reviews.map((idx) => {
-              const name: string = t.raw(`reviews.${idx}.name`);
-              const role: string = t.raw(`reviews.${idx}.role`);
-              const quote: string = t.raw(`reviews.${idx}.quote`);
+            {testimonialsList.map((review, idx) => {
+              const name = review.clientName;
+              const role = review.clientRole;
+              const quote = review.quote;
+              const avatar = review.avatarUrl || TESTIMONIAL_IMAGES[idx % TESTIMONIAL_IMAGES.length];
               
               return (
-                <div key={idx} className="flex-[0_0_100%] min-w-0">
+                <div key={review.id} className="flex-[0_0_100%] min-w-0">
                   <div className="flex flex-col md:flex-row gap-12 lg:gap-24 items-center">
                     {/* Left: Duotone Photo */}
                     <div className="w-full md:w-5/12 aspect-[4/5] relative rounded-[2rem] overflow-hidden bg-accent group">
                       <Image 
-                        src={TESTIMONIAL_IMAGES[idx]}
+                        src={avatar}
                         alt={name}
                         fill
+                        sizes="(max-width: 768px) 100vw, 40vw"
                         className="object-cover grayscale mix-blend-multiply opacity-90 transition-transform duration-700 group-hover:scale-105"
                       />
                     </div>
-
+ 
                     {/* Right: Quote Content */}
                     <div className="w-full md:w-7/12 flex flex-col justify-center py-8">
                       <Quote className="text-accent fill-accent mb-8" size={48} />
@@ -80,7 +106,7 @@ export default function PortfolioTestimonials() {
                           <p className="text-xl font-bold text-ink mb-1">{name}</p>
                           <p className="text-gray-500 font-medium">{role}</p>
                         </div>
-
+ 
                         {/* Navigation Buttons */}
                         <div className="flex gap-4">
                           <button 

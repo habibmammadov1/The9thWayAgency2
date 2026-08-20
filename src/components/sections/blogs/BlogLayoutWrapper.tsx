@@ -11,18 +11,33 @@ interface BlogLayoutWrapperProps {
 
 export default function BlogLayoutWrapper({ posts }: BlogLayoutWrapperProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Extract unique categories
-  const categories = Array.from(new Set(posts.map((p) => p.category)));
+  // Extract unique categories (filter out empty strings/falsy values)
+  const categories = Array.from(new Set(posts.map((p) => p.category).filter(Boolean)));
 
-  // Recent posts (first 3)
+  // Filter posts based on category and search query
+  const filteredPosts = posts.filter((post) => {
+    const matchesCategory = selectedCategory ? post.category === selectedCategory : true;
+    const matchesSearch = searchQuery
+      ? post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
+    return matchesCategory && matchesSearch;
+  });
+
+  // Recent posts (first 3 from original posts list)
   const recentPosts = posts.slice(0, 3);
 
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
       {/* Main Content (List) ~ 70% */}
       <div className="w-full lg:col-span-8">
-        <BlogList posts={posts} selectedCategory={selectedCategory} />
+        <BlogList 
+          posts={filteredPosts} 
+          selectedCategory={selectedCategory} 
+          searchQuery={searchQuery}
+        />
       </div>
       
       {/* Sidebar ~ 30% */}
@@ -32,6 +47,8 @@ export default function BlogLayoutWrapper({ posts }: BlogLayoutWrapperProps) {
           recentPosts={recentPosts}
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
         />
       </div>
     </div>

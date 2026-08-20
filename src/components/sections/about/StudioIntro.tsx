@@ -6,14 +6,28 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Maximize2, X } from "lucide-react";
 
-export default function StudioIntro() {
+interface StudioIntroProps {
+  data?: {
+    overline: string;
+    heading: string;
+    paragraph: string;
+    image1Url?: string | null;
+    image2Url?: string | null;
+  } | null;
+}
+
+export default function StudioIntro({ data }: StudioIntroProps) {
   const t = useTranslations("AboutPage");
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  const overline = data?.overline || t("overline");
+  const heading = data?.heading || t("heading");
+  const paragraph = data?.paragraph || t("paragraph");
+
   // Images for the studio intro
   const images = [
-    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2000&auto=format&fit=crop", // Left image (creative collaboration)
-    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2000&auto=format&fit=crop", // Right image (team strategy)
+    data?.image1Url || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2000&auto=format&fit=crop", // Left image (creative collaboration)
+    data?.image2Url || "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2000&auto=format&fit=crop", // Right image (team strategy)
   ];
 
   return (
@@ -31,9 +45,9 @@ export default function StudioIntro() {
             transition={{ duration: 0.6 }}
           >
             <div className="inline-flex items-center gap-2 bg-white/50 border border-gray-200 px-4 py-2 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#D9C2A0]" />
               <span className="text-black text-xs md:text-sm font-bold tracking-widest uppercase">
-                {t("overline")}
+                {overline}
               </span>
             </div>
           </motion.div>
@@ -46,7 +60,7 @@ export default function StudioIntro() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-black uppercase leading-[1.1] tracking-tight"
           >
-            {t("heading")}
+            {heading}
           </motion.h2>
 
           {/* Paragraph */}
@@ -57,7 +71,7 @@ export default function StudioIntro() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-gray-500 text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl"
           >
-            {t("paragraph")}
+            {paragraph}
           </motion.p>
         </div>
 
@@ -81,10 +95,10 @@ export default function StudioIntro() {
               sizes="(max-width: 768px) 100vw, 50vw"
             />
             {/* Subtle Brand Overlay */}
-            <div className="absolute inset-0 bg-accent mix-blend-overlay opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-[#D9C2A0] mix-blend-overlay opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
             
             {/* Expand Button (Bottom Right) */}
-            <div className="absolute bottom-6 right-6 w-12 h-12 md:w-14 md:h-14 bg-accent rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+            <div className="absolute bottom-6 right-6 w-12 h-12 md:w-14 md:h-14 bg-[#D9C2A0] rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
               <Maximize2 size={24} className="text-black" />
             </div>
           </motion.div>
@@ -105,7 +119,7 @@ export default function StudioIntro() {
               sizes="(max-width: 768px) 100vw, 50vw"
             />
             {/* Subtle Brand Overlay */}
-            <div className="absolute inset-0 bg-accent mix-blend-overlay opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-[#D9C2A0] mix-blend-overlay opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
           </motion.div>
 
         </div>

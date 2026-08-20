@@ -2,7 +2,6 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { CheckCircle2, ArrowUpRight, Star } from "lucide-react";
 import AnimatedCounter from "../../AnimatedCounter";
@@ -57,13 +56,14 @@ const ChatBubbleUI = () => (
   </div>
 );
 
-export default function WhyChooseUs() {
-  const t = useTranslations("WhyChooseUs");
+export default function WhyChooseUs({ initialData }: { initialData?: any }) {
   const gridRef = useRef<HTMLDivElement>(null);
   
+  const data = initialData || {};
+  
   // Convert industries translation back to an array
-  const industries = [0,1,2,3,4,5,6].map(i => t(`card1.industries.${i}`));
-  const checklist = [0,1,2,3,4].map(i => t(`card3.list.${i}`));
+  const industries = data.industries?.map((i: any) => i.name) || ["Elektron ticarət", "SaaS & Texnologiya", "Daşınmaz Əmlak", "Səhiyyə", "Qonaqpərvərlik"];
+  const checklist = data.whyChooseUsCard?.checklistItems || ["Məlumatlara əsaslanan qərarlar", "ROI mərkəzli strategiyalar", "Təcrübəli marketinq komandası"];
 
   return (
     <section className="relative w-full bg-paper pt-12 pb-24 lg:pt-16 lg:pb-32 overflow-hidden">
@@ -80,11 +80,11 @@ export default function WhyChooseUs() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent text-black text-xs font-bold tracking-widest uppercase mb-6 shadow-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-black" />
-              {t("pill")}
+              {data.intro?.pillLabel || "Niyə Biz?"}
               <span className="w-1.5 h-1.5 rounded-full bg-black" />
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-black leading-[1.1] tracking-tight">
-              {t("heading")}
+              {data.intro?.heading || "Biznesinizin Ehtiyaclarına Uyğunlaşdırılmış Həllər."}
             </h2>
           </motion.div>
 
@@ -96,7 +96,7 @@ export default function WhyChooseUs() {
             className="max-w-md"
           >
             <p className="text-gray-500 text-lg font-medium leading-relaxed">
-              {t("supporting")}
+              {data.intro?.paragraph || "Məlumatlara əsaslanan strategiyaları və qorxmaz yaradıcılığı birləşdirərək əhəmiyyətli nəticələr əldə edirik. Ambisiyalarınızla böyüyən bir tərəfdaş seçin."}
             </p>
           </motion.div>
         </div>
@@ -144,7 +144,7 @@ export default function WhyChooseUs() {
             {/* Background Image / Texture */}
             <div className="absolute top-0 right-0 w-2/3 h-2/3 opacity-[0.05] grayscale group-hover:scale-110 transition-transform duration-700 pointer-events-none origin-top-right">
               <Image 
-                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600&auto=format&fit=crop"
+                src={data.statHighlight?.imageUrl || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600&auto=format&fit=crop"}
                 alt="Dashboard"
                 fill
                 className="object-cover rounded-bl-full"
@@ -153,20 +153,20 @@ export default function WhyChooseUs() {
             
             <div className="relative z-10">
               <h3 className="text-6xl md:text-7xl font-display font-bold text-black tracking-tighter mb-2">
-                {t("card2.stat")}
+                {data.statHighlight?.value || "500+"}
               </h3>
               <p className="text-gray-500 font-semibold text-sm tracking-widest uppercase">
-                {t("card2.label")}
+                {data.statHighlight?.label || "Uğurlu Kampaniya"}
               </p>
             </div>
 
             <div className="relative z-10 mt-auto pt-12">
-              <p className="text-black font-bold text-lg mb-4">{t("card2.ctaText")}</p>
+              <p className="text-black font-bold text-lg mb-4">{data.statHighlight?.ctaText || "Birlikdə möhtəşəm işlər görək."}</p>
               <div className="flex items-center gap-4">
                 <button className="w-12 h-12 rounded-full bg-accent flex items-center justify-center shadow-[0_4px_15px_rgba(217,194,160,0.3)] hover:scale-110 transition-transform">
                   <ArrowUpRight size={20} className="text-black" />
                 </button>
-                <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider group-hover:text-black transition-colors">{t("card2.linkText")}</span>
+                <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider group-hover:text-black transition-colors">{data.statHighlight?.ctaLinkLabel || "Bizimlə əlaqə saxlayın"}</span>
               </div>
             </div>
           </motion.div>
@@ -189,13 +189,13 @@ export default function WhyChooseUs() {
               <div className="w-12 h-12 rounded-full bg-ink border border-white/10 flex items-center justify-center mb-6">
                 <CheckCircle2 size={24} className="text-accent" />
               </div>
-              <h3 className="text-3xl font-display font-bold text-white mb-4">{t("card3.title")}</h3>
+              <h3 className="text-3xl font-display font-bold text-white mb-4">{data.whyChooseUsCard?.heading || "Niyə Bizi Seçməlisiniz?"}</h3>
               <p className="text-gray-200 text-sm leading-relaxed mb-10">
-                {t("card3.desc")}
+                {data.whyChooseUsCard?.paragraph || "Sübut edilmiş metodologiyamız davamlı inkişafı təmin edir."}
               </p>
 
               <ul className="flex flex-col gap-5 flex-1">
-                {checklist.map((item, idx) => (
+                {checklist.map((item: string, idx: number) => (
                   <li key={idx} className="flex items-start gap-4">
                     <span className="mt-1 flex items-center justify-center w-5 h-5 rounded-full bg-accent/20 text-accent shrink-0">
                       <CheckCircle2 size={12} strokeWidth={3} />
@@ -207,7 +207,7 @@ export default function WhyChooseUs() {
 
               <MagneticButtonWrapper pullStrength={0.1}>
                 <button className="w-full mt-10 bg-accent text-black py-4 rounded-xl font-bold hover:bg-white transition-colors duration-300 shadow-[0_0_20px_rgba(217,194,160,0.2)]">
-                  {t("card3.button")}
+                  {data.whyChooseUsCard?.ctaLabel || "Pulsuz Konsultasiya"}
                 </button>
               </MagneticButtonWrapper>
             </div>
@@ -236,11 +236,11 @@ export default function WhyChooseUs() {
 
             <div>
               <div className="text-6xl font-display font-bold text-white mb-2 flex items-baseline">
-                <AnimatedCounter value={parseInt(t("card4.stat")) || 98} />
+                <AnimatedCounter value={parseInt(data.happyClientsCard?.percentage) || 98} />
                 <span className="text-4xl text-accent">%</span>
               </div>
               <p className="text-gray-500 text-sm font-medium pr-8">
-                {t("card4.label")}
+                {data.happyClientsCard?.label || "Müştərilərimiz keyfiyyət və nəticələrə görə bizimlə qalır."}
               </p>
             </div>
           </motion.div>
@@ -249,9 +249,9 @@ export default function WhyChooseUs() {
           <motion.div variants={cardVariants} className="bg-gray-200 rounded-3xl p-8 shadow-sm flex flex-col relative overflow-hidden group transition-all duration-500 hover:-translate-y-1 hover:shadow-xl h-full min-h-[320px]">
             <div className="relative z-10 flex flex-col h-full">
               <div>
-                <h3 className="text-4xl font-display font-bold text-black mb-2">{t("card5.title")}</h3>
+                <h3 className="text-4xl font-display font-bold text-black mb-2">{data.supportCard?.badge || "24/7"}</h3>
                 <p className="text-gray-500 font-medium text-sm w-2/3">
-                  {t("card5.desc")}
+                  {data.supportCard?.description || "Kampaniyalarınız üçün fasiləsiz dəstək və davamlı monitorinq."}
                 </p>
               </div>
 
