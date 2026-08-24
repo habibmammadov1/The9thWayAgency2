@@ -23,6 +23,18 @@ const nextConfig: NextConfig = {
         port: "4000",
         pathname: "/uploads/**",
       },
+      // Azure Blob Storage — production file uploads
+      {
+        protocol: "https",
+        hostname: "*.blob.core.windows.net",
+        pathname: "/uploads/**",
+      },
+      // Azure Container Apps — API hosted images (fallback/legacy)
+      {
+        protocol: "https",
+        hostname: "*.azurecontainerapps.io",
+        pathname: "/uploads/**",
+      },
     ],
   },
 };

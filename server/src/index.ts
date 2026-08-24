@@ -7,6 +7,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { BlobServiceClient } from '@azure/storage-blob';
 import homeRoutes from './routes/home';
 import clientLogosRoutes from './routes/clientLogos';
 import servicesRoutes from './routes/services';
@@ -21,25 +22,37 @@ import authRoutes from './routes/auth';
 import adminUsersRoutes from './routes/adminUsers';
 import { requireAuth } from './middleware/requireAuth';
 
-// Ensure uploads dir exists
+// ---------------------------------------------------------------------------
+// Storage configuration
+// When AZURE_STORAGE_CONNECTION_STRING is set (production), files are uploaded
+// directly to Azure Blob Storage. When it is absent (local dev), files fall
+// back to local disk so the local workflow is unchanged.
+// ---------------------------------------------------------------------------
+const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
+const AZURE_STORAGE_CONTAINER = process.env.AZURE_STORAGE_CONTAINER || 'uploads';
+
+const isAzureStorageEnabled = Boolean(AZURE_STORAGE_CONNECTION_STRING);
+
+// Local disk fallback (used when AZURE_STORAGE_CONNECTION_STRING is not set)
 const uploadsDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadsDir)) {
+if (!isAzureStorageEnabled && !fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname.replace(/\s+/g, '-')}`);
-  }
-});
+// In Azure: use memory storage so the buffer can be streamed to Blob Storage.
+// Locally: use disk storage as before.
+const multerStorage = isAzureStorageEnabled
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: (_req, _file, cb) => cb(null, uploadsDir),
+      filename: (_req, file, cb) =>
+        cb(null, `${Date.now()}-${file.originalname.replace(/\s+/g, '-')}`),
+    });
 
 const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-  fileFilter: (req, file, cb) => {
+  storage: multerStorage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  fileFilter: (_req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|webp|svg\+xml|svg/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowedTypes.test(file.mimetype);
@@ -47,8 +60,29 @@ const upload = multer({
       return cb(null, true);
     }
     cb(new Error('Yalnızca JPG, PNG, WEBP və SVG formatlı şəkillərə icazə verilir!'));
-  }
+  },
 });
+
+/**
+ * Upload a file buffer to Azure Blob Storage and return the public blob URL.
+ * The blob name includes a timestamp prefix to prevent collisions.
+ */
+async function uploadToAzureBlob(file: Express.Multer.File): Promise<string> {
+  if (!AZURE_STORAGE_CONNECTION_STRING) {
+    throw new Error('AZURE_STORAGE_CONNECTION_STRING is not configured');
+  }
+  const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+  const containerClient = blobServiceClient.getContainerClient(AZURE_STORAGE_CONTAINER);
+
+  const blobName = `${Date.now()}-${file.originalname.replace(/\s+/g, '-')}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+  await blockBlobClient.uploadData(file.buffer, {
+    blobHTTPHeaders: { blobContentType: file.mimetype },
+  });
+
+  return blockBlobClient.url;
+}
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -83,7 +117,12 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('/uploads', express.static(uploadsDir));
+
+// Serve local uploads directory (backward-compat for local dev and any existing local URLs)
+if (!isAzureStorageEnabled) {
+  app.use('/uploads', express.static(uploadsDir));
+}
+
 app.use('/api/auth', authRoutes);
 app.use('/api/admin/users', adminUsersRoutes);
 app.use('/api/home', homeRoutes);
@@ -99,8 +138,12 @@ app.use('/api/team', teamRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/translations', translationsRoutes);
 
-// Helper function to handle single file upload with middleware error handling
-const handleSingleUpload = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+// Helper: run multer middleware and catch errors uniformly
+const handleSingleUpload = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
   upload.single('file')(req, res, (err: any) => {
     if (err instanceof multer.MulterError) {
       if (err.code === 'LIMIT_FILE_SIZE') {
@@ -114,29 +157,71 @@ const handleSingleUpload = (req: express.Request, res: express.Response, next: e
   });
 };
 
-app.post('/api/uploads', requireAuth, handleSingleUpload, (req, res) => {
-  // TODO: migrate to cloud storage (S3/Cloudinary) before production launch
+/**
+ * POST /api/uploads — upload a single image file.
+ *
+ * In production (Azure): streams the file buffer to Azure Blob Storage and
+ * returns the public blob URL (https://<account>.blob.core.windows.net/uploads/<filename>).
+ *
+ * In local dev: saves the file to the local uploads/ directory and returns a
+ * host-relative URL as before.
+ */
+app.post('/api/uploads', requireAuth, handleSingleUpload, async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Fayl yüklənməyib' });
   }
-  const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-  res.json({ url: fileUrl });
+
+  try {
+    let fileUrl: string;
+
+    if (isAzureStorageEnabled) {
+      // Production: upload buffer to Azure Blob Storage
+      fileUrl = await uploadToAzureBlob(req.file);
+    } else {
+      // Local dev: file was saved to disk by multer diskStorage
+      fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    }
+
+    res.json({ url: fileUrl });
+  } catch (err: any) {
+    console.error('[Upload] Error uploading file:', err);
+    res.status(500).json({ error: 'Fayl yüklənə bilmədi. Yenidən cəhd edin.' });
+  }
 });
 
-// Deprecated upload route fallback
-app.post('/api/upload', requireAuth, handleSingleUpload, (req, res) => {
+/**
+ * POST /api/upload — deprecated alias, kept for backward compatibility.
+ */
+app.post('/api/upload', requireAuth, handleSingleUpload, async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Fayl yüklənməyib' });
   }
-  const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-  res.json({ url: fileUrl });
+
+  try {
+    let fileUrl: string;
+
+    if (isAzureStorageEnabled) {
+      fileUrl = await uploadToAzureBlob(req.file);
+    } else {
+      fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    }
+
+    res.json({ url: fileUrl });
+  } catch (err: any) {
+    console.error('[Upload] Error uploading file:', err);
+    res.status(500).json({ error: 'Fayl yüklənə bilmədi. Yenidən cəhd edin.' });
+  }
 });
 
 app.get('/health', async (req, res) => {
   try {
     // Test DB connection
     await prisma.$queryRaw`SELECT 1`;
-    res.json({ status: 'ok', db: 'connected' });
+    res.json({
+      status: 'ok',
+      db: 'connected',
+      storage: isAzureStorageEnabled ? 'azure-blob' : 'local-disk',
+    });
   } catch (error) {
     res.status(500).json({ status: 'error', db: 'disconnected', error: String(error) });
   }
@@ -144,4 +229,5 @@ app.get('/health', async (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
+  console.log(`Storage backend: ${isAzureStorageEnabled ? 'Azure Blob Storage' : 'local disk'}`);
 });
