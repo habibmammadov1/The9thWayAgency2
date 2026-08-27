@@ -5,6 +5,8 @@ import { z } from "zod"
 import { Button } from "@/components/admin/ui/button"
 import { Copy, RefreshCw } from "lucide-react"
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 interface CreateUserDialogProps {
   onClose: () => void
   onSuccess: () => void
@@ -59,7 +61,7 @@ export function CreateUserDialog({ onClose, onSuccess, onToast }: CreateUserDial
 
     setIsSubmitting(true)
     try {
-      const res = await fetch("http://localhost:4000/api/admin/users", {
+      const res = await fetch(`${API}/api/admin/users`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

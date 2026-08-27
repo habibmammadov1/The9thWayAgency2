@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
+const requireAuth_1 = require("../middleware/requireAuth");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.get('/ping', (req, res) => { res.send('pong from services'); });
@@ -18,7 +19,7 @@ const serviceSchema = zod_1.z.object({
     title: zod_1.z.string(),
     description: zod_1.z.string(),
     bullets: zod_1.z.array(zod_1.z.string()),
-    imageUrl: zod_1.z.string().optional(),
+    imageUrl: zod_1.z.string().nullable().optional(),
 });
 const servicesListPayloadSchema = zod_1.z.object({
     services: zod_1.z.array(serviceSchema),
@@ -39,7 +40,7 @@ const whyChooseUsBundleSchema = zod_1.z.object({
         label: zod_1.z.string(),
         ctaText: zod_1.z.string(),
         ctaLinkLabel: zod_1.z.string(),
-        imageUrl: zod_1.z.string().optional(),
+        imageUrl: zod_1.z.string().nullable().optional(),
     }),
     whyChooseUsCard: zod_1.z.object({
         heading: zod_1.z.string(),
@@ -124,7 +125,7 @@ router.get('/intro', async (req, res) => {
  *       200:
  *         description: Updated
  */
-router.put('/intro', async (req, res) => {
+router.put('/intro', requireAuth_1.requireAuth, async (req, res) => {
     try {
         const { locale } = req.query;
         if (!locale || typeof locale !== 'string') {
@@ -205,7 +206,7 @@ router.get('/list', async (req, res) => {
  *       200:
  *         description: Updated
  */
-router.put('/list', async (req, res) => {
+router.put('/list', requireAuth_1.requireAuth, async (req, res) => {
     try {
         const { locale } = req.query;
         if (!locale || typeof locale !== 'string') {
@@ -304,7 +305,7 @@ router.get('/why-choose-us', async (req, res) => {
  *       200:
  *         description: Updated
  */
-router.put('/why-choose-us', async (req, res) => {
+router.put('/why-choose-us', requireAuth_1.requireAuth, async (req, res) => {
     try {
         const { locale } = req.query;
         if (!locale || typeof locale !== 'string') {

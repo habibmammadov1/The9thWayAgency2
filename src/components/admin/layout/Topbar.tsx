@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useAdminAuth } from "@/contexts/AdminAuthContext"
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 interface TopbarProps {
   isCollapsed: boolean
   setIsCollapsed: (v: boolean) => void
@@ -24,7 +26,7 @@ export function Topbar({ isCollapsed, setIsCollapsed, isMobile }: TopbarProps) {
     let isMounted = true;
     const checkHealth = async () => {
       try {
-        const res = await fetch("http://localhost:4000/health");
+        const res = await fetch(`${API}/health`);
         if (isMounted) setApiStatus(res.ok ? "ok" : "error");
       } catch (err) {
         if (isMounted) setApiStatus("error");

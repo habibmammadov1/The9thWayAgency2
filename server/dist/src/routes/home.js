@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
+const requireAuth_1 = require("../middleware/requireAuth");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 // Schemas for validation
@@ -121,8 +122,7 @@ router.get('/hero', async (req, res) => {
  *       200:
  *         description: OK
  */
-// TODO: add admin auth middleware
-router.put('/hero', validate(heroPayloadSchema), async (req, res) => {
+router.put('/hero', requireAuth_1.requireAuth, validate(heroPayloadSchema), async (req, res) => {
     const { locale } = req.query;
     if (!locale)
         return res.status(400).json({ error: 'Locale is required' });
@@ -216,8 +216,7 @@ router.get('/uniqueness', async (req, res) => {
  *       200:
  *         description: OK
  */
-// TODO: add admin auth middleware
-router.put('/uniqueness', validate(uniquenessPayloadSchema), async (req, res) => {
+router.put('/uniqueness', requireAuth_1.requireAuth, validate(uniquenessPayloadSchema), async (req, res) => {
     const { locale } = req.query;
     if (!locale)
         return res.status(400).json({ error: 'Locale is required' });
@@ -298,8 +297,7 @@ router.get('/about-stats', async (req, res) => {
  *       200:
  *         description: OK
  */
-// TODO: add admin auth middleware
-router.put('/about-stats', validate(aboutStatsPayloadSchema), async (req, res) => {
+router.put('/about-stats', requireAuth_1.requireAuth, validate(aboutStatsPayloadSchema), async (req, res) => {
     const { locale } = req.query;
     if (!locale)
         return res.status(400).json({ error: 'Locale is required' });
@@ -394,8 +392,7 @@ router.get('/footer', async (req, res) => {
  *       200:
  *         description: OK
  */
-// TODO: add admin auth middleware
-router.put('/footer', validate(footerPayloadSchema), async (req, res) => {
+router.put('/footer', requireAuth_1.requireAuth, validate(footerPayloadSchema), async (req, res) => {
     const { locale } = req.query;
     if (!locale)
         return res.status(400).json({ error: 'Locale is required' });
@@ -449,8 +446,7 @@ router.put('/footer', validate(footerPayloadSchema), async (req, res) => {
  *       200:
  *         description: OK
  */
-// TODO: add admin auth middleware
-router.put('/footer/social-links', validate(zod_1.z.object({ socials: zod_1.z.array(socialSchema) })), async (req, res) => {
+router.put('/footer/social-links', requireAuth_1.requireAuth, validate(zod_1.z.object({ socials: zod_1.z.array(socialSchema) })), async (req, res) => {
     const payload = req.body;
     try {
         await prisma.$transaction(async (tx) => {

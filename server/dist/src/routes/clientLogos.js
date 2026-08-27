@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
+const requireAuth_1 = require("../middleware/requireAuth");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 const validate = (schema) => (req, res, next) => {
@@ -58,7 +59,7 @@ router.get('/', async (req, res) => {
  *       200:
  *         description: OK
  */
-router.post('/', validate(createLogoSchema), async (req, res) => {
+router.post('/', requireAuth_1.requireAuth, validate(createLogoSchema), async (req, res) => {
     const payload = req.body;
     try {
         const lastLogo = await prisma.clientLogo.findFirst({
@@ -87,7 +88,7 @@ router.post('/', validate(createLogoSchema), async (req, res) => {
  *       200:
  *         description: OK
  */
-router.put('/reorder', validate(reorderSchema), async (req, res) => {
+router.put('/reorder', requireAuth_1.requireAuth, validate(reorderSchema), async (req, res) => {
     const payload = req.body;
     try {
         await prisma.$transaction(payload.orders.map((item) => prisma.clientLogo.update({
@@ -115,7 +116,7 @@ router.put('/reorder', validate(reorderSchema), async (req, res) => {
  *       200:
  *         description: OK
  */
-router.put('/:id', validate(updateLogoSchema), async (req, res) => {
+router.put('/:id', requireAuth_1.requireAuth, validate(updateLogoSchema), async (req, res) => {
     const payload = req.body;
     try {
         const updatedLogo = await prisma.clientLogo.update({
@@ -143,7 +144,7 @@ router.put('/:id', validate(updateLogoSchema), async (req, res) => {
  *       200:
  *         description: OK
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAuth_1.requireAuth, async (req, res) => {
     try {
         await prisma.clientLogo.delete({
             where: { id: req.params.id },

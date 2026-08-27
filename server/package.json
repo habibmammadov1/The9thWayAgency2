@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@azure/storage-blob": "^12.33.0",
-    "@prisma/client": "^5.14.0",
+    "@prisma/client": "^5.22.0",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -37,7 +37,7 @@
     "@types/node": "^20.12.12",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
-    "prisma": "^5.14.0",
+    "prisma": "^5.22.0",
     "tsx": "^4.11.0",
     "typescript": "^5.4.5"
   }

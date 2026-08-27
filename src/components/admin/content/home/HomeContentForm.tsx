@@ -31,6 +31,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Card, CardContent } from "@/components/admin/ui/card"
 import { useToast } from "@/components/admin/ui/use-toast"
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 const slideSchema = z.object({
   id: z.string(),
   overline: z.string().min(1, "Vacib sahə"),
@@ -186,10 +188,10 @@ export function HomeContentForm() {
         const newData = {} as any;
         for (const loc of locales) {
           const [hero, uniq, stats, footer] = await Promise.all([
-            fetch(`http://localhost:4000/api/home/hero?locale=${loc}`).then(r => r.json()),
-            fetch(`http://localhost:4000/api/home/uniqueness?locale=${loc}`).then(r => r.json()),
-            fetch(`http://localhost:4000/api/home/about-stats?locale=${loc}`).then(r => r.json()),
-            fetch(`http://localhost:4000/api/home/footer?locale=${loc}`).then(r => r.json()),
+            fetch(`${API}/api/home/hero?locale=${loc}`).then(r => r.json()),
+            fetch(`${API}/api/home/uniqueness?locale=${loc}`).then(r => r.json()),
+            fetch(`${API}/api/home/about-stats?locale=${loc}`).then(r => r.json()),
+            fetch(`${API}/api/home/footer?locale=${loc}`).then(r => r.json()),
           ]);
           newData[loc] = { hero, uniqueness: uniq, aboutStats: stats, footer };
         }
@@ -218,19 +220,19 @@ export function HomeContentForm() {
     try {
       const activeData = data[activeTab];
       const responses = await Promise.all([
-        fetch(`http://localhost:4000/api/home/hero?locale=${activeTab}`, {
+        fetch(`${API}/api/home/hero?locale=${activeTab}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(activeData.hero)
         }),
-        fetch(`http://localhost:4000/api/home/uniqueness?locale=${activeTab}`, {
+        fetch(`${API}/api/home/uniqueness?locale=${activeTab}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(activeData.uniqueness)
         }),
-        fetch(`http://localhost:4000/api/home/about-stats?locale=${activeTab}`, {
+        fetch(`${API}/api/home/about-stats?locale=${activeTab}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(activeData.aboutStats)
         }),
-        fetch(`http://localhost:4000/api/home/footer?locale=${activeTab}`, {
+        fetch(`${API}/api/home/footer?locale=${activeTab}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(activeData.footer)
         }),
-        fetch(`http://localhost:4000/api/home/footer/social-links`, {
+        fetch(`${API}/api/home/footer/social-links`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ socials: activeData.footer.socials })
         }),
       ]);

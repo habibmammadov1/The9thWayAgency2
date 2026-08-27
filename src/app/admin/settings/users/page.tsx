@@ -9,6 +9,8 @@ import { CreateUserDialog } from "@/components/admin/settings/users/CreateUserDi
 import { EditUserDialog } from "@/components/admin/settings/users/EditUserDialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/admin/ui/alert-dialog"
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 interface AdminUserRow {
   id: string
   name: string
@@ -48,7 +50,7 @@ export default function AdminUsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/admin/users", {
+      const res = await fetch(`${API}/api/admin/users`, {
         credentials: "include"
       })
       if (!res.ok) throw new Error("API xətası")
@@ -68,7 +70,7 @@ export default function AdminUsersPage() {
   const handleDelete = async () => {
     if (!deletingUser) return
     try {
-      const res = await fetch(`http://localhost:4000/api/admin/users/${deletingUser.id}`, {
+      const res = await fetch(`${API}/api/admin/users/${deletingUser.id}`, {
         method: "DELETE",
         credentials: "include"
       })

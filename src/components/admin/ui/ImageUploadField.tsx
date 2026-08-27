@@ -6,6 +6,8 @@ import { useToast } from "@/components/admin/ui/use-toast"
 import { Button } from "@/components/admin/ui/button"
 import { cn } from "@/lib/utils"
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 interface ImageUploadFieldProps {
   value?: string | null
   onChange: (value: string) => void
@@ -77,7 +79,7 @@ export function ImageUploadField({
         })
       }, 100)
 
-      const res = await fetch("http://localhost:4000/api/uploads", {
+      const res = await fetch(`${API}/api/uploads`, {
         method: "POST",
         credentials: "include",
         body: formData,

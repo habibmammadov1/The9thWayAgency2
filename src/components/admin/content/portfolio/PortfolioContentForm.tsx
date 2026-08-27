@@ -34,6 +34,8 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { ImageUploadField } from "@/components/admin/ui/ImageUploadField"
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 // SCHEMAS
 const heroSchema = z.object({
   pillLabel: z.string().min(1, "Sahə boş ola bilməz"),
@@ -336,10 +338,10 @@ export function PortfolioContentForm() {
 
       for (const loc of locales) {
         const [heroRes, caseStudiesRes, introTestimonialsRes, faqRes] = await Promise.all([
-          fetch(`http://localhost:4000/api/portfolio/hero?locale=${loc}`),
-          fetch(`http://localhost:4000/api/portfolio/case-studies?locale=${loc}`),
-          fetch(`http://localhost:4000/api/testimonials/intro?locale=${loc}&page=portfolio`),
-          fetch(`http://localhost:4000/api/portfolio/faq?locale=${loc}`)
+          fetch(`${API}/api/portfolio/hero?locale=${loc}`),
+          fetch(`${API}/api/portfolio/case-studies?locale=${loc}`),
+          fetch(`${API}/api/testimonials/intro?locale=${loc}&page=portfolio`),
+          fetch(`${API}/api/portfolio/faq?locale=${loc}`)
         ])
 
         if (
@@ -414,13 +416,13 @@ export function PortfolioContentForm() {
       
       console.log(`[Portfolio] Saving locale: ${loc}...`)
       const responses = await Promise.all([
-        fetch(`http://localhost:4000/api/portfolio/hero?locale=${loc}`, {
+        fetch(`${API}/api/portfolio/hero?locale=${loc}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(localeData.hero)
         }),
-        fetch(`http://localhost:4000/api/portfolio/case-studies?locale=${loc}`, {
+        fetch(`${API}/api/portfolio/case-studies?locale=${loc}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ caseStudies: localeData.caseStudies })
         }),
-        fetch(`http://localhost:4000/api/portfolio/faq?locale=${loc}`, {
+        fetch(`${API}/api/portfolio/faq?locale=${loc}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(localeData.faq)
         })
       ])

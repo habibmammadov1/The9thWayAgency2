@@ -33,6 +33,8 @@ import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrate
 import { CSS } from "@dnd-kit/utilities"
 import { cn } from "@/lib/utils"
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 // SCHEMAS
 const introSchema = z.object({
   heading: z.string().min(1, "Başlıq boş ola bilməz"),
@@ -161,11 +163,11 @@ export function TestimonialsContentForm() {
 
       for (const loc of locales) {
         const [introHomeRes, introServicesRes, introPortfolioRes, highlightRes, listRes] = await Promise.all([
-          fetch(`http://localhost:4000/api/testimonials/intro?locale=${loc}&page=home`),
-          fetch(`http://localhost:4000/api/testimonials/intro?locale=${loc}&page=services`),
-          fetch(`http://localhost:4000/api/testimonials/intro?locale=${loc}&page=portfolio`),
-          fetch(`http://localhost:4000/api/testimonials/highlight?locale=${loc}`),
-          fetch(`http://localhost:4000/api/testimonials/list?locale=${loc}`)
+          fetch(`${API}/api/testimonials/intro?locale=${loc}&page=home`),
+          fetch(`${API}/api/testimonials/intro?locale=${loc}&page=services`),
+          fetch(`${API}/api/testimonials/intro?locale=${loc}&page=portfolio`),
+          fetch(`${API}/api/testimonials/highlight?locale=${loc}`),
+          fetch(`${API}/api/testimonials/list?locale=${loc}`)
         ])
 
         if (
@@ -229,19 +231,19 @@ export function TestimonialsContentForm() {
       
       console.log(`[Testimonials] Saving locale: ${loc}...`)
       const responses = await Promise.all([
-        fetch(`http://localhost:4000/api/testimonials/intro?locale=${loc}&page=home`, {
+        fetch(`${API}/api/testimonials/intro?locale=${loc}&page=home`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(localeData.introHome)
         }),
-        fetch(`http://localhost:4000/api/testimonials/intro?locale=${loc}&page=services`, {
+        fetch(`${API}/api/testimonials/intro?locale=${loc}&page=services`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(localeData.introServices)
         }),
-        fetch(`http://localhost:4000/api/testimonials/intro?locale=${loc}&page=portfolio`, {
+        fetch(`${API}/api/testimonials/intro?locale=${loc}&page=portfolio`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(localeData.introPortfolio)
         }),
-        fetch(`http://localhost:4000/api/testimonials/highlight?locale=${loc}`, {
+        fetch(`${API}/api/testimonials/highlight?locale=${loc}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(localeData.highlight)
         }),
-        fetch(`http://localhost:4000/api/testimonials/list?locale=${loc}`, {
+        fetch(`${API}/api/testimonials/list?locale=${loc}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ testimonials: localeData.testimonials })
         })
       ])

@@ -29,7 +29,7 @@ function cookieOptions() {
   return {
     httpOnly: true,
     secure: isProd,                       // HTTPS only in prod
-    sameSite: (isProd ? 'strict' : 'lax') as 'strict' | 'lax',
+    sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000,     // 7 days in ms
     path: '/',
   };
@@ -82,7 +82,7 @@ router.post('/login', loginLimiter, async (req: Request, res: Response) => {
 
 // POST /api/auth/logout
 router.post('/logout', (req: Request, res: Response) => {
-  res.clearCookie('admin_token', { path: '/' });
+  res.clearCookie('admin_token', { ...cookieOptions(), maxAge: 0 });
   return res.json({ ok: true });
 });
 
@@ -102,7 +102,7 @@ router.get('/me', async (req: Request, res: Response) => {
     // Verify user still exists and is active in DB
     const user = await prisma.adminUser.findUnique({ where: { id: payload.id } });
     if (!user || !user.isActive) {
-      res.clearCookie('admin_token', { path: '/' });
+      res.clearCookie('admin_token', { ...cookieOptions(), maxAge: 0 });
       return res.status(401).json({ error: 'Unauthorized' });
     }
 

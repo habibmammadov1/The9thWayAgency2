@@ -13,13 +13,13 @@ import {notFound} from 'next/navigation';
 import { fetchFooter } from "@/lib/api";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://the9thway.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://9thwayagency.com"),
   title: "THE9THWAY AGENCY | Premium Branding & Marketing",
   description: "Award-winning creative strategy & digital design. We build fearless brands.",
   openGraph: {
     title: "THE9THWAY AGENCY | Premium Branding & Marketing",
     description: "Award-winning creative strategy & digital design. We build fearless brands.",
-    url: "https://the9thway.com",
+    url: process.env.NEXT_PUBLIC_APP_URL || "https://9thwayagency.com",
     siteName: "THE9THWAY AGENCY",
     images: [
       {

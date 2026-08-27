@@ -5,6 +5,8 @@ import { z } from "zod"
 import { Button } from "@/components/admin/ui/button"
 import { Copy, RefreshCw, KeyRound, AlertTriangle } from "lucide-react"
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 interface EditUserDialogProps {
   user: {
     id: string
@@ -55,7 +57,7 @@ export function EditUserDialog({ user, isCurrentUser, onClose, onSuccess, onToas
 
     setIsSubmitting(true)
     try {
-      const res = await fetch(`http://localhost:4000/api/admin/users/${user.id}`, {
+      const res = await fetch(`${API}/api/admin/users/${user.id}`, {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -86,7 +88,7 @@ export function EditUserDialog({ user, isCurrentUser, onClose, onSuccess, onToas
 
     setIsResetting(true)
     try {
-      const res = await fetch(`http://localhost:4000/api/admin/users/${user.id}/reset-password`, {
+      const res = await fetch(`${API}/api/admin/users/${user.id}/reset-password`, {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

@@ -1,7 +1,7 @@
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from './routing';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 async function fetchMessagesFromAPI(locale: string): Promise<Record<string, any> | null> {
   try {

@@ -19,6 +19,8 @@ import { cn } from "@/lib/utils";
 import { ModuleHeader } from "@/components/admin/layout/ModuleHeader";
 import { ImageUploadField } from "@/components/admin/ui/ImageUploadField";
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 type Logo = {
   id: string;
   name: string;
@@ -99,7 +101,7 @@ export default function ClientLogosManager() {
 
   const fetchLogos = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/client-logos");
+      const res = await fetch(`${API}/api/client-logos`);
       const data = await res.json();
       setLogos(data);
     } catch (error) {
@@ -124,7 +126,7 @@ export default function ClientLogosManager() {
 
       try {
         const orderPayload = newLogos.map((l, i) => ({ id: l.id, order: i + 1 }));
-        const res = await fetch("http://localhost:4000/api/client-logos/reorder", {
+        const res = await fetch(`${API}/api/client-logos/reorder`, {
           method: "PUT",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
@@ -143,13 +145,13 @@ export default function ClientLogosManager() {
     setIsSaving(true);
     try {
       if (editingLogo) {
-        const res = await fetch(`http://localhost:4000/api/client-logos/${editingLogo.id}`, {
+        const res = await fetch(`${API}/api/client-logos/${editingLogo.id}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData)
         });
         if (!res.ok) throw new Error("API xətası");
         toast({ title: "Loqo yeniləndi", variant: "success" } as any);
       } else {
-        const res = await fetch("http://localhost:4000/api/client-logos", {
+        const res = await fetch(`${API}/api/client-logos`, {
           method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData)
         });
         if (!res.ok) throw new Error("API xətası");
@@ -167,7 +169,7 @@ export default function ClientLogosManager() {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await fetch(`http://localhost:4000/api/client-logos/${id}`, { method: "DELETE", credentials: "include" });
+      const res = await fetch(`${API}/api/client-logos/${id}`, { method: "DELETE", credentials: "include" });
       if (!res.ok) throw new Error("API xətası");
       toast({ title: "Loqo silindi" } as any);
       setLogos(logos.filter(l => l.id !== id));
@@ -179,7 +181,7 @@ export default function ClientLogosManager() {
   const handleToggle = async (id: string, isActive: boolean) => {
     try {
       setLogos(logos.map(l => l.id === id ? { ...l, isActive } : l));
-      const res = await fetch(`http://localhost:4000/api/client-logos/${id}`, {
+      const res = await fetch(`${API}/api/client-logos/${id}`, {
         method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ isActive })
       });
       if (!res.ok) throw new Error("API xətası");
@@ -195,7 +197,7 @@ export default function ClientLogosManager() {
     try {
       const fd = new FormData();
       fd.append('file', file);
-      const res = await fetch('http://localhost:4000/api/upload', { method: 'POST', credentials: 'include', body: fd });
+      const res = await fetch(`${API}/api/upload`, { method: 'POST', credentials: 'include', body: fd });
       const data = await res.json();
       if (data.url) setFormData({ ...formData, imageUrl: data.url });
     } catch (error) {

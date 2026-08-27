@@ -6,6 +6,8 @@ import StickyCTA from "@/components/StickyCTA";
 import { setRequestLocale } from "next-intl/server";
 import { fetchTestimonialsIntro, fetchTestimonialsHighlight, fetchTestimonialsList } from "@/lib/api";
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 // Fallback data in case the API is unreachable
 const fallbackServicesData = {
   intro: { pillLabel: "Xidmətlərimiz", heading: "Böyüməni Təmin Edən Marketinq Xidmətlərimiz.", ctaLabel: "Bütün Xidmətlərə Bax" },
@@ -18,7 +20,7 @@ async function getServicesData(locale: string) {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     // Use the backend API server port (4000) for direct server-to-server calls if running locally
     // In production, this would be your API URL
-    const apiUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : baseUrl;
+    const apiUrl = process.env.NODE_ENV === 'development' ? `${API}` : baseUrl;
     
     const [introRes, listRes, whyRes] = await Promise.all([
       fetch(`${apiUrl}/api/services/intro?locale=${locale}`, { next: { revalidate: 60 } }),

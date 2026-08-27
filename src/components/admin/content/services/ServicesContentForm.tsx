@@ -33,6 +33,8 @@ import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrate
 import { CSS } from "@dnd-kit/utilities"
 import { cn } from "@/lib/utils"
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 // SCHEMAS
 
 const introSchema = z.object({
@@ -239,9 +241,9 @@ export function ServicesContentForm() {
         const fullFormData = {} as any;
         for (const loc of locales) {
           const [introRes, listRes, whyRes] = await Promise.all([
-            fetch(`http://localhost:4000/api/services/intro?locale=${loc}`),
-            fetch(`http://localhost:4000/api/services/list?locale=${loc}`),
-            fetch(`http://localhost:4000/api/services/why-choose-us?locale=${loc}`),
+            fetch(`${API}/api/services/intro?locale=${loc}`),
+            fetch(`${API}/api/services/list?locale=${loc}`),
+            fetch(`${API}/api/services/why-choose-us?locale=${loc}`),
           ])
 
           if (introRes.status >= 500 || listRes.status >= 500 || whyRes.status >= 500) {
@@ -303,15 +305,15 @@ export function ServicesContentForm() {
       
       console.log(`[Services] Saving locale: ${loc}...`)
       const responses = await Promise.all([
-        fetch(`http://localhost:4000/api/services/intro?locale=${loc}`, {
+        fetch(`${API}/api/services/intro?locale=${loc}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(localeData.intro)
         }),
-        fetch(`http://localhost:4000/api/services/list?locale=${loc}`, {
+        fetch(`${API}/api/services/list?locale=${loc}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ 
             services: localeData.services.map(s => ({ ...s, bullets: s.bullets.map(b => b.value) })) 
           })
         }),
-        fetch(`http://localhost:4000/api/services/why-choose-us?locale=${loc}`, {
+        fetch(`${API}/api/services/why-choose-us?locale=${loc}`, {
           method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(localeData.whyChooseUs)
         })
       ])
