@@ -5,6 +5,7 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import type { NavPageLink } from "@/lib/page-builder/types";
 
 const SOCIAL_LINKS = [
   { name: "Instagram", href: "#" },
@@ -16,20 +17,23 @@ const SOCIAL_LINKS = [
 interface MobileMenuOverlayProps {
   isOpen: boolean;
   onClose: () => void;
+  extraLinks?: NavPageLink[];
 }
 
-export default function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
+export default function MobileMenuOverlay({ isOpen, onClose, extraLinks = [] }: MobileMenuOverlayProps) {
   const t = useTranslations("Navbar");
 
   const NAV_LINKS = [
-    { num: "01", label: t("home"), href: "/" },
-    { num: "02", label: t("services"), href: "/services" },
-    { num: "03", label: t("portfolio"), href: "/portfolio" },
-    { num: "04", label: t("blogs"), href: "/blogs" },
-    { num: "05", label: t("about"), href: "/about" },
-    { num: "06", label: t("contact"), href: "/contact" },
-    { num: "07", label: t("getConsultation"), href: "/contact" },
-  ];
+    { label: t("home"), href: "/" },
+    { label: t("services"), href: "/services" },
+    { label: t("portfolio"), href: "/portfolio" },
+    { label: t("blogs"), href: "/blogs" },
+    { label: t("about"), href: "/about" },
+    // Admin-built pages marked "show in menu"
+    ...extraLinks.map((page) => ({ label: page.label, href: `/${page.slug}` })),
+    { label: t("contact"), href: "/contact" },
+    { label: t("getConsultation"), href: "/contact" },
+  ].map((link, i) => ({ ...link, num: String(i + 1).padStart(2, "0") }));
 
   // Prevent scrolling when overlay is open
   React.useEffect(() => {

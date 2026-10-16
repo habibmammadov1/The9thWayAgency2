@@ -11,6 +11,7 @@ import {getMessages, setRequestLocale} from 'next-intl/server';
 import {routing} from '@/i18n/routing';
 import {notFound} from 'next/navigation';
 import { fetchFooter } from "@/lib/api";
+import { fetchNavPages } from "@/lib/page-builder/pagesApi";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://9thwayagency.com"),
@@ -60,14 +61,14 @@ export default async function RootLayout({
   setRequestLocale(locale);
   const messages = await getMessages();
   
-  const footerData = await fetchFooter(locale);
+  const [footerData, navPages] = await Promise.all([fetchFooter(locale), fetchNavPages(locale)]);
 
   return (
     <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       <body className={`${gilroy.variable} ${belwe.variable} font-sans bg-[#0B0B0C] text-[#E4E2DF] antialiased`} suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           <ScrollProgressBar />
-          <Navbar />
+          <Navbar extraLinks={navPages} />
           <SmoothScrollProvider>
             {children}
             <Footer data={footerData} locale={locale} />

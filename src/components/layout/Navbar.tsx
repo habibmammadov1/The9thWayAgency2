@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import MobileMenuOverlay from "./MobileMenuOverlay";
 import MagneticButtonWrapper from "../MagneticButtonWrapper";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
+import type { NavPageLink } from "@/lib/page-builder/types";
 
 // A simple 3x3 grid dots icon component
 const GridDotsIcon = () => (
@@ -23,7 +24,7 @@ const GridDotsIcon = () => (
   </svg>
 );
 
-export default function Navbar() {
+export default function Navbar({ extraLinks = [] }: { extraLinks?: NavPageLink[] }) {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const pathname = usePathname();
   const { scrollY } = useScroll();
@@ -35,6 +36,8 @@ export default function Navbar() {
     { label: t("portfolio"), href: "/portfolio" },
     { label: t("blogs"), href: "/blogs" },
     { label: t("about"), href: "/about" },
+    // Admin-built pages marked "show in menu"
+    ...extraLinks.map((page) => ({ label: page.label, href: `/${page.slug}` })),
     { label: t("contact"), href: "/contact" },
   ];
 
@@ -131,6 +134,7 @@ export default function Navbar() {
       <MobileMenuOverlay 
         isOpen={isOverlayOpen} 
         onClose={() => setIsOverlayOpen(false)} 
+        extraLinks={extraLinks}
       />
     </>
   );

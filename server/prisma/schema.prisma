@@ -451,3 +451,49 @@ model AdminUser {
   updatedAt          DateTime  @updatedAt
   mustChangePassword Boolean   @default(true)
 }
+
+// ---------------------------------------------------------------------------
+// Page builder — admin-created pages composed of ordered content blocks.
+// Purely additive: no relation to the content models above.
+// ---------------------------------------------------------------------------
+
+model Page {
+  id           String            @id @default(uuid())
+  slug         String            @unique
+  status       String            @default("draft") // draft | published
+  showInNav    Boolean           @default(false)
+  navOrder     Int               @default(0)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  translations PageTranslation[]
+  blocks       PageBlock[]
+}
+
+model PageTranslation {
+  id             String   @id @default(uuid())
+  pageId         String
+  locale         String
+  title          String
+  navLabel       String?
+  seoTitle       String?
+  seoDescription String?
+  ogImageUrl     String?
+  updatedAt      DateTime @updatedAt
+  page           Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, locale])
+}
+
+model PageBlock {
+  id        String   @id @default(uuid())
+  pageId    String
+  locale    String
+  order     Int
+  type      String
+  props     Json
+  isVisible Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId, locale])
+}
