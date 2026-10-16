@@ -45,6 +45,7 @@ export function Topbar({ isCollapsed, setIsCollapsed, isMobile }: TopbarProps) {
     if (parts.length <= 1) return "Ana Səhifə"
     const section = parts[1]
     const map: Record<string, string> = {
+      pages: "Səhifələr",
       services: "Xidmətlər",
       blogs: "Bloqlar",
       about: "Haqqımızda",

@@ -1,3 +1,4 @@
+import { slugify } from "@/lib/utils";
 import type {
   BlockPropsMap,
   BlockProps,
@@ -196,4 +197,26 @@ export function cloneBlocks(blocks: PageBlock[]): PageBlock[] {
     }
     return { ...b, id: newId(), props };
   });
+}
+
+// Keep in sync with RESERVED_SLUGS in server/src/lib/pageBlocks.ts
+export const RESERVED_SLUGS = [
+  "az", "ru", "en",
+  "about", "services", "portfolio", "blogs", "team", "contact",
+  "admin", "api", "page-preview", "uploads", "_next", "_vercel",
+];
+
+export const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/** Returns an error message, or null when the slug is acceptable. */
+export function validateSlug(slug: string): string | null {
+  if (!slug) return "URL (slug) boş ola bilməz";
+  if (!SLUG_PATTERN.test(slug)) return 'URL yalnız kiçik latın hərfləri, rəqəmlər və "-" ola bilər';
+  if (RESERVED_SLUGS.includes(slug)) return "Bu URL saytın mövcud səhifəsi üçün istifadə olunur";
+  return null;
+}
+
+/** slugify() from lib/utils plus the Azerbaijani letters it does not map (ü, İ). */
+export function toSlug(text: string): string {
+  return slugify(text.replace(/[üÜ]/g, "u").replace(/İ/g, "i")).slice(0, 100).replace(/-$/, "");
 }
