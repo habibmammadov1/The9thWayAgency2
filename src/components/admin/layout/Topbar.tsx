@@ -46,6 +46,7 @@ export function Topbar({ isCollapsed, setIsCollapsed, isMobile }: TopbarProps) {
     const section = parts[1]
     const map: Record<string, string> = {
       pages: "Səhifələr",
+      forms: "Formalar",
       services: "Xidmətlər",
       blogs: "Bloqlar",
       about: "Haqqımızda",
