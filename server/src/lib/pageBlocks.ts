@@ -136,6 +136,12 @@ const blockPropsSchemas = {
     count: z.number().int().min(1).max(24).default(4),
   }),
   contactForm: z.object({}),
+  // Renders a form built in Admin → Formalar (see routes/forms.ts)
+  form: z.object({
+    formId: z.string().max(100).default(''),
+    heading: text(300),
+    text: text(2000),
+  }),
 } as const;
 
 export type BlockType = keyof typeof blockPropsSchemas;

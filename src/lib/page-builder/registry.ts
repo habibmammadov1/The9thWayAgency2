@@ -154,6 +154,13 @@ export const BLOCK_DEFINITIONS: { [T in BlockType]: BlockDefinition<T> } = {
     category: "sections",
     defaults: () => ({}) as Record<string, never>,
   },
+  form: {
+    type: "form",
+    label: "Forma",
+    description: "Admin → Formalar bölməsində qurulmuş forma (öz sahələri ilə)",
+    category: "sections",
+    defaults: () => ({ formId: "", heading: "", text: "" }),
+  },
 };
 
 export const BLOCK_TYPES = Object.keys(BLOCK_DEFINITIONS) as BlockType[];

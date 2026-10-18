@@ -21,6 +21,7 @@ import translationsRoutes from './routes/translations';
 import authRoutes from './routes/auth';
 import adminUsersRoutes from './routes/adminUsers';
 import pagesRoutes from './routes/pages';
+import formsRoutes from './routes/forms';
 import { requireAuth } from './middleware/requireAuth';
 
 // ---------------------------------------------------------------------------
@@ -139,6 +140,7 @@ app.use('/api/team', teamRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/translations', translationsRoutes);
 app.use('/api/pages', pagesRoutes);
+app.use('/api/forms', formsRoutes);
 
 // Helper: run multer middleware and catch errors uniformly
 const handleSingleUpload = (
