@@ -24,6 +24,7 @@ import {
   Inbox,
   Layers,
   ClipboardList,
+  BookOpen,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { fetchContactSubmissions } from "@/lib/api"
@@ -64,6 +65,7 @@ const navigation: NavigationSection[] = [
     title: "Sistem",
     items: [
       { name: "Müraciətlər", href: "/admin/submissions", icon: Inbox, showBadge: true },
+      { name: "Təlimat", href: "/admin/guide", icon: BookOpen },
       { name: "İstifadəçilər", href: "/admin/settings/users", icon: Users },
     ],
   },
