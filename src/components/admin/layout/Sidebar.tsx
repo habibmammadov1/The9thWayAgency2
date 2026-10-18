@@ -22,6 +22,7 @@ import {
   ChevronDown,
   MessageSquare,
   Inbox,
+  Layers,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { fetchContactSubmissions } from "@/lib/api"
@@ -43,6 +44,7 @@ const navigation: NavigationSection[] = [
     title: "Məzmun",
     items: [
       { name: "Ana Səhifə", href: "/admin/content/home", icon: Home },
+      { name: "Səhifələr", href: "/admin/pages", icon: Layers },
       { name: "Xidmətlər", href: "/admin/content/services", icon: Briefcase },
       { name: "Rəylər", href: "/admin/content/testimonials", icon: MessageSquare },
       { name: "Bloqlar", href: "/admin/content/blogs", icon: FileText },
