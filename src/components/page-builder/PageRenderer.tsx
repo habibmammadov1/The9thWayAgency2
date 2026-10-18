@@ -15,6 +15,7 @@ import CardsBlock from "./blocks/CardsBlock";
 import GalleryBlock from "./blocks/GalleryBlock";
 import FaqBlock from "./blocks/FaqBlock";
 import CtaBlock from "./blocks/CtaBlock";
+import FormBlock from "./blocks/FormBlock";
 
 export interface RenderableBlock {
   id: string;
@@ -25,11 +26,14 @@ export interface RenderableBlock {
 interface PageRendererProps {
   blocks: RenderableBlock[];
   sectionData: SectionData;
-  /** Used as the contact form's sourcePage so submissions show which page they came from. */
+  /** Used as the forms' sourcePage so submissions show which page they came from. */
   slug: string;
+  locale: string;
+  /** Admin live preview: forms render but cannot submit. */
+  isPreview?: boolean;
 }
 
-function renderBlock(block: RenderableBlock, sectionData: SectionData, slug: string): React.ReactNode {
+function renderBlock(block: RenderableBlock, sectionData: SectionData, slug: string, locale: string, isPreview: boolean): React.ReactNode {
   // Unknown types (e.g. from a newer API version) are skipped instead of breaking the page
   if (!isBlockType(block.type)) return null;
 
@@ -78,17 +82,21 @@ function renderBlock(block: RenderableBlock, sectionData: SectionData, slug: str
     }
     case "contactForm":
       return <ContactSection info={(sectionData.contactInfo as never) ?? null} sourcePage={slug} />;
+    case "form": {
+      const props = withDefaults("form", block.props);
+      return <FormBlock props={props} form={sectionData.forms?.[props.formId]} locale={locale} slug={slug} isPreview={isPreview} />;
+    }
   }
 }
 
-export default function PageRenderer({ blocks, sectionData, slug }: PageRendererProps) {
+export default function PageRenderer({ blocks, sectionData, slug, locale, isPreview = false }: PageRendererProps) {
   // The fixed navbar overlaps the top of the page; heroes already reserve space for it.
   const needsTopSpace = blocks.length === 0 || blocks[0].type !== "hero";
 
   return (
     <main className={cn("w-full flex flex-col min-h-screen bg-paper", needsTopSpace && "pt-28 md:pt-32")}>
       {blocks.map((block) => (
-        <React.Fragment key={block.id}>{renderBlock(block, sectionData, slug)}</React.Fragment>
+        <React.Fragment key={block.id}>{renderBlock(block, sectionData, slug, locale, isPreview)}</React.Fragment>
       ))}
     </main>
   );

@@ -23,15 +23,19 @@ import {
   MessageSquare,
   Inbox,
   Layers,
+  ClipboardList,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { fetchContactSubmissions } from "@/lib/api"
+import { fetchFormsUnreadCount } from "@/lib/forms/formsApi"
 
 interface NavigationItem {
   name: string;
   href: string;
   icon: React.ComponentType<any>;
   showBadge?: boolean;
+  /** Which unread counter the badge shows (default: contact submissions) */
+  badge?: "forms";
 }
 
 interface NavigationSection {
@@ -45,6 +49,7 @@ const navigation: NavigationSection[] = [
     items: [
       { name: "Ana Səhifə", href: "/admin/content/home", icon: Home },
       { name: "Səhifələr", href: "/admin/pages", icon: Layers },
+      { name: "Formalar", href: "/admin/forms", icon: ClipboardList, showBadge: true, badge: "forms" },
       { name: "Xidmətlər", href: "/admin/content/services", icon: Briefcase },
       { name: "Rəylər", href: "/admin/content/testimonials", icon: MessageSquare },
       { name: "Bloqlar", href: "/admin/content/blogs", icon: FileText },
@@ -82,6 +87,7 @@ interface SidebarProps {
 export function Sidebar({ isCollapsed, setIsCollapsed, isMobile }: SidebarProps) {
   const pathname = usePathname()
   const [unreadCount, setUnreadCount] = React.useState(0)
+  const [formsUnread, setFormsUnread] = React.useState(0)
 
   const fetchUnread = async () => {
     try {
@@ -98,6 +104,23 @@ export function Sidebar({ isCollapsed, setIsCollapsed, isMobile }: SidebarProps)
     window.addEventListener("submissions-updated", fetchUnread)
     return () => window.removeEventListener("submissions-updated", fetchUnread)
   }, [])
+
+  // Unread answers of admin-built forms (Admin → Formalar)
+  React.useEffect(() => {
+    let cancelled = false
+    const refresh = () => {
+      fetchFormsUnreadCount().then((n) => !cancelled && setFormsUnread(n))
+    }
+    refresh()
+
+    window.addEventListener("forms-updated", refresh)
+    return () => {
+      cancelled = true
+      window.removeEventListener("forms-updated", refresh)
+    }
+  }, [])
+
+  const badgeCount = (item: NavigationItem) => (item.badge === "forms" ? formsUnread : unreadCount)
 
   return (
     <motion.aside
@@ -185,7 +208,7 @@ export function Sidebar({ isCollapsed, setIsCollapsed, isMobile }: SidebarProps)
                             isActive ? "text-[var(--primary-foreground)]" : "text-[#C2C2C2] group-hover:text-white"
                           )}
                         />
-                        {item.showBadge && unreadCount > 0 && isCollapsed && (
+                        {item.showBadge && badgeCount(item) > 0 && isCollapsed && (
                           <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[var(--primary)] border-2 border-[var(--color-ink-lighter)] rounded-full" />
                         )}
                       </motion.div>
@@ -198,9 +221,9 @@ export function Sidebar({ isCollapsed, setIsCollapsed, isMobile }: SidebarProps)
                             className="flex-1 flex items-center justify-between truncate whitespace-nowrap"
                           >
                             <span>{item.name}</span>
-                            {item.showBadge && unreadCount > 0 && (
+                            {item.showBadge && badgeCount(item) > 0 && (
                               <span className="ml-2 bg-[var(--primary)] text-black text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 min-w-5 text-center">
-                                {unreadCount}
+                                {badgeCount(item)}
                               </span>
                             )}
                           </motion.span>

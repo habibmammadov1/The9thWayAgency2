@@ -9,6 +9,7 @@ import CardsEditor from "./CardsEditor";
 import GalleryEditor from "./GalleryEditor";
 import FaqEditor from "./FaqEditor";
 import CtaEditor from "./CtaEditor";
+import FormBlockEditor from "./FormBlockEditor";
 import { ClientLogosEditor, ContactFormEditor, TeamMembersEditor, TestimonialsEditor } from "./SectionEditors";
 
 type AnyPatch = Partial<BlockProps<BlockType>>;
@@ -41,6 +42,8 @@ export function BlockEditor({ block, onChange }: { block: PageBlock; onChange: (
       return <ClientLogosEditor />;
     case "contactForm":
       return <ContactFormEditor />;
+    case "form":
+      return <FormBlockEditor props={p} onChange={set} />;
     default:
       return <p className="text-xs text-red-600">Naməlum blok növü</p>;
   }

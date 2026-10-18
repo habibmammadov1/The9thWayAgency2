@@ -7,6 +7,8 @@ import {
   fetchTestimonialsIntro,
   fetchTestimonialsList,
 } from "@/lib/api";
+import { fetchPublicForm } from "@/lib/forms/formsApi";
+import type { PublicForm } from "@/lib/forms/types";
 
 // Data for the "existing section" blocks (testimonials, logos, team, contact).
 // Loaded only for the block types a page actually uses. Works on server and client.
@@ -16,6 +18,8 @@ export interface SectionData {
   clientLogos?: unknown[] | null;
   team?: { teaser: { heading: string; viewAllLabel: string; displayCount: number } | null; members: unknown[] };
   contactInfo?: unknown;
+  /** Form definitions by form id (null when missing, inactive or not available in this language). */
+  forms?: Record<string, PublicForm | null>;
 }
 
 export async function loadSectionData(
@@ -56,6 +60,22 @@ export async function loadSectionData(
 
   if (types.has("contactForm")) {
     jobs.push(fetchContactInfo(locale).then((res) => void (data.contactInfo = res?.info ?? null)));
+  }
+
+  const formIds = Array.from(
+    new Set(
+      blocks
+        .filter((b) => b.type === "form")
+        .map((b) => String(b.props?.formId ?? ""))
+        .filter(Boolean),
+    ),
+  );
+  if (formIds.length > 0) {
+    jobs.push(
+      Promise.all(formIds.map(async (id) => [id, await fetchPublicForm(id, locale)] as const)).then((entries) => {
+        data.forms = Object.fromEntries(entries);
+      }),
+    );
   }
 
   await Promise.all(jobs);

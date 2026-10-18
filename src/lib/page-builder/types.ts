@@ -105,6 +105,13 @@ export interface TeamMembersBlockProps {
   count: number;
 }
 
+export interface FormBlockProps {
+  /** Id of a form built in Admin → Formalar. */
+  formId: string;
+  heading: string;
+  text: string;
+}
+
 export type EmptyProps = Record<string, never>;
 
 export interface BlockPropsMap {
@@ -119,6 +126,7 @@ export interface BlockPropsMap {
   clientLogos: EmptyProps;
   teamMembers: TeamMembersBlockProps;
   contactForm: EmptyProps;
+  form: FormBlockProps;
 }
 
 export type BlockType = keyof BlockPropsMap;

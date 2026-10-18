@@ -41,5 +41,5 @@ export default async function BuilderPage({ params }: Props) {
 
   const sectionData = await loadSectionData(locale, page.blocks);
 
-  return <PageRenderer blocks={page.blocks} sectionData={sectionData} slug={page.slug} />;
+  return <PageRenderer blocks={page.blocks} sectionData={sectionData} slug={page.slug} locale={locale} />;
 }

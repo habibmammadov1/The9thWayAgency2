@@ -497,3 +497,46 @@ model PageBlock {
 
   @@index([pageId, locale])
 }
+
+// ---------------------------------------------------------------------------
+// Form builder — admin-defined forms (fields per language) and their answers.
+// Independent from ContactSubmission, which keeps serving the contact page.
+// ---------------------------------------------------------------------------
+
+model Form {
+  id          String           @id @default(uuid())
+  name        String
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  locales     FormLocale[]
+  submissions FormSubmission[]
+}
+
+model FormLocale {
+  id           String   @id @default(uuid())
+  formId       String
+  locale       String
+  fields       Json
+  submitLabel  String   @default("")
+  successTitle String   @default("")
+  successText  String   @default("")
+  updatedAt    DateTime @updatedAt
+  form         Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@unique([formId, locale])
+}
+
+model FormSubmission {
+  id         String   @id @default(uuid())
+  formId     String
+  locale     String
+  sourcePage String   @default("")
+  data       Json
+  status     String   @default("new")
+  createdAt  DateTime @default(now())
+  // Restrict: a form with answers cannot be deleted by accident (deactivate it instead)
+  form       Form     @relation(fields: [formId], references: [id], onDelete: Restrict)
+
+  @@index([formId, createdAt])
+}

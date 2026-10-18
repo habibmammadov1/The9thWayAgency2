@@ -13,6 +13,7 @@ import {
   PanelTop,
   Users,
   BadgeCheck,
+  ClipboardList,
   type LucideIcon,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/admin/ui/dialog";
@@ -32,6 +33,7 @@ const ICONS: Record<BlockType, LucideIcon> = {
   clientLogos: BadgeCheck,
   teamMembers: Users,
   contactForm: Mail,
+  form: ClipboardList,
 };
 
 const CATEGORIES: { value: BlockCategory | "all"; label: string }[] = [

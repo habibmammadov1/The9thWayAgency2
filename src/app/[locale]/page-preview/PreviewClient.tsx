@@ -30,7 +30,9 @@ export default function PreviewClient({ locale }: { locale: string }) {
   useEffect(() => {
     if (!blocks) return;
     const key = blocks
-      .map((b) => (b.type === "teamMembers" ? `${b.type}:${b.props?.count}` : b.type))
+      .map((b) =>
+        b.type === "teamMembers" ? `${b.type}:${b.props?.count}` : b.type === "form" ? `${b.type}:${b.props?.formId}` : b.type,
+      )
       .sort()
       .join(",");
     if (key === loadedTypes.current) return;
@@ -50,5 +52,5 @@ export default function PreviewClient({ locale }: { locale: string }) {
     );
   }
 
-  return <PageRenderer blocks={blocks} sectionData={sectionData} slug={slug} />;
+  return <PageRenderer blocks={blocks} sectionData={sectionData} slug={slug} locale={locale} isPreview />;
 }
