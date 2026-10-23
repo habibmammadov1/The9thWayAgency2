@@ -1,9 +1,6 @@
 // Booking — date/time helpers built on Intl (no date library). Slots arrive as UTC instants;
 // everything shown to a visitor is formatted in the time zone they picked.
 
-const INTL_LOCALE: Record<string, string> = { az: "az", ru: "ru", en: "en-GB" };
-const intlLocale = (locale: string) => INTL_LOCALE[locale] ?? "az";
-
 /** "YYYY-MM-DD" of an instant in the given zone. */
 export function dayKey(instant: Date | string, timeZone: string): string {
   const d = typeof instant === "string" ? new Date(instant) : instant;
@@ -15,22 +12,37 @@ export function formatTime(instant: Date | string, timeZone: string): string {
   return new Intl.DateTimeFormat("en-GB", { timeZone, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(d);
 }
 
-/** e.g. "Fri, 23 Oct 2026" in the visitor's language. */
+// Month and weekday names are fixed here instead of coming from Intl: some browsers have no data
+// for "az" and print "M10" instead of the month name, and server and browser could differ.
+const MONTHS = {
+  az: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"],
+  ru: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+  en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+} as const;
+const MONTHS_OF_DATE_RU = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+// Index 0 = Sunday
+const WEEKDAYS = {
+  az: ["Bazar", "B.e.", "Ç.a.", "Çərş.", "C.a.", "Cümə", "Şən."],
+  ru: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+  en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+} as const;
+const lang = (locale: string): "az" | "ru" | "en" => (locale === "ru" || locale === "en" ? locale : "az");
+
+/** e.g. "Fri, 23 October 2026" in the visitor's language. Accepts an instant or a "YYYY-MM-DD" calendar key. */
 export function formatLongDate(instantOrKey: Date | string, timeZone: string, locale: string): string {
-  // A bare "YYYY-MM-DD" key is a calendar date, so it is formatted at UTC noon (no zone shift).
+  // A bare key is already a calendar date; an instant is first converted to a date in the chosen zone.
   const isKey = typeof instantOrKey === "string" && /^\d{4}-\d{2}-\d{2}$/.test(instantOrKey);
-  const d = isKey ? new Date(`${instantOrKey}T12:00:00Z`) : typeof instantOrKey === "string" ? new Date(instantOrKey) : instantOrKey;
-  return new Intl.DateTimeFormat(intlLocale(locale), {
-    timeZone: isKey ? "UTC" : timeZone,
-    weekday: "short",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(d);
+  const key = isKey ? (instantOrKey as string) : dayKey(instantOrKey, timeZone);
+  const [y, m, d] = key.split("-").map(Number);
+  const l = lang(locale);
+  const weekday = WEEKDAYS[l][new Date(Date.UTC(y, m - 1, d)).getUTCDay()];
+  const month = l === "ru" ? MONTHS_OF_DATE_RU[m - 1] : l === "az" ? MONTHS.az[m - 1].toLocaleLowerCase("az") : MONTHS.en[m - 1];
+  return `${weekday}, ${d} ${month} ${y}`;
 }
 
+/** e.g. "Oktyabr 2026"; month is 0-based. */
 export function monthTitle(year: number, month: number, locale: string): string {
-  return new Intl.DateTimeFormat(intlLocale(locale), { timeZone: "UTC", month: "long", year: "numeric" }).format(new Date(Date.UTC(year, month, 1)));
+  return `${MONTHS[lang(locale)][month]} ${year}`;
 }
 
 export interface CalendarCell {

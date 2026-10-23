@@ -189,7 +189,11 @@ export function BookingTypesManager() {
                   </Field>
                   <Field label="Aktiv" hint="Deaktiv növ saytda göstərilmir.">
                     <div className="pt-1">
-                      <Switch checked={draft.isActive} onCheckedChange={(isActive) => setDraft({ ...draft, isActive })} />
+                      <Switch
+                        checked={draft.isActive}
+                        onCheckedChange={(isActive) => setDraft({ ...draft, isActive })}
+                        className="data-[state=checked]:bg-[var(--primary)] data-[state=unchecked]:bg-gray-300 [&>span]:bg-white"
+                      />
                     </div>
                   </Field>
                 </div>
