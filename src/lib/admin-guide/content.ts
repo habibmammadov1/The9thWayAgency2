@@ -303,7 +303,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         title: "Sistemi ilk dəfə qurmaq",
         items: [
           "Sol menyuda \"Rezervasiyalar\" → \"İş cədvəli\" tab-ı. Biznes saat qurşağını seçin (məs. Asia/Baku) və hər gün üçün iş saatlarını yazın. Bağlı gün üçün bütün aralıqları silin. Bir gündə fasilə üçün 2 aralıq əlavə etmək olar (məs. 09:00-13:00 və 14:00-18:00). \"Yadda saxla\".",
-          "\"Görüş növləri\" tab-ı → \"Yeni görüş növü\". Daxili ad (yalnız siz görürsünüz), müddət (dəqiqə) yazın. Hər dil (AZ/RU/EN) üçün başlıq, təsvir, görüş yeri/linki və təşəkkür mətni yazın. Başlığı boş qoyduğunuz dildə bu növ saytda görünməz. \"Saxla\".",
+          "\"Görüş növləri\" tab-ı → \"Yeni görüş növü\". Daxili ad (yalnız siz görürsünüz), müddət (dəqiqə) yazın. Hər dil (AZ/RU/EN) üçün başlıq, təsvir, görüş yeri/linki və təşəkkür mətni yazın. Başlığı boş qoyduğunuz dildə AZ mətn göstərilir (heç bir dildə başlıq yoxdursa növ saytda görünməz). \"Saxla\".",
           "\"Səhifələr\" bölməsində istədiyiniz səhifəni açın → \"Blok əlavə et\" → \"Rezervasiya\" (\"Hazır bölmələr\" qrupunda). \"Görüş növü\" siyahısından növü seçin (boş buraxsanız, ziyarətçi özü seçir). İstəsəniz başlıq və alt mətn yazın.",
           "Səhifəni \"Yadda saxla\" və \"Dərc et\", sonra saytda açıb rezerv edərək yoxlayın.",
         ],
@@ -312,8 +312,8 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         type: "list",
         title: "Ana səhifədə və menyuda",
         items: [
-          "Ana səhifədə, Komanda ilə Əlaqə bölmələrinin arasında, \"Görüş təyin edin\" bölməsi avtomatik görünür. Onu əlavə etmək lazım deyil: həmin dildə ən azı bir aktiv görüş növü olan kimi görünür, olmayanda gizlənir.",
-          "Yuxarı menyudakı və mobil menyudakı \"Konsultasiya al\" düyməsi ana səhifədəki bu bölməyə aparır.",
+          "Ana səhifədə, Komanda ilə Əlaqə bölmələrinin arasında, \"Görüş təyin edin\" bölməsi avtomatik görünür. Onu əlavə etmək lazım deyil: ən azı bir aktiv görüş növü olan kimi görünür, olmayanda gizlənir.",
+          "Yuxarı menyudakı və mobil menyudakı \"Konsultasiya al\" düyməsi ana səhifədəki bu bölməyə aparır. Aktiv görüş növü yoxdursa, düymə \"Əlaqə\" səhifəsinə aparır.",
           "Bu bölmənin başlığı və alt mətni sabitdir, paneldən dəyişmir. Fərqli mətnlə ayrıca yer istəsəniz, \"Səhifələr\"də yeni səhifə yaradıb \"Rezervasiya\" blokunu qoyun.",
           "Görüş növünün özünün mətnləri (başlıq, təsvir, görüş yeri, təşəkkür) \"Görüş növləri\" tab-ında dəyişir.",
         ],

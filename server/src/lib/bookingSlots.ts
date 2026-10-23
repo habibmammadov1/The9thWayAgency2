@@ -167,6 +167,15 @@ export function isSlotAvailable(params: Omit<SlotParams, 'from' | 'to'> & { star
   return slots.includes(startsAt.toISOString());
 }
 
+/**
+ * Picks the text of a meeting type for a visitor language: that language, else Azerbaijani,
+ * else any language that has a title. Entries without a title count as missing.
+ */
+export function pickLocaleText<T extends { locale: string; title: string }>(locales: T[], locale: string): T | undefined {
+  const filled = locales.filter((l) => l.title.trim() !== '');
+  return filled.find((l) => l.locale === locale) ?? filled.find((l) => l.locale === 'az') ?? filled[0];
+}
+
 /** Converts a wall-clock value like "2026-10-25T09:00" in the given zone to a UTC Date (null if invalid). */
 export function localToDate(local: string, zone: string): Date | null {
   const dt = DateTime.fromISO(local, { zone });

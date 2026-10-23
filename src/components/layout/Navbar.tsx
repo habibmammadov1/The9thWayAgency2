@@ -24,7 +24,7 @@ const GridDotsIcon = () => (
   </svg>
 );
 
-export default function Navbar({ extraLinks = [] }: { extraLinks?: NavPageLink[] }) {
+export default function Navbar({ extraLinks = [], hasBooking = false }: { extraLinks?: NavPageLink[]; hasBooking?: boolean }) {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const pathname = usePathname();
   const { scrollY } = useScroll();
@@ -108,7 +108,7 @@ export default function Navbar({ extraLinks = [] }: { extraLinks?: NavPageLink[]
             <div className="hidden sm:block">
               <MagneticButtonWrapper pullStrength={0.15}>
                 <Link 
-                  href="/#booking"
+                  href={hasBooking ? "/#booking" : "/contact"}
                   className="flex bg-[#d9c2a0] text-[#0B0B0C] px-6 py-3 text-[14px] font-bold hover:bg-[#0B0B0C] hover:text-[#d9c2a0] transition-colors duration-300 items-center justify-center rounded-[14px]"
                 >
                   {t("getConsultation")}
@@ -135,6 +135,7 @@ export default function Navbar({ extraLinks = [] }: { extraLinks?: NavPageLink[]
         isOpen={isOverlayOpen} 
         onClose={() => setIsOverlayOpen(false)} 
         extraLinks={extraLinks}
+        hasBooking={hasBooking}
       />
     </>
   );
