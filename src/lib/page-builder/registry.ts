@@ -161,6 +161,13 @@ export const BLOCK_DEFINITIONS: { [T in BlockType]: BlockDefinition<T> } = {
     category: "sections",
     defaults: () => ({ formId: "", heading: "", text: "" }),
   },
+  booking: {
+    type: "booking",
+    label: "Rezervasiya",
+    description: "Görüş rezervasiyası: təqvim, boş saatlar (Admin → Rezervasiyalar)",
+    category: "sections",
+    defaults: () => ({ typeId: "", heading: "", text: "" }),
+  },
 };
 
 export const BLOCK_TYPES = Object.keys(BLOCK_DEFINITIONS) as BlockType[];

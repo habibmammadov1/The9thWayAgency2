@@ -142,6 +142,12 @@ const blockPropsSchemas = {
     heading: text(300),
     text: text(2000),
   }),
+  // Renders the booking calendar (Admin → Rezervasiyalar). Empty typeId = visitor picks the meeting type.
+  booking: z.object({
+    typeId: z.string().max(100).default(''),
+    heading: text(300),
+    text: text(2000),
+  }),
 } as const;
 
 export type BlockType = keyof typeof blockPropsSchemas;

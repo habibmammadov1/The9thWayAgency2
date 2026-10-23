@@ -10,6 +10,7 @@ import GalleryEditor from "./GalleryEditor";
 import FaqEditor from "./FaqEditor";
 import CtaEditor from "./CtaEditor";
 import FormBlockEditor from "./FormBlockEditor";
+import BookingBlockEditor from "./BookingBlockEditor";
 import { ClientLogosEditor, ContactFormEditor, TeamMembersEditor, TestimonialsEditor } from "./SectionEditors";
 
 type AnyPatch = Partial<BlockProps<BlockType>>;
@@ -42,6 +43,8 @@ export function BlockEditor({ block, onChange }: { block: PageBlock; onChange: (
       return <ClientLogosEditor />;
     case "contactForm":
       return <ContactFormEditor />;
+    case "booking":
+      return <BookingBlockEditor props={p} onChange={set} />;
     case "form":
       return <FormBlockEditor props={p} onChange={set} />;
     default:

@@ -112,6 +112,13 @@ export interface FormBlockProps {
   text: string;
 }
 
+export interface BookingBlockProps {
+  /** Id of a meeting type from Admin → Rezervasiyalar. Empty = the visitor chooses. */
+  typeId: string;
+  heading: string;
+  text: string;
+}
+
 export type EmptyProps = Record<string, never>;
 
 export interface BlockPropsMap {
@@ -127,6 +134,7 @@ export interface BlockPropsMap {
   teamMembers: TeamMembersBlockProps;
   contactForm: EmptyProps;
   form: FormBlockProps;
+  booking: BookingBlockProps;
 }
 
 export type BlockType = keyof BlockPropsMap;

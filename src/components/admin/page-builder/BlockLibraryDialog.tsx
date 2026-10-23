@@ -14,6 +14,7 @@ import {
   Users,
   BadgeCheck,
   ClipboardList,
+  CalendarClock,
   type LucideIcon,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/admin/ui/dialog";
@@ -34,6 +35,7 @@ const ICONS: Record<BlockType, LucideIcon> = {
   teamMembers: Users,
   contactForm: Mail,
   form: ClipboardList,
+  booking: CalendarClock,
 };
 
 const CATEGORIES: { value: BlockCategory | "all"; label: string }[] = [

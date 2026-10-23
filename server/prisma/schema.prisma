@@ -540,3 +540,76 @@ model FormSubmission {
 
   @@index([formId, createdAt])
 }
+
+// ---------------------------------------------------------------------------
+// Booking — Calendly-style meeting reservations.
+// One shared calendar (BookingSettings), several meeting types, time off, and bookings.
+// ---------------------------------------------------------------------------
+
+model BookingSettings {
+  id              String   @id @default("default")
+  timezone        String   @default("Asia/Baku")
+  weeklyHours     Json
+  slotStepMinutes Int      @default(30)
+  bufferMinutes   Int      @default(0)
+  minNoticeHours  Int      @default(12)
+  maxDaysAhead    Int      @default(60)
+  updatedAt       DateTime @updatedAt
+}
+
+model BookingType {
+  id              String              @id @default(uuid())
+  name            String
+  durationMinutes Int
+  isActive        Boolean             @default(true)
+  order           Int                 @default(0)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  locales         BookingTypeLocale[]
+  bookings        Booking[]
+}
+
+model BookingTypeLocale {
+  id           String      @id @default(uuid())
+  typeId       String
+  locale       String
+  title        String
+  description  String      @default("")
+  locationNote String      @default("")
+  successText  String      @default("")
+  updatedAt    DateTime    @updatedAt
+  type         BookingType @relation(fields: [typeId], references: [id], onDelete: Cascade)
+
+  @@unique([typeId, locale])
+}
+
+model BookingTimeOff {
+  id        String   @id @default(uuid())
+  startsAt  DateTime
+  endsAt    DateTime
+  reason    String   @default("")
+  createdAt DateTime @default(now())
+}
+
+model Booking {
+  id              String      @id @default(uuid())
+  typeId          String
+  startsAt        DateTime
+  endsAt          DateTime
+  status          String      @default("confirmed")
+  isSeen          Boolean     @default(false)
+  name            String
+  email           String
+  phone           String?
+  message         String?
+  locale          String
+  visitorTimezone String      @default("")
+  adminNote       String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  // Restrict: a meeting type with bookings cannot be deleted by accident (deactivate it instead)
+  type            BookingType @relation(fields: [typeId], references: [id], onDelete: Restrict)
+
+  @@index([startsAt])
+  @@index([typeId])
+}

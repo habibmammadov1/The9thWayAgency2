@@ -16,6 +16,7 @@ import GalleryBlock from "./blocks/GalleryBlock";
 import FaqBlock from "./blocks/FaqBlock";
 import CtaBlock from "./blocks/CtaBlock";
 import FormBlock from "./blocks/FormBlock";
+import BookingBlock from "./blocks/BookingBlock";
 
 export interface RenderableBlock {
   id: string;
@@ -82,6 +83,10 @@ function renderBlock(block: RenderableBlock, sectionData: SectionData, slug: str
     }
     case "contactForm":
       return <ContactSection info={(sectionData.contactInfo as never) ?? null} sourcePage={slug} />;
+    case "booking": {
+      const props = withDefaults("booking", block.props);
+      return <BookingBlock props={props} types={sectionData.bookingTypes} locale={locale} isPreview={isPreview} />;
+    }
     case "form": {
       const props = withDefaults("form", block.props);
       return <FormBlock props={props} form={sectionData.forms?.[props.formId]} locale={locale} slug={slug} isPreview={isPreview} />;
