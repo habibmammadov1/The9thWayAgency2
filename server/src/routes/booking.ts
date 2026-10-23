@@ -11,6 +11,7 @@ import {
   isSlotAvailable,
   isValidTimeZone,
   localToDate,
+  pickLocaleText,
 } from '../lib/bookingSlots';
 
 const router = Router();
@@ -130,18 +131,18 @@ router.get('/public/types', async (req: Request, res: Response): Promise<void> =
       res.status(400).json({ error: 'locale query param is required' });
       return;
     }
+    // A type without a text in this language falls back to Azerbaijani (then any language),
+    // so forgetting one language does not make the type disappear from the site.
     const types = await prisma.bookingType.findMany({
-      where: { isActive: true, locales: { some: { locale: locale.data } } },
+      where: { isActive: true },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
-      include: { locales: { where: { locale: locale.data } } },
+      include: { locales: true },
     });
     res.json(
-      types.map((t) => ({
-        id: t.id,
-        durationMinutes: t.durationMinutes,
-        title: t.locales[0].title,
-        description: t.locales[0].description,
-      })),
+      types.flatMap((t) => {
+        const text = pickLocaleText(t.locales, locale.data);
+        return text ? [{ id: t.id, durationMinutes: t.durationMinutes, title: text.title, description: text.description }] : [];
+      }),
     );
   } catch (error) {
     console.error('Error fetching booking types:', error);
@@ -311,7 +312,7 @@ router.post('/public/book', validate(bookSchema), async (req: Request, res: Resp
       return;
     }
 
-    const text = type.locales.find((l) => l.locale === payload.locale) ?? type.locales.find((l) => l.locale === 'az') ?? type.locales[0];
+    const text = pickLocaleText(type.locales, payload.locale) ?? type.locales[0];
     res.json({
       success: true,
       booking: {

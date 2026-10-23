@@ -206,7 +206,7 @@ export function BookingTypesManager() {
                     </button>
                   ))}
                 </div>
-                <p className="text-[11px] text-gray-500">Başlığı boş qoysanız, bu növ həmin dildə saytda görünməz.</p>
+                <p className="text-[11px] text-gray-500">Başlığı boş qoysanız, həmin dildə AZ mətn göstərilir. Heç bir dildə başlıq yoxdursa, növ saytda görünməz.</p>
                 <TextField label="Başlıq" value={draft.locales[lang].title} onChange={(title) => setLocale({ title })} />
                 <TextAreaField label="Təsvir (istəyə görə)" rows={3} value={draft.locales[lang].description} onChange={(description) => setLocale({ description })} />
                 <TextAreaField label="Görüş yeri / link (təsdiqdən sonra göstərilir)" rows={2} value={draft.locales[lang].locationNote} onChange={(locationNote) => setLocale({ locationNote })} />

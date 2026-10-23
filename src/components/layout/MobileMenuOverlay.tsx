@@ -18,9 +18,10 @@ interface MobileMenuOverlayProps {
   isOpen: boolean;
   onClose: () => void;
   extraLinks?: NavPageLink[];
+  hasBooking?: boolean;
 }
 
-export default function MobileMenuOverlay({ isOpen, onClose, extraLinks = [] }: MobileMenuOverlayProps) {
+export default function MobileMenuOverlay({ isOpen, onClose, extraLinks = [], hasBooking = false }: MobileMenuOverlayProps) {
   const t = useTranslations("Navbar");
 
   const NAV_LINKS = [
@@ -32,7 +33,7 @@ export default function MobileMenuOverlay({ isOpen, onClose, extraLinks = [] }: 
     // Admin-built pages marked "show in menu"
     ...extraLinks.map((page) => ({ label: page.label, href: `/${page.slug}` })),
     { label: t("contact"), href: "/contact" },
-    { label: t("getConsultation"), href: "/#booking" },
+    { label: t("getConsultation"), href: hasBooking ? "/#booking" : "/contact" },
   ].map((link, i) => ({ ...link, num: String(i + 1).padStart(2, "0") }));
 
   // Prevent scrolling when overlay is open

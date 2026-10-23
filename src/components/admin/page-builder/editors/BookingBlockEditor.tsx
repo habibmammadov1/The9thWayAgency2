@@ -27,7 +27,7 @@ export default function BookingBlockEditor({ props, onChange }: EditorProps<"boo
 
   return (
     <div className="space-y-4">
-      <Field label="Görüş növü" hint="Boş buraxsanız, ziyarətçi aktiv görüş növlərindən birini özü seçir. Növləri Admin → Rezervasiyalar bölməsində qurursunuz.">
+      <Field label="Görüş növü" hint="Boş buraxsanız, ziyarətçi aktiv görüş növlərindən birini özü seçir. Növləri Admin → Rezervasiyalar bölməsində qurursunuz. Başlığı yazılmayan dildə AZ mətn göstərilir.">
         <select
           value={props.typeId}
           disabled={!types}
@@ -35,6 +35,7 @@ export default function BookingBlockEditor({ props, onChange }: EditorProps<"boo
           className="h-10 w-full rounded-md border border-[var(--border)] bg-white px-3 text-sm"
         >
           <option value="">{types ? "— Ziyarətçi seçsin —" : failed ? "Növlər yüklənmədi" : "Yüklənir..."}</option>
+          {missing && <option value={props.typeId}>— Silinib, başqa növ seçin —</option>}
           {types?.map((t) => (
             <option key={t.id} value={t.id}>
               {t.name} ({t.durationMinutes} dəq){!t.isActive ? " (deaktiv)" : ""}
