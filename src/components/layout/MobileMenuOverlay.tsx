@@ -32,7 +32,7 @@ export default function MobileMenuOverlay({ isOpen, onClose, extraLinks = [] }: 
     // Admin-built pages marked "show in menu"
     ...extraLinks.map((page) => ({ label: page.label, href: `/${page.slug}` })),
     { label: t("contact"), href: "/contact" },
-    { label: t("getConsultation"), href: "/contact" },
+    { label: t("getConsultation"), href: "/#booking" },
   ].map((link, i) => ({ ...link, num: String(i + 1).padStart(2, "0") }));
 
   // Prevent scrolling when overlay is open
