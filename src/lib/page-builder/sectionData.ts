@@ -9,6 +9,8 @@ import {
 } from "@/lib/api";
 import { fetchPublicForm } from "@/lib/forms/formsApi";
 import type { PublicForm } from "@/lib/forms/types";
+import { fetchBookingTypes } from "@/lib/booking/bookingApi";
+import type { PublicBookingType } from "@/lib/booking/types";
 
 // Data for the "existing section" blocks (testimonials, logos, team, contact).
 // Loaded only for the block types a page actually uses. Works on server and client.
@@ -20,6 +22,8 @@ export interface SectionData {
   contactInfo?: unknown;
   /** Form definitions by form id (null when missing, inactive or not available in this language). */
   forms?: Record<string, PublicForm | null>;
+  /** Active meeting types in this language (booking blocks). */
+  bookingTypes?: PublicBookingType[];
 }
 
 export async function loadSectionData(
@@ -76,6 +80,10 @@ export async function loadSectionData(
         data.forms = Object.fromEntries(entries);
       }),
     );
+  }
+
+  if (types.has("booking")) {
+    jobs.push(fetchBookingTypes(locale).then((list) => void (data.bookingTypes = list)));
   }
 
   await Promise.all(jobs);

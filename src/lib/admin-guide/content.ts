@@ -24,6 +24,8 @@ export const SAMPLE_QUESTIONS = [
   "Necə forma yaradım?",
   "Yeni səhifə necə yaradım və menyuya necə əlavə edim?",
   "Formaya gələn cavabları harada görürəm?",
+  "Rezervasiya (görüş) sistemini necə qururam?",
+  "Kimsə görüş rezerv edəndə harada görürəm?",
   "Bloq yazısı necə əlavə edim?",
   "Yeni admin istifadəçi necə əlavə edim?",
   "Şəkil yüklənmir, nə edim?",
@@ -153,6 +155,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           "Rəylər, Müştəri loqoları, Komanda: mövcud bölmələri səhifəyə qoyur. Məzmunu öz bölmələrində dəyişirsiniz (Rəylər, Müştəri Loqoları, Komanda).",
           "Əlaqə forması: saytın köhnə, sabit əlaqə formasını göstərir (cavablar \"Müraciətlər\" bölməsinə düşür).",
           "Forma: \"Formalar\" bölməsində qurduğunuz formanı göstərir (aşağıda ayrıca izah olunub).",
+          "Rezervasiya: ziyarətçinin təqvimdən gün və saat seçib görüş rezerv etdiyi bölmə (\"Rezervasiyalar\" bölməsində izah olunub).",
         ],
       },
       {
@@ -282,6 +285,82 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           "Fayl yükləmə sahəsi yoxdur.",
           "Spam qorunması: gizli sahə və eyni ünvandan saatda ən çox 10 göndəriş limiti var.",
           "Bu bölmə saytdakı köhnə sabit əlaqə formasından ayrıdır. Köhnə formanın mesajları \"Müraciətlər\" bölməsindədir.",
+        ],
+      },
+    ],
+  },
+  {
+    id: "rezervasiyalar",
+    title: "Rezervasiyalar (görüş təyin etmək sistemi)",
+    summary: "Admin → Rezervasiyalar: iş cədvəli, görüş növləri, bağlı vaxtlar, gələn rezervasiyalar, saytda rezervasiya bloku.",
+    blocks: [
+      {
+        type: "p",
+        text: "Bu sistem Calendly kimi işləyir: ziyarətçi saytda təqvimdən gün seçir, o günün boş saatlarını görür, saat seçib adını və e-poçtunu yazır və görüş rezerv olunur. Bütün görüşlər bir ümumi təqvimdədir: biri rezerv olunanda həmin vaxt bütün görüş növləri üçün bağlanır. Rezervasiyalar yalnız admin paneldə görünür, e-poçt göndərilmir. Ziyarətçi təsdiqi ekranda görür və \"Təqvimə əlavə et\" ilə .ics faylı yükləyə bilər.",
+      },
+      {
+        type: "steps",
+        title: "Sistemi ilk dəfə qurmaq",
+        items: [
+          "Sol menyuda \"Rezervasiyalar\" → \"İş cədvəli\" tab-ı. Biznes saat qurşağını seçin (məs. Asia/Baku) və hər gün üçün iş saatlarını yazın. Bağlı gün üçün bütün aralıqları silin. Bir gündə fasilə üçün 2 aralıq əlavə etmək olar (məs. 09:00-13:00 və 14:00-18:00). \"Yadda saxla\".",
+          "\"Görüş növləri\" tab-ı → \"Yeni görüş növü\". Daxili ad (yalnız siz görürsünüz), müddət (dəqiqə) yazın. Hər dil (AZ/RU/EN) üçün başlıq, təsvir, görüş yeri/linki və təşəkkür mətni yazın. Başlığı boş qoyduğunuz dildə bu növ saytda görünməz. \"Saxla\".",
+          "\"Səhifələr\" bölməsində istədiyiniz səhifəni açın → \"Blok əlavə et\" → \"Rezervasiya\" (\"Hazır bölmələr\" qrupunda). \"Görüş növü\" siyahısından növü seçin (boş buraxsanız, ziyarətçi özü seçir). İstəsəniz başlıq və alt mətn yazın.",
+          "Səhifəni \"Yadda saxla\" və \"Dərc et\", sonra saytda açıb rezerv edərək yoxlayın.",
+        ],
+      },
+      {
+        type: "list",
+        title: "Ana səhifədə və menyuda",
+        items: [
+          "Ana səhifədə, Komanda ilə Əlaqə bölmələrinin arasında, \"Görüş təyin edin\" bölməsi avtomatik görünür. Onu əlavə etmək lazım deyil: həmin dildə ən azı bir aktiv görüş növü olan kimi görünür, olmayanda gizlənir.",
+          "Yuxarı menyudakı və mobil menyudakı \"Konsultasiya al\" düyməsi ana səhifədəki bu bölməyə aparır.",
+          "Bu bölmənin başlığı və alt mətni sabitdir, paneldən dəyişmir. Fərqli mətnlə ayrıca yer istəsəniz, \"Səhifələr\"də yeni səhifə yaradıb \"Rezervasiya\" blokunu qoyun.",
+          "Görüş növünün özünün mətnləri (başlıq, təsvir, görüş yeri, təşəkkür) \"Görüş növləri\" tab-ında dəyişir.",
+        ],
+      },
+      {
+        type: "list",
+        title: "İş cədvəlinin ayarları",
+        items: [
+          "Saatların addımı: saatlar nə qədər aralıqla təklif olunur (15, 30, 45 və ya 60 dəqiqə).",
+          "Görüşlər arası fasilə: hər görüşdən əvvəl və sonra boş qalan dəqiqə sayı.",
+          "Minimum xəbərdarlıq: ziyarətçi ən tez neçə saat sonraya rezerv edə bilər (məs. 12 saat).",
+          "Ən çox neçə gün irəli: təqvim bugündən neçə gün sonraya qədər açıqdır.",
+          "Ziyarətçi saatları öz saat qurşağında görür, siz isə admin paneldə biznes qurşağında.",
+        ],
+      },
+      {
+        type: "steps",
+        title: "Gələn rezervasiyaları görmək",
+        items: [
+          "\"Rezervasiyalar\" → \"Rezervasiyalar\" tab-ı. Süzgəc: Gələcək, Keçmiş, Ləğv edilmiş.",
+          "Sətrə basın: ad, e-poçt, telefon, mesaj, ziyarətçinin saat qurşağı açılır. Orada yalnız sizə görünən qeyd yaza bilərsiniz.",
+          "\"Ləğv et\": rezervasiya ləğv olunur və həmin vaxt yenidən boş görünür (ziyarətçiyə bildiriş getmir, özünüz əlaqə saxlayın). \"Bərpa et\" ləğvi geri qaytarır (vaxt artıq tutulubsa bərpa olunmur).",
+          "\"Sil\": rezervasiyanı və ziyarətçinin şəxsi məlumatını həmişəlik silir.",
+          "Yeni rezervasiya gələndə sol menyuda \"Rezervasiyalar\"ın yanında say görünür.",
+        ],
+      },
+      {
+        type: "steps",
+        title: "Vaxtı bağlamaq (tətil, məşğulluq)",
+        items: [
+          "\"Rezervasiyalar\" → \"Bağlı vaxtlar\" tab-ı.",
+          "Başlanğıc və son tarix-saatı seçin, istəsəniz səbəb yazın, \"Bağla\" basın.",
+          "Bu aralıqda saytda boş saat görünmür. Əvvəlcədən edilmiş rezervasiyalar silinmir, onları \"Rezervasiyalar\"da ayrıca ləğv edin.",
+        ],
+      },
+      {
+        type: "warn",
+        text: "Rezervasiyası olan görüş növünü silmək olmur. Əvəzinə növün redaktorunda \"Aktiv\" açarını söndürün: növ saytda göstərilməz, rezervasiyalar qalır. İş cədvəlini dəyişdikdə artıq edilmiş rezervasiyalar dəyişmir.",
+      },
+      {
+        type: "list",
+        title: "Bilmək faydalıdır",
+        items: [
+          "Eyni vaxta iki nəfər rezerv edə bilməz: sistem rezerv anında yenidən yoxlayır, ikinci şəxs \"Bu vaxt artıq tutulub\" mesajı alır.",
+          "Spam qorunması: gizli sahə və eyni ünvandan saatda ən çox 5 rezervasiya limiti var.",
+          "Hələlik avtomatik e-poçt (təsdiq, xatırlatma), ziyarətçinin özünün ləğvi və Google Calendar sinxronu yoxdur.",
+          "Görüş yeri/linki (məs. Google Meet) yalnız rezervasiya təsdiqindən sonra ziyarətçiyə göstərilir.",
         ],
       },
     ],

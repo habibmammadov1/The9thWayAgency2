@@ -108,7 +108,7 @@ export default function Navbar({ extraLinks = [] }: { extraLinks?: NavPageLink[]
             <div className="hidden sm:block">
               <MagneticButtonWrapper pullStrength={0.15}>
                 <Link 
-                  href="/contact"
+                  href="/#booking"
                   className="flex bg-[#d9c2a0] text-[#0B0B0C] px-6 py-3 text-[14px] font-bold hover:bg-[#0B0B0C] hover:text-[#d9c2a0] transition-colors duration-300 items-center justify-center rounded-[14px]"
                 >
                   {t("getConsultation")}
