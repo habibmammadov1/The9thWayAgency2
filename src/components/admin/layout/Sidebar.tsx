@@ -25,10 +25,12 @@ import {
   Layers,
   ClipboardList,
   BookOpen,
+  CalendarClock,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { fetchContactSubmissions } from "@/lib/api"
 import { fetchFormsUnreadCount } from "@/lib/forms/formsApi"
+import { fetchBookingUnreadCount } from "@/lib/booking/bookingApi"
 
 interface NavigationItem {
   name: string;
@@ -36,7 +38,7 @@ interface NavigationItem {
   icon: React.ComponentType<any>;
   showBadge?: boolean;
   /** Which unread counter the badge shows (default: contact submissions) */
-  badge?: "forms";
+  badge?: "forms" | "bookings";
 }
 
 interface NavigationSection {
@@ -51,6 +53,7 @@ const navigation: NavigationSection[] = [
       { name: "Ana Səhifə", href: "/admin/content/home", icon: Home },
       { name: "Səhifələr", href: "/admin/pages", icon: Layers },
       { name: "Formalar", href: "/admin/forms", icon: ClipboardList, showBadge: true, badge: "forms" },
+      { name: "Rezervasiyalar", href: "/admin/bookings", icon: CalendarClock, showBadge: true, badge: "bookings" },
       { name: "Xidmətlər", href: "/admin/content/services", icon: Briefcase },
       { name: "Rəylər", href: "/admin/content/testimonials", icon: MessageSquare },
       { name: "Bloqlar", href: "/admin/content/blogs", icon: FileText },
@@ -90,6 +93,7 @@ export function Sidebar({ isCollapsed, setIsCollapsed, isMobile }: SidebarProps)
   const pathname = usePathname()
   const [unreadCount, setUnreadCount] = React.useState(0)
   const [formsUnread, setFormsUnread] = React.useState(0)
+  const [bookingsUnread, setBookingsUnread] = React.useState(0)
 
   const fetchUnread = async () => {
     try {
@@ -122,7 +126,23 @@ export function Sidebar({ isCollapsed, setIsCollapsed, isMobile }: SidebarProps)
     }
   }, [])
 
-  const badgeCount = (item: NavigationItem) => (item.badge === "forms" ? formsUnread : unreadCount)
+  // New bookings (Admin → Rezervasiyalar)
+  React.useEffect(() => {
+    let cancelled = false
+    const refresh = () => {
+      fetchBookingUnreadCount().then((n) => !cancelled && setBookingsUnread(n))
+    }
+    refresh()
+
+    window.addEventListener("bookings-updated", refresh)
+    return () => {
+      cancelled = true
+      window.removeEventListener("bookings-updated", refresh)
+    }
+  }, [])
+
+  const badgeCount = (item: NavigationItem) =>
+    item.badge === "forms" ? formsUnread : item.badge === "bookings" ? bookingsUnread : unreadCount
 
   return (
     <motion.aside

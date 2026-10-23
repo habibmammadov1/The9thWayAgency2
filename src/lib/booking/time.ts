@@ -33,13 +33,6 @@ export function monthTitle(year: number, month: number, locale: string): string 
   return new Intl.DateTimeFormat(intlLocale(locale), { timeZone: "UTC", month: "long", year: "numeric" }).format(new Date(Date.UTC(year, month, 1)));
 }
 
-/** Monday-first short weekday names. */
-export function weekdayNames(locale: string): string[] {
-  const fmt = new Intl.DateTimeFormat(intlLocale(locale), { timeZone: "UTC", weekday: "short" });
-  // 2024-01-01 was a Monday
-  return Array.from({ length: 7 }, (_, i) => fmt.format(new Date(Date.UTC(2024, 0, 1 + i))));
-}
-
 export interface CalendarCell {
   key: string;
   day: number;

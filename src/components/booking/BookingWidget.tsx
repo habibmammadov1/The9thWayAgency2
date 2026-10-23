@@ -16,7 +16,6 @@ import {
   monthTitle,
   parseKey,
   timeZoneOptions,
-  weekdayNames,
 } from "@/lib/booking/time";
 import type { BookingConfirmation, PublicBookingType } from "@/lib/booking/types";
 
@@ -34,6 +33,7 @@ const TEXTS = {
     loadError: "Boş vaxtları yükləmək alınmadı. Səhifəni yeniləyib yenidən cəhd edin.",
     timeZone: "Saat qurşağı",
     minutes: "dəq",
+    weekdays: ["B.e.", "Ç.a.", "Çər.", "C.a.", "Cümə", "Şən.", "Bazar"],
     prevMonth: "Əvvəlki ay",
     nextMonth: "Növbəti ay",
     back: "Geri",
@@ -68,6 +68,7 @@ const TEXTS = {
     loadError: "Не удалось загрузить время. Обновите страницу и попробуйте снова.",
     timeZone: "Часовой пояс",
     minutes: "мин",
+    weekdays: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
     prevMonth: "Предыдущий месяц",
     nextMonth: "Следующий месяц",
     back: "Назад",
@@ -102,6 +103,7 @@ const TEXTS = {
     loadError: "Could not load available times. Refresh the page and try again.",
     timeZone: "Time zone",
     minutes: "min",
+    weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     prevMonth: "Previous month",
     nextMonth: "Next month",
     back: "Back",
@@ -219,7 +221,7 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
   const [confirmation, setConfirmation] = useState<BookingConfirmation | null>(null);
 
   const zoneChoices = useMemo(() => timeZoneOptions(zone, visitorZone), [zone, visitorZone]);
-  const weekdays = useMemo(() => weekdayNames(locale), [locale]);
+  const weekdays = t.weekdays;
   const cells = useMemo(() => (view ? monthGrid(view.y, view.m) : []), [view]);
 
   const monthHasSlots = [...slotsByDay.keys()].some((k) => view && k.startsWith(`${view.y}-${String(view.m + 1).padStart(2, "0")}`));
