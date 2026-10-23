@@ -310,6 +310,16 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       },
       {
         type: "list",
+        title: "Ana səhifədə və menyuda",
+        items: [
+          "Ana səhifədə, Komanda ilə Əlaqə bölmələrinin arasında, \"Görüş təyin edin\" bölməsi avtomatik görünür. Onu əlavə etmək lazım deyil: həmin dildə ən azı bir aktiv görüş növü olan kimi görünür, olmayanda gizlənir.",
+          "Yuxarı menyudakı və mobil menyudakı \"Konsultasiya al\" düyməsi ana səhifədəki bu bölməyə aparır.",
+          "Bu bölmənin başlığı və alt mətni sabitdir, paneldən dəyişmir. Fərqli mətnlə ayrıca yer istəsəniz, \"Səhifələr\"də yeni səhifə yaradıb \"Rezervasiya\" blokunu qoyun.",
+          "Görüş növünün özünün mətnləri (başlıq, təsvir, görüş yeri, təşəkkür) \"Görüş növləri\" tab-ında dəyişir.",
+        ],
+      },
+      {
+        type: "list",
         title: "İş cədvəlinin ayarları",
         items: [
           "Saatların addımı: saatlar nə qədər aralıqla təklif olunur (15, 30, 45 və ya 60 dəqiqə).",
