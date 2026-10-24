@@ -218,6 +218,14 @@ export function BookingsList() {
                     <dd className="whitespace-pre-wrap">{selected.message}</dd>
                   </>
                 )}
+                {selected.answers?.map((a) => (
+                  <React.Fragment key={a.fieldId}>
+                    <dt className="text-gray-500">{a.label}</dt>
+                    <dd className="whitespace-pre-wrap break-words">
+                      {a.value === true ? "Bəli" : Array.isArray(a.value) ? a.value.join(", ") : String(a.value)}
+                    </dd>
+                  </React.Fragment>
+                ))}
                 <dt className="text-gray-500">Ziyarətçinin saat qurşağı</dt>
                 <dd>
                   {selected.visitorTimezone} ({formatDateTime(selected.startsAt, selected.visitorTimezone)})

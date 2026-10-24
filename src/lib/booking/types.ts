@@ -1,5 +1,7 @@
 // Booking — shared types. Server side: server/src/lib/bookingSlots.ts and server/src/routes/booking.ts.
 
+import type { AnswerValue, FormFieldDef, FormFieldType } from "@/lib/forms/types";
+
 export const BOOKING_LOCALES = ["az", "ru", "en"] as const;
 export type BookingLocale = (typeof BOOKING_LOCALES)[number];
 
@@ -12,6 +14,8 @@ export interface PublicBookingType {
   durationMinutes: number;
   title: string;
   description: string;
+  /** Own form fields built in the admin (this language, or the fallback language). null = classic form (phone + note). */
+  fields: FormFieldDef[] | null;
 }
 
 export interface SlotsResponse {
@@ -38,6 +42,8 @@ export interface BookPayload {
   email: string;
   phone?: string;
   message?: string;
+  /** Answers to the type's own fields, by field id */
+  answers?: Record<string, AnswerValue>;
   locale: string;
   timezone: string;
   website: string;
@@ -69,6 +75,8 @@ export interface BookingTypeLocale {
   description: string;
   locationNote: string;
   successText: string;
+  /** null = classic fixed form; an array = own fields (empty = no extra fields) */
+  fields: FormFieldDef[] | null;
 }
 
 export interface AdminBookingType {
@@ -105,7 +113,16 @@ export interface AdminBooking {
   locale: string;
   visitorTimezone: string;
   adminNote: string | null;
+  /** Answers to the type's own form fields (label and type were copied at booking time) */
+  answers: BookingAnswer[] | null;
   createdAt: string;
+}
+
+export interface BookingAnswer {
+  fieldId: string;
+  label: string;
+  type: FormFieldType;
+  value: AnswerValue;
 }
 
 export interface BookingsPage {

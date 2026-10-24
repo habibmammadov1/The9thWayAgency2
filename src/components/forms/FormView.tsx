@@ -23,7 +23,7 @@ interface FormViewProps {
 const INPUT =
   "w-full bg-transparent border-0 border-b border-[#E4E2DF] py-3 text-[#0B0B0C] placeholder:text-[#B5B3AE] focus:outline-none focus:border-[#0B0B0C] transition-colors";
 
-function FieldControl({
+export function FieldControl({
   field,
   inputId,
   value,
