@@ -18,6 +18,9 @@ import {
   timeZoneOptions,
 } from "@/lib/booking/time";
 import type { BookingConfirmation, PublicBookingType } from "@/lib/booking/types";
+import { FieldControl } from "@/components/forms/FormView";
+import { textsFor, validateField } from "@/lib/forms/fields";
+import type { AnswerValue } from "@/lib/forms/types";
 
 // Calendly-style booking widget. No next-intl hooks: all texts come from the small dictionary below,
 // so it also renders inside the admin live preview.
@@ -174,6 +177,9 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
   const [chosenTypeId, setChosenTypeId] = useState<string | null>(null);
   const activeType = types.find((x) => x.id === (typeId || chosenTypeId)) ?? (types.length === 1 && !typeId ? types[0] : null);
 
+  // Own form fields built in the admin; null = the classic fixed form (phone + note)
+  const customFields = activeType?.fields ?? null;
+
   const [monthOverride, setMonthOverride] = useState<{ y: number; m: number } | null>(null);
   const todayMonth = today ? parseKey(today) : null;
   const todayY = todayMonth?.year ?? null;
@@ -216,6 +222,8 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
 
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", website: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  // Answers to the meeting type's own form fields (keys are field ids; errors use "a:" + id)
+  const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [confirmation, setConfirmation] = useState<BookingConfirmation | null>(null);
@@ -246,7 +254,12 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
     if (!form.name.trim()) next.name = t.required;
     if (!form.email.trim()) next.email = t.required;
     else if (!EMAIL_RE.test(form.email.trim())) next.email = t.invalidEmail;
-    if (form.phone.trim() && !PHONE_RE.test(form.phone.trim())) next.phone = t.invalidPhone;
+    if (customFields) {
+      for (const field of customFields) {
+        const message = validateField(field, answers[field.id], locale);
+        if (message) next[`a:${field.id}`] = message;
+      }
+    } else if (form.phone.trim() && !PHONE_RE.test(form.phone.trim())) next.phone = t.invalidPhone;
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -262,8 +275,7 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
         startsAt: selectedSlot,
         name: form.name.trim(),
         email: form.email.trim(),
-        phone: form.phone.trim() || undefined,
-        message: form.message.trim() || undefined,
+        ...(customFields ? { answers } : { phone: form.phone.trim() || undefined, message: form.message.trim() || undefined }),
         locale,
         timezone: zone,
         website: form.website,
@@ -406,7 +418,7 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
           [
             ["name", t.name, "text", true],
             ["email", t.email, "email", true],
-            ["phone", t.phone, "tel", false],
+            ...(customFields ? [] : ([["phone", t.phone, "tel", false]] as const)),
           ] as const
         ).map(([field, label, type, required]) => (
           <div key={field} className="mb-6">
@@ -426,12 +438,39 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
             {errors[field] && <p className="mt-1 text-xs font-semibold text-red-500">{errors[field]}</p>}
           </div>
         ))}
-        <div className="mb-6">
-          <label htmlFor="bk-message" className="mb-1 block text-xs font-semibold uppercase tracking-widest text-[#8A8A87]">
-            {t.message}
-          </label>
-          <textarea id="bk-message" rows={3} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={cn(INPUT, "resize-none")} />
-        </div>
+        {customFields ? (
+          customFields.map((field) => {
+            const inputId = `bk-a-${field.id}`;
+            return (
+              <div key={field.id} className="mb-6">
+                {field.type !== "checkbox" && (
+                  <label htmlFor={inputId} className="mb-1 block text-xs font-semibold uppercase tracking-widest text-[#8A8A87]">
+                    {field.label} {field.required ? "*" : `(${t.optional})`}
+                  </label>
+                )}
+                <FieldControl
+                  field={field}
+                  inputId={inputId}
+                  value={answers[field.id]}
+                  placeholderFallback={textsFor(locale).select}
+                  onChange={(value) => {
+                    setAnswers({ ...answers, [field.id]: value });
+                    if (errors[`a:${field.id}`]) setErrors({ ...errors, [`a:${field.id}`]: "" });
+                  }}
+                />
+                {field.helpText && <p className="mt-1 text-xs text-[#8A8A87]">{field.helpText}</p>}
+                {errors[`a:${field.id}`] && <p className="mt-1 text-xs font-semibold text-red-500">{errors[`a:${field.id}`]}</p>}
+              </div>
+            );
+          })
+        ) : (
+          <div className="mb-6">
+            <label htmlFor="bk-message" className="mb-1 block text-xs font-semibold uppercase tracking-widest text-[#8A8A87]">
+              {t.message}
+            </label>
+            <textarea id="bk-message" rows={3} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={cn(INPUT, "resize-none")} />
+          </div>
+        )}
 
         {formError && <p className="mb-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-600">{formError}</p>}
 

@@ -319,6 +319,18 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         ],
       },
       {
+        type: "steps",
+        title: "Rezervasiya formunun sahələrini qurmaq (məsələn Clinic name, Website)",
+        items: [
+          "\"Rezervasiyalar\" → \"Görüş növləri\" → növün qələm ikonuna basın. Pəncərənin aşağısında \"Rezervasiya formunun sahələri\" bölməsi var.",
+          "Ad və E-poçt həmişə var və məcburidir, onları silmək olmur. Qalan sahələri siz qurursunuz: \"Sahə əlavə et\" basın, sahəyə basıb açın, növünü seçin (qısa mətn, uzun mətn, e-poçt, telefon, açılan siyahı və s.), başlıq yazın (məsələn \"Clinic name\"), \"Məcburi\" açarı ilə məcburi edin.",
+          "Sahələri sürükləyib sıralaya, kopyalaya və silə bilərsiniz. Yeni növdə başlanğıc üçün Telefon və Qeyd sahələri gəlir, istəsəniz silin.",
+          "Hər dil (AZ, RU, EN) üçün sahələr ayrıca qurulur. Başqa dil tab-ında \"AZ-dan kopyala\" mətnləri və sahələri birlikdə kopyalayır. Bir dildə başlıq yoxdursa, orada AZ versiyası (mətn və sahələri ilə) göstərilir.",
+          "\"Saxla\" basın. Saytda tarix və saat seçəndən sonra forma bu sahələrlə açılır.",
+          "Ziyarətçinin cavabları \"Rezervasiyalar\" tab-ında rezervasiyaya basanda görünür. Sahənin başlığını sonradan dəyişsəniz, köhnə rezervasiyalar köhnə başlıqla qalır.",
+        ],
+      },
+      {
         type: "list",
         title: "İş cədvəlinin ayarları",
         items: [

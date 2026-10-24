@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { requireAuth } from '../middleware/requireAuth';
+import { AnswerError, FormField, formFieldsSchema, validateAnswers } from '../lib/formFields';
 import {
   BOOKING_LOCALES,
   DEFAULT_BOOKING_SETTINGS,
@@ -141,7 +142,9 @@ router.get('/public/types', async (req: Request, res: Response): Promise<void> =
     res.json(
       types.flatMap((t) => {
         const text = pickLocaleText(t.locales, locale.data);
-        return text ? [{ id: t.id, durationMinutes: t.durationMinutes, title: text.title, description: text.description }] : [];
+        return text
+          ? [{ id: t.id, durationMinutes: t.durationMinutes, title: text.title, description: text.description, fields: (text.fields as FormField[] | null) ?? null }]
+          : [];
       }),
     );
   } catch (error) {
@@ -232,6 +235,7 @@ const bookSchema = z.object({
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Düzgün e-poçt daxil edin'),
   phone: z.string().trim().max(50).regex(/^([+()\d\s.\-]{5,30})?$/, 'Düzgün telefon nömrəsi daxil edin').optional(),
   message: z.string().trim().max(2000).optional(),
+  answers: z.record(z.unknown()).optional(), // answers to the type's own form fields
   locale: localeSchema,
   timezone: z.string().max(100).optional(),
   website: z.string().max(500).optional(), // honeypot
@@ -277,6 +281,22 @@ router.post('/public/book', validate(bookSchema), async (req: Request, res: Resp
       return;
     }
 
+    // The form the visitor saw comes from the same text/language used here
+    const text = pickLocaleText(type.locales, payload.locale) ?? type.locales[0];
+    const formFields = (text?.fields as FormField[] | null | undefined) ?? null;
+    let answers: ReturnType<typeof validateAnswers> | null = null;
+    if (formFields) {
+      try {
+        answers = validateAnswers(formFields, payload.answers);
+      } catch (err) {
+        if (err instanceof AnswerError) {
+          res.status(400).json({ error: err.message });
+          return;
+        }
+        throw err;
+      }
+    }
+
     const settings = await loadSettings();
     const endsAt = new Date(startsAt.getTime() + type.durationMinutes * 60_000);
 
@@ -299,8 +319,10 @@ router.post('/public/book', validate(bookSchema), async (req: Request, res: Resp
           endsAt,
           name: payload.name,
           email: payload.email,
-          phone: emptyToNull(payload.phone),
-          message: emptyToNull(payload.message),
+          // Classic types keep phone/message; types with their own fields store answers instead
+          phone: formFields ? null : emptyToNull(payload.phone),
+          message: formFields ? null : emptyToNull(payload.message),
+          answers: answers ? (answers as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
           locale: payload.locale,
           visitorTimezone: payload.timezone && isValidTimeZone(payload.timezone) ? payload.timezone : '',
         },
@@ -312,7 +334,6 @@ router.post('/public/book', validate(bookSchema), async (req: Request, res: Resp
       return;
     }
 
-    const text = pickLocaleText(type.locales, payload.locale) ?? type.locales[0];
     res.json({
       success: true,
       booking: {
@@ -388,6 +409,8 @@ const typeLocaleSchema = z.object({
   description: z.string().trim().max(3000).default(''),
   locationNote: z.string().trim().max(1000).default(''),
   successText: z.string().trim().max(2000).default(''),
+  // undefined = keep what is stored, null = classic fixed form, array = own fields
+  fields: formFieldsSchema.nullable().optional(),
 });
 
 const typeSchema = z.object({
@@ -403,6 +426,15 @@ const typeSchema = z.object({
     .default({}),
 });
 
+/** Prisma input for one language of a type; `fields` undefined keeps the stored value on update. */
+function localeData(l: z.infer<typeof typeLocaleSchema>) {
+  const { fields, ...rest } = l;
+  return {
+    ...rest,
+    ...(fields === undefined ? {} : { fields: fields === null ? Prisma.DbNull : (fields as unknown as Prisma.InputJsonValue) }),
+  };
+}
+
 async function loadAdminType(id: string) {
   const type = await prisma.bookingType.findUnique({
     where: { id },
@@ -411,7 +443,13 @@ async function loadAdminType(id: string) {
   if (!type) return null;
   const locales: Record<string, unknown> = {};
   for (const l of type.locales) {
-    locales[l.locale] = { title: l.title, description: l.description, locationNote: l.locationNote, successText: l.successText };
+    locales[l.locale] = {
+      title: l.title,
+      description: l.description,
+      locationNote: l.locationNote,
+      successText: l.successText,
+      fields: (l.fields as FormField[] | null) ?? null,
+    };
   }
   return {
     id: type.id,
@@ -489,7 +527,7 @@ router.post('/types', requireAuth, validate(typeSchema), async (req: Request, re
         isActive: payload.isActive,
         order: (last._max.order ?? -1) + 1,
         locales: {
-          create: BOOKING_LOCALES.filter((l) => payload.locales[l]?.title).map((l) => ({ locale: l, ...payload.locales[l]! })),
+          create: BOOKING_LOCALES.filter((l) => payload.locales[l]?.title).map((l) => ({ locale: l, ...localeData(payload.locales[l]!) })),
         },
       },
     });
@@ -538,8 +576,8 @@ router.put('/types/:id', requireAuth, validate(typeSchema), async (req: Request,
       ...keep.map((locale) =>
         prisma.bookingTypeLocale.upsert({
           where: { typeId_locale: { typeId: id, locale } },
-          create: { typeId: id, locale, ...payload.locales[locale]! },
-          update: payload.locales[locale]!,
+          create: { typeId: id, locale, ...localeData(payload.locales[locale]!) },
+          update: localeData(payload.locales[locale]!),
         }),
       ),
     ]);

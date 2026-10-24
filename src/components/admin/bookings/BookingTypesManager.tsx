@@ -12,8 +12,26 @@ import { cn } from "@/lib/utils";
 import { createType, deleteType, listTypes, reorderTypes, saveType } from "@/lib/booking/bookingApi";
 import { BOOKING_LOCALES, type AdminBookingType, type BookingLocale, type BookingTypeLocale } from "@/lib/booking/types";
 import { Field, TextAreaField, TextField } from "@/components/admin/page-builder/fields";
+import { RepeatableList } from "@/components/admin/page-builder/RepeatableList";
+import { FieldEditor } from "@/components/admin/forms/FieldEditor";
+import { FIELD_TYPE_INFO, createField } from "@/lib/forms/fields";
+import type { FormFieldDef } from "@/lib/forms/types";
 
-const EMPTY_LOCALE: BookingTypeLocale = { title: "", description: "", locationNote: "", successText: "" };
+const EMPTY_LOCALE: BookingTypeLocale = { title: "", description: "", locationNote: "", successText: "", fields: [] };
+
+// Starting fields (like the old fixed form): a phone number and a note, both optional
+const STARTER_LABELS: Record<BookingLocale, { phone: string; note: string }> = {
+  az: { phone: "Telefon", note: "Qeyd" },
+  ru: { phone: "Телефон", note: "Заметка" },
+  en: { phone: "Phone", note: "Notes" },
+};
+
+function starterFields(locale: BookingLocale): FormFieldDef[] {
+  return [
+    { ...createField("phone"), label: STARTER_LABELS[locale].phone },
+    { ...createField("textarea"), label: STARTER_LABELS[locale].note },
+  ];
+}
 
 interface Draft {
   id: string | null;
@@ -28,7 +46,11 @@ const toDraft = (t?: AdminBookingType): Draft => ({
   name: t?.name ?? "",
   durationMinutes: t?.durationMinutes ?? 30,
   isActive: t?.isActive ?? true,
-  locales: { az: { ...EMPTY_LOCALE, ...t?.locales.az }, ru: { ...EMPTY_LOCALE, ...t?.locales.ru }, en: { ...EMPTY_LOCALE, ...t?.locales.en } },
+  locales: {
+    az: { ...EMPTY_LOCALE, ...t?.locales.az, fields: t?.locales.az?.fields ?? starterFields("az") },
+    ru: { ...EMPTY_LOCALE, ...t?.locales.ru, fields: t?.locales.ru?.fields ?? starterFields("ru") },
+    en: { ...EMPTY_LOCALE, ...t?.locales.en, fields: t?.locales.en?.fields ?? starterFields("en") },
+  },
 });
 
 export function BookingTypesManager() {
@@ -211,9 +233,26 @@ export function BookingTypesManager() {
                 <TextAreaField label="Təsvir (istəyə görə)" rows={3} value={draft.locales[lang].description} onChange={(description) => setLocale({ description })} />
                 <TextAreaField label="Görüş yeri / link (təsdiqdən sonra göstərilir)" rows={2} value={draft.locales[lang].locationNote} onChange={(locationNote) => setLocale({ locationNote })} />
                 <TextAreaField label="Təşəkkür mətni (istəyə görə)" rows={2} value={draft.locales[lang].successText} onChange={(successText) => setLocale({ successText })} />
+
+                <div className="space-y-3 rounded-xl border border-[var(--border)] bg-gray-50 p-4">
+                  <h3 className="text-sm font-bold">Rezervasiya formunun sahələri</h3>
+                  <p className="text-xs text-[var(--muted-foreground)]">
+                    Ziyarətçi saat seçəndən sonra bu formu doldurur. <b>Ad və E-poçt həmişə var</b> və məcburidir. Əlavə sahələri (məsələn &quot;Clinic name&quot;, &quot;Website&quot;) burada qurursunuz. Ziyarətçinin cavabları rezervasiyada görünür.
+                  </p>
+                  <RepeatableList<FormFieldDef>
+                    key={lang}
+                    items={draft.locales[lang].fields ?? []}
+                    onChange={(fields) => setLocale({ fields })}
+                    addLabel="Sahə əlavə et"
+                    max={30}
+                    itemTitle={(f, i) => `${f.label || `Sahə ${i + 1}`}${f.required ? " *" : ""}  ·  ${FIELD_TYPE_INFO[f.type].label}`}
+                    createItem={() => createField("text")}
+                    renderItem={(field, update) => <FieldEditor field={field} update={update} />}
+                  />
+                </div>
                 {lang !== "az" && (
                   <Button type="button" variant="ghost" size="sm" onClick={() => setLocale({ ...draft.locales.az })}>
-                    AZ-dan kopyala
+                    AZ-dan kopyala (mətnlər və sahələr)
                   </Button>
                 )}
               </div>

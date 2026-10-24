@@ -577,6 +577,8 @@ model BookingTypeLocale {
   description  String      @default("")
   locationNote String      @default("")
   successText  String      @default("")
+  // Booking form fields built in the admin (same shape as the form builder). null = classic fixed form (phone + note).
+  fields       Json?
   updatedAt    DateTime    @updatedAt
   type         BookingType @relation(fields: [typeId], references: [id], onDelete: Cascade)
 
@@ -605,6 +607,8 @@ model Booking {
   locale          String
   visitorTimezone String      @default("")
   adminNote       String?
+  // Answers to the extra form fields (label and type copied at booking time)
+  answers         Json?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   // Restrict: a meeting type with bookings cannot be deleted by accident (deactivate it instead)
