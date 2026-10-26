@@ -4,7 +4,7 @@ import WhyChooseUs from "@/components/sections/services/WhyChooseUs";
 import Testimonials from "@/components/Testimonials";
 import StickyCTA from "@/components/StickyCTA";
 import { setRequestLocale } from "next-intl/server";
-import { fetchTestimonialsIntro, fetchTestimonialsHighlight, fetchTestimonialsList } from "@/lib/api";
+import { fetchTestimonialsIntro, fetchTestimonialsHighlight, fetchTestimonialsList, fetchSiteSettings } from "@/lib/api";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
@@ -46,11 +46,12 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [data, testimonialsIntro, testimonialsHighlight, testimonialsList] = await Promise.all([
+  const [data, testimonialsIntro, testimonialsHighlight, testimonialsList, siteSettings] = await Promise.all([
     getServicesData(locale),
     fetchTestimonialsIntro(locale, 'services'),
     fetchTestimonialsHighlight(locale),
     fetchTestimonialsList(locale),
+    fetchSiteSettings(),
   ]);
 
   return (
@@ -67,7 +68,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
         initialHighlight={testimonialsHighlight}
         initialList={testimonialsList}
       />
-      <StickyCTA />
+      <StickyCTA whatsappNumber={siteSettings.whatsappNumber} />
     </main>
   );
 }

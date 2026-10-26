@@ -1,9 +1,8 @@
 import { Router, Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/requireAuth';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 /**
  * GET /api/translations?locale=az

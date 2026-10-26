@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from './lib/prisma';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import multer from 'multer';
@@ -23,6 +23,7 @@ import adminUsersRoutes from './routes/adminUsers';
 import pagesRoutes from './routes/pages';
 import formsRoutes from './routes/forms';
 import bookingRoutes from './routes/booking';
+import settingsRoutes from './routes/settings';
 import { requireAuth } from './middleware/requireAuth';
 
 // ---------------------------------------------------------------------------
@@ -89,12 +90,23 @@ async function uploadToAzureBlob(file: Express.Multer.File): Promise<string> {
 
 const app = express();
 const port = process.env.PORT || 4000;
-const prisma = new PrismaClient();
 
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+// The app sits behind Azure's ingress: trust one proxy hop so req.ip is the real client address
+app.set('trust proxy', 1);
+
+if (!process.env.JWT_SECRET) {
+  console.error('JWT_SECRET is not set; refusing to start');
+  process.exit(1);
+}
+
+// FRONTEND_URL may hold several origins separated by commas (e.g. apex and www)
+const ALLOWED_ORIGINS = (process.env.FRONTEND_URL || 'http://localhost:3000')
+  .split(',')
+  .map((o) => o.trim().replace(/\/$/, ''))
+  .filter(Boolean);
 
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: (origin, cb) => cb(null, !origin || ALLOWED_ORIGINS.includes(origin)),
   credentials: true,   // required for httpOnly cookie cross-origin
 }));
 app.use(express.json());
@@ -130,8 +142,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin/users', adminUsersRoutes);
 app.use('/api/home', homeRoutes);
 app.use('/api/client-logos', clientLogosRoutes);
-console.log('SERVICES ROUTES:', servicesRoutes);
-app.use('/api/services/test', (req, res) => res.send('test ok'));
 app.use('/api/services', servicesRoutes);
 app.use('/api/testimonials', testimonialsRoutes);
 app.use('/api/portfolio', portfolioRoutes);
@@ -143,6 +153,7 @@ app.use('/api/translations', translationsRoutes);
 app.use('/api/pages', pagesRoutes);
 app.use('/api/forms', formsRoutes);
 app.use('/api/booking', bookingRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Helper: run multer middleware and catch errors uniformly
 const handleSingleUpload = (
@@ -229,11 +240,29 @@ app.get('/health', async (req, res) => {
       storage: isAzureStorageEnabled ? 'azure-blob' : 'local-disk',
     });
   } catch (error) {
-    res.status(500).json({ status: 'error', db: 'disconnected', error: String(error) });
+    console.error('[Health] database check failed:', error);
+    res.status(500).json({ status: 'error', db: 'disconnected' });
   }
 });
 
-app.listen(port, () => {
+// Last resort for anything a route did not handle: log it, answer with JSON instead of an HTML stack trace
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('[Unhandled]', req.method, req.path, err);
+  if (res.headersSent) return next(err);
+  res.status(500).json({ error: 'Gözlənilməz server xətası baş verdi.' });
+});
+
+process.on('unhandledRejection', (reason) => console.error('[UnhandledRejection]', reason));
+
+const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
   console.log(`Storage backend: ${isAzureStorageEnabled ? 'Azure Blob Storage' : 'local disk'}`);
+});
+
+// Release database connections cleanly when Azure replaces a revision
+process.on('SIGTERM', () => {
+  server.close(async () => {
+    await prisma.$disconnect();
+    process.exit(0);
+  });
 });

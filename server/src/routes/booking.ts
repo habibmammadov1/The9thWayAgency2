@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { PrismaClient, Prisma } from '@prisma/client';
+import { prisma } from '../lib/prisma';
 import { z } from 'zod';
 import { requireAuth } from '../middleware/requireAuth';
 import { AnswerError, FormField, formFieldsSchema, validateAnswers } from '../lib/formFields';
@@ -16,7 +17,6 @@ import {
 } from '../lib/bookingSlots';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 const validate = (schema: z.ZodSchema) => (req: Request, res: Response, next: Function) => {
   const result = schema.safeParse(req.body);
@@ -45,8 +45,8 @@ const LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const LIMIT_MAX = 5;
 
 function allowBooking(req: Request): boolean {
-  const forwarded = String(req.headers['x-forwarded-for'] ?? '').split(',')[0].trim();
-  const key = forwarded || req.ip || req.socket.remoteAddress || 'unknown';
+  // req.ip honours 'trust proxy' (set in index.ts), so a client cannot pick its own key via X-Forwarded-For
+  const key = req.ip || req.socket.remoteAddress || 'unknown';
   const now = Date.now();
   if (bookLimits.size > 5000) {
     for (const [k, v] of bookLimits) if (now > v.resetAt) bookLimits.delete(k);

@@ -617,3 +617,11 @@ model Booking {
   @@index([startsAt])
   @@index([typeId])
 }
+
+// Site-wide settings, a single row (id = "default"). Edited in Admin -> Sayt Ayarları.
+model SiteSettings {
+  id             String   @id @default("default")
+  // Shown next to the founder photo and used by the floating WhatsApp button, e.g. "+1 (770) 679-2620"
+  whatsappNumber String   @default("")
+  updatedAt      DateTime @updatedAt
+}

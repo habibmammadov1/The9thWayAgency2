@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { prisma } from '../lib/prisma';
 import { z } from 'zod';
 import { requireAuth } from '../middleware/requireAuth';
 import {
@@ -12,7 +13,6 @@ import {
 } from '../lib/formFields';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 const validate = (schema: z.ZodSchema) => (req: Request, res: Response, next: Function) => {
   const result = schema.safeParse(req.body);
