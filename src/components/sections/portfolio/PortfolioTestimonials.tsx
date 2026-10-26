@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { LOGOS } from "@/lib/data";
 
 const TESTIMONIAL_IMAGES = [
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop",
@@ -26,9 +25,11 @@ interface TestimonialItem {
 interface PortfolioTestimonialsProps {
   headingOverride?: string;
   initialList?: TestimonialItem[] | null;
+  /** Client logos added in the admin (Müştəri Loqoları); the strip is hidden when there are none */
+  logos?: { id?: string; name?: string; imageUrl?: string | null }[] | null;
 }
 
-export default function PortfolioTestimonials({ headingOverride, initialList }: PortfolioTestimonialsProps) {
+export default function PortfolioTestimonials({ headingOverride, initialList, logos }: PortfolioTestimonialsProps) {
   const t = useTranslations("PortfolioPage.Testimonials");
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
@@ -45,6 +46,7 @@ export default function PortfolioTestimonials({ headingOverride, initialList }: 
     avatarUrl: TESTIMONIAL_IMAGES[idx % TESTIMONIAL_IMAGES.length]
   }));
 
+  const clientLogos = (logos ?? []).filter((l) => l.imageUrl);
   const testimonialsList = initialList && initialList.length > 0 ? initialList : fallbackList;
 
   return (
@@ -132,7 +134,8 @@ export default function PortfolioTestimonials({ headingOverride, initialList }: 
         </motion.div>
       </div>
 
-      {/* Dark Logo Strip Band */}
+      {/* Dark Logo Strip Band: only real logos from the admin */}
+      {clientLogos.length > 0 && (
       <motion.div 
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -140,17 +143,18 @@ export default function PortfolioTestimonials({ headingOverride, initialList }: 
         transition={{ duration: 1, delay: 0.4 }}
         className="mt-24 w-full bg-ink border-t border-b border-ink flex overflow-hidden flex-wrap md:flex-nowrap"
       >
-        {LOGOS.slice(0, 4).map((logo, idx) => (
+        {clientLogos.slice(0, 4).map((logo, idx) => (
           <div key={idx} className="flex-1 min-w-[50%] md:min-w-0 flex items-center justify-center py-12 border-b md:border-b-0 border-r border-white/10 [&:nth-child(even)]:border-r-0 md:[&:nth-child(even)]:border-r md:last:border-r-0">
             <img 
-              src={logo.src} 
-              alt={logo.name} 
+              src={logo.imageUrl ?? ""} 
+              alt={logo.name ?? ""} 
               className="h-8 md:h-12 object-contain filter grayscale opacity-60 hover:opacity-100 hover:grayscale-0 transition-all duration-300"
               style={{ filter: "brightness(0) invert(1)" }}
             />
           </div>
         ))}
       </motion.div>
+      )}
     </section>
   );
 }

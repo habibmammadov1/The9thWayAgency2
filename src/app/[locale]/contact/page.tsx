@@ -27,7 +27,7 @@ export default async function ContactPage({
   return (
     <main className="w-full flex flex-col items-center justify-center bg-white">
       {/* Contact Page Phase 1 */}
-      <ContactWhyChooseUs data={whyChooseUs} />
+      <ContactWhyChooseUs data={whyChooseUs} socialLinks={contactInfo?.socialLinks} />
       
       {/* Contact Page Phase 2 (Reused Form) */}
       <ContactSection info={contactInfo?.info} sourcePage="contact" />

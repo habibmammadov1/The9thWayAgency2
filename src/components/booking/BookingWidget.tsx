@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import React, { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { CalendarPlus, CheckCircle2, ChevronLeft, ChevronRight, Clock, Globe, Loader2, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BookingError, createBooking, fetchSlots } from "@/lib/booking/bookingApi";
@@ -32,6 +32,7 @@ const TEXTS = {
     pickDay: "Əvvəlcə gün seçin",
     noTimes: "Bu gün üçün boş vaxt yoxdur",
     noTimesMonth: "Bu ayda boş vaxt yoxdur. Növbəti aya baxın.",
+    seeNextMonth: "Növbəti ayın boş vaxtlarına bax",
     loading: "Yüklənir...",
     loadError: "Boş vaxtları yükləmək alınmadı. Səhifəni yeniləyib yenidən cəhd edin.",
     timeZone: "Saat qurşağı",
@@ -67,6 +68,7 @@ const TEXTS = {
     pickDay: "Сначала выберите день",
     noTimes: "На этот день нет свободного времени",
     noTimesMonth: "В этом месяце нет свободного времени. Посмотрите следующий.",
+    seeNextMonth: "Посмотреть свободное время в следующем месяце",
     loading: "Загрузка...",
     loadError: "Не удалось загрузить время. Обновите страницу и попробуйте снова.",
     timeZone: "Часовой пояс",
@@ -102,6 +104,7 @@ const TEXTS = {
     pickDay: "Pick a day first",
     noTimes: "No times available on this day",
     noTimesMonth: "No times available this month. Check the next one.",
+    seeNextMonth: "See availability next month",
     loading: "Loading...",
     loadError: "Could not load available times. Refresh the page and try again.",
     timeZone: "Time zone",
@@ -198,18 +201,31 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
   const activeTypeId = activeType?.id ?? null;
   const viewY = view?.y ?? null;
   const viewM = view?.m ?? null;
+  // When the first month has nothing bookable (e.g. the last days of a month), open the next one by itself
+  const userNavigated = useRef(false);
+  const autoHops = useRef(0);
   useEffect(() => {
     if (!activeTypeId || viewY === null || viewM === null) return;
     const key = `${activeTypeId}|${viewY}-${viewM}|${tick}`;
     const { from, to } = monthFetchRange(viewY, viewM);
     let cancelled = false;
     fetchSlots(activeTypeId, from, to)
-      .then((res) => !cancelled && setFetched({ key, slots: res.slots, error: false }))
+      .then((res) => {
+        if (cancelled) return;
+        setFetched({ key, slots: res.slots, error: false });
+        const prefix = `${viewY}-${String(viewM + 1).padStart(2, "0")}`;
+        const hasDays = [...groupSlotsByDay(res.slots, zone).keys()].some((k) => k.startsWith(prefix));
+        if (!hasDays && !userNavigated.current && autoHops.current < 3) {
+          autoHops.current += 1;
+          const next = new Date(Date.UTC(viewY, viewM + 1, 1));
+          setMonthOverride({ y: next.getUTCFullYear(), m: next.getUTCMonth() });
+        }
+      })
       .catch(() => !cancelled && setFetched({ key, slots: [], error: true }));
     return () => {
       cancelled = true;
     };
-  }, [activeTypeId, viewY, viewM, tick]);
+  }, [activeTypeId, viewY, viewM, tick, zone]);
 
   const slotsByDay = useMemo(
     () => (fetched && fetched.key === requestKey ? groupSlotsByDay(fetched.slots, zone) : new Map<string, string[]>()),
@@ -232,11 +248,13 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
   const weekdays = t.weekdays;
   const cells = useMemo(() => (view ? monthGrid(view.y, view.m) : []), [view]);
 
-  const monthHasSlots = [...slotsByDay.keys()].some((k) => view && k.startsWith(`${view.y}-${String(view.m + 1).padStart(2, "0")}`));
+  const daysWithSlots = [...slotsByDay.keys()].filter((k) => view && k.startsWith(`${view.y}-${String(view.m + 1).padStart(2, "0")}`)).length;
+  const monthHasSlots = daysWithSlots > 0;
   const isCurrentMonth = !!(view && todayMonth && view.y === todayMonth.year && view.m === todayMonth.month);
 
   const shiftMonth = (delta: number) => {
     if (!view) return;
+    userNavigated.current = true;
     const d = new Date(Date.UTC(view.y, view.m + delta, 1));
     setMonthOverride({ y: d.getUTCFullYear(), m: d.getUTCMonth() });
     setSelectedDay(null);
@@ -508,7 +526,7 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
                 aria-label={t.prevMonth}
                 disabled={isCurrentMonth || !view}
                 onClick={() => shiftMonth(-1)}
-                className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#0B0B0C]/25 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent"
               >
                 <ChevronLeft size={20} />
               </button>
@@ -518,7 +536,7 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
                 aria-label={t.nextMonth}
                 disabled={!view}
                 onClick={() => shiftMonth(1)}
-                className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100 disabled:opacity-30"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#0B0B0C]/25 hover:bg-gray-100 disabled:opacity-30"
               >
                 <ChevronRight size={20} />
               </button>
@@ -563,6 +581,11 @@ export default function BookingWidget({ types, typeId, locale, isPreview = false
             )}
             {!loading && fetched?.error && <p className="mt-4 text-sm font-semibold text-red-600">{t.loadError}</p>}
             {!loading && !fetched?.error && !monthHasSlots && <p className="mt-4 text-sm text-[#8A8A87]">{t.noTimesMonth}</p>}
+            {!loading && !fetched?.error && daysWithSlots > 0 && daysWithSlots <= 7 && (
+              <button type="button" onClick={() => shiftMonth(1)} className="mt-4 text-sm font-semibold text-[#0B0B0C] underline underline-offset-4 hover:text-[#A38B68]">
+                {t.seeNextMonth} →
+              </button>
+            )}
 
             <div className="mt-6">
               <label htmlFor="bk-zone" className="mb-1 block text-xs font-bold uppercase tracking-widest text-[#8A8A87]">

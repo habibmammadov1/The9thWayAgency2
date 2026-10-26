@@ -23,9 +23,9 @@ import {
 } from "@/components/admin/ui/form";
 import { Tabs, TabsList, TabsTrigger } from "@/components/admin/ui/tabs";
 import { 
-  fetchContactWhyChooseUs, 
+  fetchContactWhyChooseUsStrict, 
   updateContactWhyChooseUs, 
-  fetchContactInfo, 
+  fetchContactInfoStrict, 
   updateContactInfo 
 } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -55,10 +55,10 @@ const contactFormSchema = z.object({
     description: z.string().min(1, "Açıqlama boş ola bilməz"),
   })),
   info: z.object({
-    address: z.string().min(1, "Sahə boş ola bilməz"),
-    phone: z.string().min(1, "Sahə boş ola bilməz"),
-    email: z.string().min(1, "Sahə boş ola bilməz"),
-    workingHours: z.string().min(1, "Sahə boş ola bilməz"),
+    address: z.string(),
+    phone: z.string().min(1, "Telefon boş ola bilməz"),
+    email: z.string().min(1, "E-poçt boş ola bilməz"),
+    workingHours: z.string(),
     mapLatitude: z.number().nullable().optional(),
     mapLongitude: z.number().nullable().optional(),
   }),
@@ -209,6 +209,8 @@ export default function ContactAdminPage() {
   const [locale, setLocale] = useState("az");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [openPanel, setOpenPanel] = useState<string>("info");
 
   const form = useForm<any>({
     resolver: zodResolver(contactFormSchema),
@@ -257,10 +259,11 @@ export default function ContactAdminPage() {
 
   const loadAllData = async () => {
     setIsLoading(true);
+    setLoadFailed(false);
     try {
       const [wcu, contactInfo] = await Promise.all([
-        fetchContactWhyChooseUs(locale),
-        fetchContactInfo(locale),
+        fetchContactWhyChooseUsStrict(locale),
+        fetchContactInfoStrict(locale),
       ]);
 
       const barValuesString = Array.isArray(wcu?.content?.chartBarValues)
@@ -301,9 +304,11 @@ export default function ContactAdminPage() {
         socialLinks: contactInfo?.socialLinks || [],
       });
     } catch (err) {
+      // Never leave an empty default form on screen: saving it could overwrite real data
+      setLoadFailed(true);
       toast({
         title: "Xəta",
-        description: "Məlumatları yükləyərkən xəta baş verdi.",
+        description: "Məlumatları yükləyərkən xəta baş verdi. Səhifəni yeniləyin.",
         variant: "destructive",
       });
     } finally {
@@ -343,46 +348,91 @@ export default function ContactAdminPage() {
     });
   };
 
-  const handleFormSubmit = async (values: ContactFormValues) => {
+  const friendlyError = (err: unknown, fallback: string) => {
+    const msg = err instanceof Error ? err.message : "";
+    if (/unauthorized|no session|401/i.test(msg)) return "Sessiyanın vaxtı bitib. Yenidən daxil olun və təkrar cəhd edin.";
+    return msg || fallback;
+  };
+
+  const firstError = (errs: unknown): { path: string; message: string } | null => {
+    if (!errs || typeof errs !== "object") return null;
+    const node = errs as Record<string, unknown>;
+    if (typeof node.message === "string" && node.message) return { path: "", message: node.message };
+    for (const key of Object.keys(node)) {
+      if (key === "ref") continue;
+      const found = firstError(node[key]);
+      if (found) return { path: key + (found.path ? "." + found.path : ""), message: found.message };
+    }
+    return null;
+  };
+
+  // Validates only the given fields; when invalid, opens the panel with the problem and says what it is
+  const validateGroup = async (names: string[], panelFor: (root: string) => string) => {
+    const valid = await form.trigger(names as any);
+    if (valid) return true;
+    const found = firstError(form.formState.errors);
+    const root = found?.path.split(".")[0] ?? names[0];
+    setOpenPanel(panelFor(root));
+    toast({
+      title: "Məlumat düzgün deyil",
+      description: found?.message || "Qırmızı ilə işarələnmiş sahələri düzəldin.",
+      variant: "destructive",
+    });
+    return false;
+  };
+
+  // Panels 1 and 2: "Niyə Biz?" texts and feature cards
+  const saveContent = async () => {
+    if (!(await validateGroup(["whyChooseUs", "cards"], (r) => (r === "cards" ? "cards" : "why-choose-us")))) return;
+    const values = form.getValues();
     setIsSaving(true);
     try {
-      const chartValuesArray = values.whyChooseUs.chartBarValues
-        .split(",")
-        .map(Number);
-
-      const wcuPayload = {
-        content: {
-          ...values.whyChooseUs,
-          chartBarValues: chartValuesArray,
-        },
+      await updateContactWhyChooseUs(locale, {
+        content: { ...values.whyChooseUs, chartBarValues: values.whyChooseUs.chartBarValues.split(",").map(Number) },
         cards: values.cards,
-      };
-
-      const infoPayload = {
-        info: values.info,
-        socialLinks: values.socialLinks,
-      };
-
-      await Promise.all([
-        updateContactWhyChooseUs(locale, wcuPayload),
-        updateContactInfo(locale, infoPayload),
-      ]);
-
-      toast({
-        title: "Uğurlu",
-        description: "Əlaqə səhifəsi məlumatları yadda saxlanıldı.",
       });
+      toast({ title: "Uğurlu", description: "\"Niyə Biz?\" və kartlar yadda saxlanıldı." });
       loadAllData();
-    } catch (err: any) {
-      toast({
-        title: "Xəta",
-        description: err.message || "Yadda saxlayarkən xəta baş verdi.",
-        variant: "destructive",
-      });
+    } catch (err) {
+      toast({ title: "Xəta", description: friendlyError(err, "Yadda saxlayarkən xəta baş verdi."), variant: "destructive" });
     } finally {
       setIsSaving(false);
     }
   };
+
+  // Panels 3 and 4: contact details, map and social links (independent of the panels above)
+  const saveContact = async () => {
+    if (!(await validateGroup(["info", "socialLinks"], (r) => (r === "socialLinks" ? "socials" : "info")))) return;
+    const values = form.getValues();
+    const finite = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : null);
+    setIsSaving(true);
+    try {
+      await updateContactInfo(locale, {
+        info: { ...values.info, mapLatitude: finite(values.info.mapLatitude), mapLongitude: finite(values.info.mapLongitude) },
+        socialLinks: values.socialLinks,
+      });
+      toast({ title: "Uğurlu", description: "Əlaqə məlumatları, xəritə və sosial linklər yadda saxlanıldı." });
+      loadAllData();
+    } catch (err) {
+      toast({ title: "Xəta", description: friendlyError(err, "Yadda saxlayarkən xəta baş verdi."), variant: "destructive" });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const SaveBar = ({ onSave, label }: { onSave: () => void; label: string }) => (
+    <div className="flex justify-end border-t pt-4">
+      <Button
+        type="button"
+        onClick={onSave}
+        disabled={isSaving || loadFailed}
+        className="bg-[var(--primary)] text-black hover:bg-[var(--primary)]/90 font-bold px-6 h-11"
+      >
+        {isSaving ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Save size={16} className="mr-2" />}
+        {label}
+      </Button>
+    </div>
+  );
 
   return (
     <div className="p-6 md:p-8 space-y-6 overflow-y-auto h-full w-full">
@@ -419,11 +469,21 @@ export default function ContactAdminPage() {
           <Loader2 className="animate-spin text-[var(--primary)]" size={36} />
           <p className="text-sm text-[var(--muted-foreground)]">Əlaqə səhifəsi məlumatları yüklənir...</p>
         </div>
+      ) : loadFailed ? (
+        <div className="max-w-xl rounded-2xl border border-red-200 bg-red-50 p-6 space-y-3">
+          <p className="font-bold text-red-800">Məlumatlar yüklənmədi</p>
+          <p className="text-sm text-red-700">
+            Boş formanın üstünə yazmamaq üçün redaktə söndürülüb. İnternet əlaqəsini yoxlayın və yenidən yükləyin.
+          </p>
+          <Button type="button" variant="outline" onClick={loadAllData}>
+            Yenidən yüklə
+          </Button>
+        </div>
       ) : (
         <Form {...(form as any)}>
-          <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-8 max-w-5xl">
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-8 max-w-5xl">
             
-            <Accordion type="single" collapsible defaultValue="why-choose-us" className="w-full space-y-4">
+            <Accordion type="single" collapsible value={openPanel} onValueChange={setOpenPanel} className="w-full space-y-4">
               
               {/* PANEL 1: WHY CHOOSE US CONTENT */}
               <AccordionItem value="why-choose-us" className="border rounded-2xl bg-white shadow-sm overflow-hidden px-1">
@@ -546,6 +606,7 @@ export default function ContactAdminPage() {
                       )}
                     />
                   </div>
+                  {SaveBar({ onSave: saveContent, label: "Niyə Biz? və kartları saxla" })}
                 </AccordionContent>
               </AccordionItem>
 
@@ -585,6 +646,7 @@ export default function ContactAdminPage() {
                       </div>
                     </SortableContext>
                   </DndContext>
+                  {SaveBar({ onSave: saveContent, label: "Niyə Biz? və kartları saxla" })}
                 </AccordionContent>
               </AccordionItem>
 
@@ -665,8 +727,39 @@ export default function ContactAdminPage() {
                           form.setValue("info.mapLongitude", lng, { shouldDirty: true, shouldTouch: true });
                         }}
                       />
+
+                      {/* Typing the coordinates is the fallback when the map cannot be used (blocked, slow, mobile) */}
+                      <div className="grid grid-cols-2 gap-3 mt-3">
+                        {(["mapLatitude", "mapLongitude"] as const).map((key) => {
+                          const current = form.watch(`info.${key}`);
+                          return (
+                            <div key={key} className="space-y-1.5">
+                              <Label className="text-xs font-semibold text-neutral-500">
+                                {key === "mapLatitude" ? "Enlik (Latitude)" : "Uzunluq (Longitude)"}
+                              </Label>
+                              <Input
+                                key={String(current)}
+                                inputMode="decimal"
+                                defaultValue={typeof current === "number" ? String(current) : ""}
+                                placeholder={key === "mapLatitude" ? "40.394508" : "49.714875"}
+                                className="h-10 font-mono text-sm"
+                                onBlur={(e) => {
+                                  const n = Number(e.target.value.replace(",", "."));
+                                  const max = key === "mapLatitude" ? 90 : 180;
+                                  if (e.target.value.trim() && Number.isFinite(n) && Math.abs(n) <= max) {
+                                    form.setValue(`info.${key}`, n, { shouldDirty: true, shouldTouch: true });
+                                  } else {
+                                    e.target.value = typeof current === "number" ? String(current) : "";
+                                  }
+                                }}
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
+                  {SaveBar({ onSave: saveContact, label: "Əlaqə məlumatlarını, xəritəni və sosial linkləri saxla" })}
                 </AccordionContent>
               </AccordionItem>
 
@@ -706,29 +799,12 @@ export default function ContactAdminPage() {
                       </div>
                     </SortableContext>
                   </DndContext>
+                  {SaveBar({ onSave: saveContact, label: "Əlaqə məlumatlarını, xəritəni və sosial linkləri saxla" })}
                 </AccordionContent>
               </AccordionItem>
 
             </Accordion>
 
-            {/* Bottom Actions Row */}
-            <div className="border-t pt-6 flex items-center justify-end">
-              <Button
-                type="submit"
-                disabled={isSaving}
-                className="bg-[var(--primary)] text-black hover:bg-[var(--primary)]/90 font-bold px-8 h-12"
-              >
-                {isSaving ? (
-                  <>
-                    <Loader2 size={16} className="mr-2 animate-spin" /> Yadda saxlanılır...
-                  </>
-                ) : (
-                  <>
-                    <Save size={16} className="mr-2" /> Yadda Saxla
-                  </>
-                )}
-              </Button>
-            </div>
           </form>
         </Form>
       )}

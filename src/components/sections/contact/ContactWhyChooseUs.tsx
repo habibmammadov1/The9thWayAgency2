@@ -115,12 +115,7 @@ export default function ContactWhyChooseUs({ data, socialLinks }: ContactWhyChoo
         icon: getSocialIcon(s.platform),
         href: s.url
       }))
-    : [
-        { icon: <MessageCircle size={20} />, href: "#" },
-        { icon: <InstIcon size={20} />, href: "#" },
-        { icon: <LiIcon size={20} />, href: "#" },
-        { icon: <Mail size={20} />, href: "#" },
-      ];
+    : []; // no links set in the admin: show nothing instead of dead "#" icons
 
   return (
     <section className="relative z-10 w-full pt-32 pb-20 lg:pt-40 lg:pb-32 bg-white overflow-hidden">

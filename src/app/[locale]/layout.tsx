@@ -69,7 +69,7 @@ export default async function RootLayout({
       <body className={`${gilroy.variable} ${belwe.variable} font-sans bg-[#0B0B0C] text-[#E4E2DF] antialiased`} suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           <ScrollProgressBar />
-          <Navbar extraLinks={navPages} hasBooking={bookingTypes.length > 0} />
+          <Navbar extraLinks={navPages} hasBooking={bookingTypes.length > 0} socials={footerData?.socials} />
           <SmoothScrollProvider>
             {children}
             <Footer data={footerData} locale={locale} />

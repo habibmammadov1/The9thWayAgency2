@@ -17,11 +17,9 @@ const fallbackServicesData = {
 
 async function getServicesData(locale: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    // Use the backend API server port (4000) for direct server-to-server calls if running locally
-    // In production, this would be your API URL
-    const apiUrl = process.env.NODE_ENV === 'development' ? `${API}` : baseUrl;
-    
+    // The public site has no /api routes of its own: always call the backend API
+    const apiUrl = API;
+
     const [introRes, listRes, whyRes] = await Promise.all([
       fetch(`${apiUrl}/api/services/intro?locale=${locale}`, { next: { revalidate: 60 } }),
       fetch(`${apiUrl}/api/services/list?locale=${locale}`, { next: { revalidate: 60 } }),

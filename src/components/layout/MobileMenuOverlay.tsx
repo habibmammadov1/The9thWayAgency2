@@ -7,21 +7,16 @@ import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { NavPageLink } from "@/lib/page-builder/types";
 
-const SOCIAL_LINKS = [
-  { name: "Instagram", href: "#" },
-  { name: "LinkedIn", href: "#" },
-  { name: "Twitter", href: "#" },
-  { name: "Dribbble", href: "#" },
-];
-
 interface MobileMenuOverlayProps {
   isOpen: boolean;
   onClose: () => void;
   extraLinks?: NavPageLink[];
   hasBooking?: boolean;
+  /** Social links from the admin; the block is hidden when there are none */
+  socials?: { platform: string; url: string }[];
 }
 
-export default function MobileMenuOverlay({ isOpen, onClose, extraLinks = [], hasBooking = false }: MobileMenuOverlayProps) {
+export default function MobileMenuOverlay({ isOpen, onClose, extraLinks = [], hasBooking = false, socials = [] }: MobileMenuOverlayProps) {
   const t = useTranslations("Navbar");
 
   const NAV_LINKS = [
@@ -121,14 +116,10 @@ export default function MobileMenuOverlay({ isOpen, onClose, extraLinks = [], ha
                 <div className="text-[#8A8A87] font-medium leading-relaxed max-w-sm">
                   We are a creative agency focused on building fearless brands with strategy and passion. Let's create something extraordinary.
                 </div>
-                {/* Thumbnails placeholder */}
-                <div className="flex gap-4">
-                  <div className="w-24 h-24 bg-white/10 rounded-xl overflow-hidden shadow-inner"></div>
-                  <div className="w-24 h-24 bg-white/10 rounded-xl overflow-hidden shadow-inner"></div>
-                </div>
               </motion.div>
 
-              {/* Social Links */}
+              {/* Social Links (hidden when none are set in the admin) */}
+              {socials.length > 0 && (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -137,13 +128,14 @@ export default function MobileMenuOverlay({ isOpen, onClose, extraLinks = [], ha
               >
                 <span className="text-xs uppercase tracking-widest text-[#8A8A87] font-semibold">Socials</span>
                 <div className="flex flex-wrap gap-x-8 gap-y-4">
-                  {SOCIAL_LINKS.map((social) => (
-                    <a key={social.name} href={social.href} className="text-sm font-medium hover:text-[#d9c2a0] transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-px after:bottom-0 after:left-0 after:bg-[#d9c2a0] after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
-                      {social.name}
+                  {socials.map((social, idx) => (
+                    <a key={`${social.platform}-${idx}`} href={social.url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium hover:text-[#d9c2a0] transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-px after:bottom-0 after:left-0 after:bg-[#d9c2a0] after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
+                      {social.platform}
                     </a>
                   ))}
                 </div>
               </motion.div>
+              )}
             </div>
           </div>
         </motion.div>
