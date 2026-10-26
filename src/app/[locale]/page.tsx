@@ -8,7 +8,7 @@ import ContactSection from "@/components/ContactSection";
 import StickyCTA from "@/components/StickyCTA";
 import HomeBooking from "@/components/booking/HomeBooking";
 import { fetchBookingTypes } from "@/lib/booking/bookingApi";
-import { fetchHero, fetchUniqueness, fetchAboutStats, fetchClientLogos, fetchTestimonialsIntro, fetchTestimonialsHighlight, fetchTestimonialsList, fetchTeamTeaser, fetchTeamMembers, fetchContactInfo } from "@/lib/api";
+import { fetchHero, fetchUniqueness, fetchAboutStats, fetchClientLogos, fetchTestimonialsIntro, fetchTestimonialsHighlight, fetchTestimonialsList, fetchTeamTeaser, fetchTeamMembers, fetchContactInfo, fetchSiteSettings } from "@/lib/api";
 
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
@@ -34,7 +34,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [heroData, uniquenessData, aboutStatsData, clientLogos, testimonialsIntro, testimonialsHighlight, testimonialsList, teamTeaser, contactInfo, bookingTypes] = await Promise.all([
+  const [heroData, uniquenessData, aboutStatsData, clientLogos, testimonialsIntro, testimonialsHighlight, testimonialsList, teamTeaser, contactInfo, bookingTypes, siteSettings] = await Promise.all([
     fetchHero(locale),
     fetchUniqueness(locale),
     fetchAboutStats(locale),
@@ -45,13 +45,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     fetchTeamTeaser(locale, 'home'),
     fetchContactInfo(locale),
     fetchBookingTypes(locale),
+    fetchSiteSettings(),
   ]);
 
   const teamMembers = await fetchTeamMembers(locale, teamTeaser?.displayCount || 4);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
-      <HeroCarousel data={heroData} locale={locale} />
+      <HeroCarousel data={heroData} locale={locale} whatsappNumber={siteSettings.whatsappNumber} />
       <ClientLogosMarquee logos={clientLogos} />
       <UniquenessSection data={uniquenessData} locale={locale} />
       <AboutStats data={aboutStatsData} locale={locale} />
@@ -64,7 +65,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <TeamMembers teaserSettings={teamTeaser} members={teamMembers} />
       <HomeBooking types={bookingTypes} locale={locale} />
       <ContactSection info={contactInfo?.info} sourcePage="home" />
-      <StickyCTA />
+      <StickyCTA whatsappNumber={siteSettings.whatsappNumber} />
     </main>
   );
 }

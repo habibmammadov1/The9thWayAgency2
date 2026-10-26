@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../lib/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
@@ -7,7 +7,6 @@ import { z } from 'zod';
 import { requireAuth } from '../middleware/requireAuth';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 // Rate-limit login: 10 attempts per 15 minutes per IP
 const loginLimiter = rateLimit({

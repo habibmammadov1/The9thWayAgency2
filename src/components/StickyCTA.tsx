@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { whatsappLink } from "@/lib/whatsapp";
 
-export default function StickyCTA() {
+export default function StickyCTA({ whatsappNumber }: { whatsappNumber?: string }) {
+  const waLink = whatsappLink(whatsappNumber);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function StickyCTA() {
 
   return (
     <AnimatePresence>
-      {isVisible && (
+      {isVisible && waLink && (
         <motion.div
           initial={{ opacity: 0, y: 50, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -34,7 +36,7 @@ export default function StickyCTA() {
         >
           {/* Using a group and relative position so it doesn't collide with the scroll progress bar which is at right-0 */}
           <a
-            href="https://wa.me/994507500751"
+            href={waLink}
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center justify-center relative"

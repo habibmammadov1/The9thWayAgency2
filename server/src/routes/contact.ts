@@ -1,9 +1,35 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { z } from 'zod';
+import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/requireAuth';
 
 const router = Router();
-const prisma = new PrismaClient();
+
+const coordinate = (max: number) =>
+  z.preprocess(
+    (v) => (v === '' || v === undefined || v === null ? null : Number(v)),
+    z.number().finite().min(-max).max(max).nullable(),
+  );
+
+const contactInfoSchema = z.object({
+  info: z.object({
+    address: z.string().default(''),
+    phone: z.string().min(1, 'Telefon boş ola bilməz'),
+    email: z.string().min(1, 'E-poçt boş ola bilməz'),
+    workingHours: z.string().default(''),
+    mapLatitude: coordinate(90).default(null),
+    mapLongitude: coordinate(180).default(null),
+  }),
+  socialLinks: z
+    .array(z.object({ platform: z.string().min(1, 'Platforma boş ola bilməz'), url: z.string().min(1, 'URL boş ola bilməz') }))
+    .default([]),
+});
+
+// "field: message" text for the admin toast instead of a bare 500
+function validationMessage(error: z.ZodError): string {
+  const issue = error.issues[0];
+  return issue ? `${issue.path.join('.')}: ${issue.message}` : 'Məlumat düzgün deyil';
+}
 
 // Custom in-memory rate-limiter map to prevent brute-force spam submissions
 const ipRateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -52,58 +78,60 @@ router.get('/why-choose-us', async (req, res) => {
 });
 
 // 2. PUT Update Contact Why Choose Us content & feature cards
+const whyChooseUsSchema = z.object({
+  content: z.object({
+    overline: z.string().min(1, 'Sahə boş ola bilməz'),
+    chartLabel: z.string().min(1, 'Sahə boş ola bilməz'),
+    chartHeading: z.string().min(1, 'Sahə boş ola bilməz'),
+    chartParagraph: z.string().min(1, 'Sahə boş ola bilməz'),
+    chartBarValues: z.array(z.number().finite().min(0).max(100)).min(1, 'Ən azı bir dəyər daxil edin'),
+    rightHeading: z.string().min(1, 'Sahə boş ola bilməz'),
+    rightParagraph: z.string().min(1, 'Sahə boş ola bilməz'),
+    bandText: z.string().min(1, 'Sahə boş ola bilməz'),
+  }),
+  cards: z
+    .array(
+      z.object({
+        icon: z.string().optional(),
+        title: z.string().min(1, 'Kart başlığı boş ola bilməz'),
+        description: z.string().min(1, 'Kart açıqlaması boş ola bilməz'),
+      }),
+    )
+    .default([]),
+});
+
 router.put('/why-choose-us', requireAuth, async (req, res) => {
+  const parsed = whyChooseUsSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: validationMessage(parsed.error) });
+  }
+  const locale = (req.query.locale as string) || 'az';
+  const { content, cards } = parsed.data;
+
   try {
-    const locale = (req.query.locale as string) || 'az';
-    const { content, cards } = req.body;
-
-    const updatedContent = await prisma.contactWhyChooseUsContent.upsert({
-      where: { locale },
-      update: {
-        overline: content.overline,
-        chartLabel: content.chartLabel,
-        chartHeading: content.chartHeading,
-        chartParagraph: content.chartParagraph,
-        chartBarValues: Array.isArray(content.chartBarValues) ? content.chartBarValues : JSON.parse(content.chartBarValues),
-        rightHeading: content.rightHeading,
-        rightParagraph: content.rightParagraph,
-        bandText: content.bandText,
-      },
-      create: {
-        locale,
-        overline: content.overline,
-        chartLabel: content.chartLabel,
-        chartHeading: content.chartHeading,
-        chartParagraph: content.chartParagraph,
-        chartBarValues: Array.isArray(content.chartBarValues) ? content.chartBarValues : JSON.parse(content.chartBarValues),
-        rightHeading: content.rightHeading,
-        rightParagraph: content.rightParagraph,
-        bandText: content.bandText,
-      }
-    });
-
-    // Delete existing cards and insert new sorted cards
-    await prisma.contactFeatureCard.deleteMany({ where: { locale } });
-    if (cards && cards.length > 0) {
-      await prisma.contactFeatureCard.createMany({
-        data: cards.map((c: any, index: number) => ({
+    const [updatedContent] = await prisma.$transaction([
+      prisma.contactWhyChooseUsContent.upsert({
+        where: { locale },
+        update: content,
+        create: { locale, ...content },
+      }),
+      prisma.contactFeatureCard.deleteMany({ where: { locale } }),
+      prisma.contactFeatureCard.createMany({
+        data: cards.map((c, index) => ({
           locale,
           order: index + 1,
           icon: c.icon || 'LifeBuoy',
           title: c.title,
-          description: c.description
-        }))
-      });
-    }
+          description: c.description,
+        })),
+      }),
+    ]);
 
-    const updatedCards = await prisma.contactFeatureCard.findMany({
-      where: { locale },
-      orderBy: { order: 'asc' }
-    });
-
+    const updatedCards = await prisma.contactFeatureCard.findMany({ where: { locale }, orderBy: { order: 'asc' } });
     res.json({ content: updatedContent, cards: updatedCards });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update Why Choose Us content' });
+    console.error('[Contact] update why-choose-us failed:', error);
+    res.status(500).json({ error: '"Niyə Biz?" məzmunu yadda saxlanıla bilmədi.' });
   }
 });
 
@@ -127,50 +155,33 @@ router.get('/info', async (req, res) => {
 
 // 4. PUT Update Contact Info and social links
 router.put('/info', requireAuth, async (req, res) => {
+  const parsed = contactInfoSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: validationMessage(parsed.error) });
+  }
+  const locale = (req.query.locale as string) || 'az';
+  const { info, socialLinks } = parsed.data;
+
   try {
-    const locale = (req.query.locale as string) || 'az';
-    const { info, socialLinks } = req.body;
+    // One transaction: details and social links are saved together or not at all.
+    // Social links are global (shared by all languages); an empty list removes them all.
+    const [updatedInfo] = await prisma.$transaction([
+      prisma.contactInfo.upsert({
+        where: { locale },
+        update: info,
+        create: { locale, ...info },
+      }),
+      prisma.footerSocialLink.deleteMany(),
+      prisma.footerSocialLink.createMany({
+        data: socialLinks.map((s, idx) => ({ platform: s.platform, url: s.url, order: idx + 1 })),
+      }),
+    ]);
 
-    const updatedInfo = await prisma.contactInfo.upsert({
-      where: { locale },
-      update: {
-        address: info.address,
-        phone: info.phone,
-        email: info.email,
-        workingHours: info.workingHours,
-        mapLatitude: info.mapLatitude ? parseFloat(info.mapLatitude) : null,
-        mapLongitude: info.mapLongitude ? parseFloat(info.mapLongitude) : null,
-      },
-      create: {
-        locale,
-        address: info.address,
-        phone: info.phone,
-        email: info.email,
-        workingHours: info.workingHours,
-        mapLatitude: info.mapLatitude ? parseFloat(info.mapLatitude) : null,
-        mapLongitude: info.mapLongitude ? parseFloat(info.mapLongitude) : null,
-      }
-    });
-
-    // Update global social links table
-    if (socialLinks && socialLinks.length > 0) {
-      await prisma.footerSocialLink.deleteMany();
-      await prisma.footerSocialLink.createMany({
-        data: socialLinks.map((s: any, idx: number) => ({
-          platform: s.platform,
-          url: s.url,
-          order: idx + 1
-        }))
-      });
-    }
-
-    const updatedSocialLinks = await prisma.footerSocialLink.findMany({
-      orderBy: { order: 'asc' }
-    });
-
+    const updatedSocialLinks = await prisma.footerSocialLink.findMany({ orderBy: { order: 'asc' } });
     res.json({ info: updatedInfo, socialLinks: updatedSocialLinks });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update Contact Info' });
+    console.error('[Contact] update info failed:', error);
+    res.status(500).json({ error: 'Əlaqə məlumatları yadda saxlanıla bilmədi.' });
   }
 });
 
@@ -213,7 +224,7 @@ router.post('/submit', async (req, res) => {
 });
 
 // 6. GET Fetch submissions inbox list
-router.get('/submissions', async (req, res) => {
+router.get('/submissions', requireAuth, async (req, res) => {
   try {
     const status = (req.query.status as string) || 'all';
     const page = parseInt(req.query.page as string) || 1;

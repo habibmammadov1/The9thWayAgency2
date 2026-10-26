@@ -1,10 +1,9 @@
 import { Router, Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../lib/prisma';
 import { z } from 'zod';
 import { requireAuth } from '../middleware/requireAuth';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 // Schemas for validation
 const slideSchema = z.object({

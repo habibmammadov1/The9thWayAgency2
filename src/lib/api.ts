@@ -539,3 +539,37 @@ export async function updateTranslations(
   return await res.json();
 }
 
+
+/** Site-wide settings (WhatsApp number). Never throws: a missing value hides the WhatsApp links. */
+export async function fetchSiteSettings(): Promise<{ whatsappNumber: string }> {
+  try {
+    const res = await fetch(`${API_URL}/api/settings`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('API Error');
+    const data = await res.json();
+    return { whatsappNumber: typeof data?.whatsappNumber === 'string' ? data.whatsappNumber : '' };
+  } catch (error) {
+    console.warn('API fetch failed for site settings', error);
+    return { whatsappNumber: '' };
+  }
+}
+
+/** Admin loader: throws on failure so the form never edits an empty fallback. */
+export async function fetchSiteSettingsStrict(): Promise<{ whatsappNumber: string }> {
+  const res = await fetch(`${API_URL}/api/settings`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return await res.json();
+}
+
+export async function updateSiteSettings(data: { whatsappNumber: string }) {
+  const res = await fetch(`${API_URL}/api/settings`, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.error || (res.status === 401 ? 'Unauthorized' : 'Failed to update settings'));
+  }
+  return await res.json();
+}
