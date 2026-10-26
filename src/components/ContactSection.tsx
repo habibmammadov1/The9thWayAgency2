@@ -184,6 +184,9 @@ export default function ContactSection({ info, sourcePage = "home" }: ContactSec
                       <a href={`tel:${phoneVal.replace(/\s+/g, '')}`} className="hover:text-white transition-colors block">{phoneVal}</a>
                       <a href={`mailto:${emailVal}`} className="hover:text-white transition-colors block">{emailVal}</a>
                     </p>
+                    {info?.workingHours && (
+                      <p className="mt-3 text-[#8A8A87] leading-relaxed whitespace-pre-wrap">{info.workingHours}</p>
+                    )}
                   </div>
                 </div>
               </div>

@@ -49,7 +49,7 @@ export default async function PortfolioPage({ params }: { params: Promise<{ loca
     <main className="flex min-h-screen flex-col items-center justify-between">
       <PortfolioHero logos={clientLogos} initialData={heroData} />
       <CaseStudyShowcase initialData={caseStudiesData} />
-      <PortfolioTestimonials headingOverride={testimonialsIntro?.heading} initialList={testimonialsList} />
+      <PortfolioTestimonials headingOverride={testimonialsIntro?.heading} initialList={testimonialsList} logos={clientLogos} />
       <PortfolioFAQ initialData={faqData} />
     </main>
   );

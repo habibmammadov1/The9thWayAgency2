@@ -189,6 +189,7 @@ export async function fetchBlogPostById(id: string) {
 export async function saveBlogCategories(locale: string, categories: any[]) {
   const res = await fetch(`${API_URL}/api/blog/categories?locale=${locale}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ categories }),
   });
@@ -202,6 +203,7 @@ export async function saveBlogCategories(locale: string, categories: any[]) {
 export async function createBlogPost(post: any) {
   const res = await fetch(`${API_URL}/api/blog/posts`, {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(post),
   });
@@ -215,6 +217,7 @@ export async function createBlogPost(post: any) {
 export async function updateBlogPost(id: string, post: any) {
   const res = await fetch(`${API_URL}/api/blog/posts/${id}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(post),
   });
@@ -228,6 +231,7 @@ export async function updateBlogPost(id: string, post: any) {
 export async function deleteBlogPost(id: string) {
   const res = await fetch(`${API_URL}/api/blog/posts/${id}`, {
     method: 'DELETE',
+    credentials: 'include',
   });
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
@@ -250,6 +254,7 @@ export async function fetchAboutStudioIntro(locale: string) {
 export async function updateAboutStudioIntro(locale: string, data: any) {
   const res = await fetch(`${API_URL}/api/about/studio-intro?locale=${locale}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
@@ -274,6 +279,7 @@ export async function fetchAboutWhatWeBuild(locale: string) {
 export async function updateAboutWhatWeBuild(locale: string, data: any) {
   const res = await fetch(`${API_URL}/api/about/what-we-build?locale=${locale}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
@@ -298,6 +304,7 @@ export async function fetchAboutMissionVision(locale: string) {
 export async function updateAboutMissionVision(locale: string, data: any) {
   const res = await fetch(`${API_URL}/api/about/mission-vision?locale=${locale}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
@@ -322,6 +329,7 @@ export async function fetchTeamIntro(locale: string) {
 export async function updateTeamIntro(locale: string, data: any) {
   const res = await fetch(`${API_URL}/api/team/intro?locale=${locale}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
@@ -346,6 +354,7 @@ export async function fetchTeamTeaser(locale: string, page: string) {
 export async function updateTeamTeaser(locale: string, page: string, data: any) {
   const res = await fetch(`${API_URL}/api/team/teaser?locale=${locale}&page=${page}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
@@ -372,6 +381,7 @@ export async function fetchTeamMembers(locale: string, limit?: number, showAll: 
 export async function updateTeamMembers(locale: string, data: any) {
   const res = await fetch(`${API_URL}/api/team/members?locale=${locale}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
@@ -393,9 +403,23 @@ export async function fetchContactWhyChooseUs(locale: string) {
   }
 }
 
+/** Admin loaders: unlike the public ones they throw on failure, so the form never edits an empty fallback. */
+export async function fetchContactWhyChooseUsStrict(locale: string) {
+  const res = await fetch(`${API_URL}/api/contact/why-choose-us?locale=${locale}`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return await res.json();
+}
+
+export async function fetchContactInfoStrict(locale: string) {
+  const res = await fetch(`${API_URL}/api/contact/info?locale=${locale}`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return await res.json();
+}
+
 export async function updateContactWhyChooseUs(locale: string, data: any) {
   const res = await fetch(`${API_URL}/api/contact/why-choose-us?locale=${locale}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
@@ -410,7 +434,17 @@ export async function fetchContactInfo(locale: string) {
   try {
     const res = await fetch(`${API_URL}/api/contact/info?locale=${locale}`, { cache: 'no-store' });
     if (!res.ok) throw new Error('API Error');
-    return await res.json();
+    const data = await res.json();
+    // A language without its own contact row (e.g. EN/RU never filled in) uses the Azerbaijani details
+    // instead of the built-in placeholders; social links are global, so they stay as returned.
+    if (!data?.info && locale !== 'az') {
+      const azRes = await fetch(`${API_URL}/api/contact/info?locale=az`, { cache: 'no-store' });
+      if (azRes.ok) {
+        const az = await azRes.json();
+        return { ...data, info: az?.info ?? null, socialLinks: data?.socialLinks?.length ? data.socialLinks : az?.socialLinks ?? [] };
+      }
+    }
+    return data;
   } catch (error) {
     console.warn(`API fetch failed for contact info (locale: ${locale})`, error);
     return { info: null, socialLinks: [] };
@@ -420,6 +454,7 @@ export async function fetchContactInfo(locale: string) {
 export async function updateContactInfo(locale: string, data: any) {
   const res = await fetch(`${API_URL}/api/contact/info?locale=${locale}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
@@ -445,7 +480,7 @@ export async function submitContactForm(data: any) {
 
 export async function fetchContactSubmissions(status: string, page: number = 1) {
   try {
-    const res = await fetch(`${API_URL}/api/contact/submissions?status=${status}&page=${page}`, { cache: 'no-store' });
+    const res = await fetch(`${API_URL}/api/contact/submissions?status=${status}&page=${page}`, { cache: 'no-store', credentials: 'include' });
     if (!res.ok) throw new Error('API Error');
     return await res.json();
   } catch (error) {
@@ -457,6 +492,7 @@ export async function fetchContactSubmissions(status: string, page: number = 1) 
 export async function updateSubmissionStatus(id: string, status: string) {
   const res = await fetch(`${API_URL}/api/contact/submissions/${id}/status`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status }),
   });
@@ -492,6 +528,7 @@ export async function updateTranslations(
 ): Promise<{ updated: number }> {
   const res = await fetch(`${API_URL}/api/translations`, {
     method: 'PUT',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updates),
   });

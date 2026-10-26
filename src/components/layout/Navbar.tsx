@@ -24,7 +24,7 @@ const GridDotsIcon = () => (
   </svg>
 );
 
-export default function Navbar({ extraLinks = [], hasBooking = false }: { extraLinks?: NavPageLink[]; hasBooking?: boolean }) {
+export default function Navbar({ extraLinks = [], hasBooking = false, socials = [] }: { extraLinks?: NavPageLink[]; hasBooking?: boolean; socials?: { platform: string; url: string }[] }) {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const pathname = usePathname();
   const { scrollY } = useScroll();
@@ -136,6 +136,7 @@ export default function Navbar({ extraLinks = [], hasBooking = false }: { extraL
         onClose={() => setIsOverlayOpen(false)} 
         extraLinks={extraLinks}
         hasBooking={hasBooking}
+        socials={socials}
       />
     </>
   );

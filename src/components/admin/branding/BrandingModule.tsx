@@ -71,8 +71,9 @@ export function BrandingModule() {
     // await fetch("/api/branding/logo", { method: "POST", body: formData });
     
     toast({
-      title: "Uğurlu",
-      description: "Loqo yeniləndi (demo)",
+      title: "Hələ aktiv deyil",
+      description: "Loqonun admin paneldən dəyişdirilməsi hələ əlavə olunmayıb. Dəyişiklik saxlanmadı.",
+      variant: "destructive",
     })
   }
 
