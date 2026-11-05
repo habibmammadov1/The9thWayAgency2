@@ -34,6 +34,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
+  verification: {
+    other: { "facebook-domain-verification": "15g4d5obp44rkdalfwo5a26uc366ft" },
+  },
   twitter: {
     card: "summary_large_image",
     title: "THE9THWAY AGENCY | Premium Branding & Marketing",
