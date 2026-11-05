@@ -6,6 +6,7 @@ import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
+import MetaPixel from "@/components/MetaPixel";
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages, setRequestLocale} from 'next-intl/server';
 import {routing} from '@/i18n/routing';
@@ -70,6 +71,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       <body className={`${gilroy.variable} ${belwe.variable} font-sans bg-[#0B0B0C] text-[#E4E2DF] antialiased`} suppressHydrationWarning>
+        <MetaPixel />
         <NextIntlClientProvider messages={messages}>
           <ScrollProgressBar />
           <Navbar extraLinks={navPages} hasBooking={bookingTypes.length > 0} socials={footerData?.socials} />
